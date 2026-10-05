@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>视频码率与清晰度 —— B站 vs YouTube 统计面板解读</title>
+<style>
+  :root{
+    --bg:#0f1115; --bg2:#161a22; --card:#1b202b; --line:#2a3140;
+    --text:#e8ecf3; --muted:#9aa5b5; --accent:#4da3ff; --pink:#ff6699;
+    --red:#ff5252; --green:#3ddc84; --yellow:#ffc857; --purple:#b388ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.75; padding-bottom:80px;
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px}
+  header{
+    background:linear-gradient(135deg,#141a2e 0%,#1a1230 60%,#251233 100%);
+    border-bottom:1px solid var(--line); padding:56px 0 40px; margin-bottom:40px;
+  }
+  header h1{font-size:32px;font-weight:700;letter-spacing:.5px}
+  header p{color:var(--muted);margin-top:12px;font-size:15px}
+  .tag{display:inline-block;background:rgba(77,163,255,.15);color:var(--accent);
+    border:1px solid rgba(77,163,255,.35);border-radius:20px;padding:2px 14px;
+    font-size:13px;margin-right:8px;margin-top:16px}
+  h2{font-size:24px;margin:56px 0 8px;padding-left:14px;border-left:4px solid var(--accent)}
+  h2 .sub{display:block;font-size:13px;color:var(--muted);font-weight:400;margin-top:4px}
+  h3{font-size:17px;margin:28px 0 10px;color:var(--accent)}
+  p{margin:10px 0;color:#cfd6e0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin:16px 0}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr}}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+  th{background:#202636;font-weight:600;white-space:nowrap}
+  td{color:#cfd6e0}
+  code{background:#11151d;border:1px solid var(--line);border-radius:6px;
+    padding:1px 7px;font-family:"SF Mono",Menlo,Consolas,monospace;font-size:13px;color:#8fd0ff}
+  .bili{color:var(--pink);font-weight:600}
+  .yt{color:var(--red);font-weight:600}
+  .good{color:var(--green);font-weight:600}
+  .warn{color:var(--yellow);font-weight:600}
+  .bad{color:var(--red);font-weight:600}
+  .muted{color:var(--muted);font-size:13px}
+  /* 因素排行条 */
+  .bar-row{display:flex;align-items:center;gap:14px;margin:14px 0}
+  .bar-label{width:170px;flex-shrink:0;font-size:14px;text-align:right;color:#cfd6e0}
+  .bar-track{flex:1;height:26px;background:#11151d;border:1px solid var(--line);border-radius:8px;overflow:hidden;position:relative}
+  .bar-fill{height:100%;border-radius:7px;display:flex;align-items:center;padding-left:10px;font-size:12px;font-weight:600;color:#0b0e13;white-space:nowrap}
+  .bar-val{position:absolute;top:0;line-height:26px;font-size:12px;font-weight:600;color:var(--text);white-space:nowrap}
+  /* 计算器 */
+  .calc{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:18px 0}
+  @media(max-width:600px){.calc{grid-template-columns:1fr}}
+  .calc label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+  .calc input,.calc select{
+    width:100%;background:#11151d;border:1px solid var(--line);border-radius:8px;
+    color:var(--text);padding:10px 12px;font-size:15px}
+  .calc input:focus,.calc select:focus{outline:none;border-color:var(--accent)}
+  .result{background:#111827;border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin-top:6px}
+  .result .num{font-size:34px;font-weight:700;font-family:"SF Mono",Menlo,monospace}
+  .verdict{margin-top:8px;font-size:14px}
+  /* 面板还原 */
+  .panel{border-radius:12px;padding:20px 24px;font-size:13.5px;line-height:2.1}
+  .panel.b{background:#181418;border:1px solid #3a2430}
+  .panel.y{background:#14181c;border:1px solid #23303a}
+  .panel .k{color:var(--muted)}
+  .panel .k b{color:var(--text);font-weight:600}
+  .chip{display:inline-block;border-radius:5px;padding:0 7px;font-size:12px;margin-left:6px}
+  .chip.b{background:rgba(255,102,153,.15);color:var(--pink)}
+  .chip.y{background:rgba(255,82,82,.15);color:var(--red)}
+  .qa{margin:12px 0}
+  .qa .q{font-weight:600;color:var(--text)}
+  .qa .q::before{content:"Q · ";color:var(--yellow)}
+  .qa .a{color:#cfd6e0;margin-top:4px}
+  .qa .a::before{content:"A · ";color:var(--green)}
+  .foot{margin-top:64px;color:var(--muted);font-size:13px;text-align:center;border-top:1px solid var(--line);padding-top:24px}
+  .term{border-bottom:1px dashed var(--accent);cursor:help}
+  #tip{position:fixed;z-index:999;max-width:320px;background:#232b3a;border:1px solid #3a465c;border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.6;color:var(--text);display:none;pointer-events:none}
+  #tip .t-en{color:#8fd0ff;font-size:12px;font-weight:600}
+  #tip .t-def{margin-top:4px;color:#cfd6e0}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>视频码率与清晰度：B站 vs YouTube 统计面板解读</h1>
+    <p>从两张「Stats for nerds」截图说起 —— 编码、帧率、码率，到底谁在决定你看到的画质？</p>
+    <span class="tag">AV1 编码</span><span class="tag">DASH 流媒体</span><span class="tag">码率策略</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ 1. 这是什么 ============ -->
+  <h2>① 这两个面板是什么？是同一个视频吗？<span class="sub">What are these panels?</span></h2>
+  <p>左边那张是 <span class="bili">Bilibili 网页播放器</span> 的「统计信息」面板（右键播放器或按快捷键打开）；右边是 <span class="yt">YouTube</span> 的「Stats for nerds」（右键播放器 → 详细统计信息）。</p>
+  <p><b>它们不是同一个视频。</b>这是两个不同平台上的两个不同视频（YouTube 那个的 Video ID 是 <code>zPJw2f8zJlg</code>）。不过它们恰好都用了 <b>AV1 编码</b>，正好可以对比两家平台的传输策略。</p>
+
+  <div class="grid2">
+    <div class="panel b">
+      <div><span class="k"><b>Mime Type</b>:</span> video/mp4; codecs="av01.0.08M.08…" + AAC <span class="chip b">B站</span></div>
+      <div><span class="k"><b>Resolution</b>:</span> 1920×1080<b>@29.97</b></div>
+      <div><span class="k"><b>Video DataRate</b>:</span> <b>256 Kbps</b> [AV1]</div>
+      <div><span class="k"><b>Audio DataRate</b>:</span> 180 Kbps</div>
+      <div><span class="k"><b>Dropped Frames</b>:</span> 0 / 265</div>
+      <div><span class="k"><b>Video Speed</b>:</span> 3077 Kbps（下载速率）</div>
+    </div>
+    <div class="panel y">
+      <div><span class="k"><b>Video ID</b>:</span> zPJw2f8zJlg <span class="chip y">YouTube</span></div>
+      <div><span class="k"><b>Current / Optimal Res</b>:</span> 1920×1080<b>@60</b> / 2560×1440@60</div>
+      <div><span class="k"><b>Codecs</b>:</span> av01.0.09M.08 (399) / opus (251)</div>
+      <div><span class="k"><b>Connection Speed</b>:</span> 22442 Kbps（带宽，≠视频码率）</div>
+      <div><span class="k"><b>Buffer Health</b>:</span> 18.22 s</div>
+      <div><span class="k"><b>Mystery Text</b>:</span> USDAI, <b>SABR</b>, s4: t:1.78 b:0.000-20.001 …</div>
+    </div>
+  </div>
+
+  <h3>逐项关键差异</h3>
+  <table>
+    <tr><th>维度</th><th>B站（左图）</th><th>YouTube（右图）</th><th>说明</th></tr>
+    <tr>
+      <td>视频编码</td><td><code>av01.0.08M.08</code>（AV1 Main, 8bit）</td><td><code>av01.0.09M.08</code>（AV1 Main, 8bit）</td>
+      <td>两家都给了 AV1 流，编码代际相同。<code>(399)</code> 是 YouTube 的 itag（流格式编号）。</td>
+    </tr>
+    <tr>
+      <td>音频编码</td><td>AAC（<code>mp4a.40.2</code>），180 Kbps</td><td>Opus（251）</td>
+      <td>Opus 在低码率下音质更好，且 YouTube 音轨常见 ~130-160 Kbps。</td>
+    </tr>
+    <tr>
+      <td>分辨率 / 帧率</td><td>1080p @ <b>29.97fps</b></td><td>1080p @ <b>60fps</b></td>
+      <td>YouTube 判定你的网络足以播 1440p60（Optimal Res），当前播放的是你选的档位。</td>
+    </tr>
+    <tr>
+      <td>视频码率</td><td><b>明确显示 256 Kbps</b>（非常低）</td><td><b>不显示</b>（SABR 动态调整）</td>
+      <td><span class="warn">⚠ 常见误区：</span>YouTube 的 <code>Connection Speed 22442 Kbps</code> 是<b>网络下载带宽</b>，不是视频码率！视频码率被 SABR 隐藏了。</td>
+    </tr>
+    <tr>
+      <td>丢帧</td><td>0 / 265（完全没丢）</td><td>7 dropped of 112（播放中掉了 7 帧）</td>
+      <td>可能是解码压力或机器负载导致，偶发不必担心。</td>
+    </tr>
+    <tr>
+      <td>容器 / 分段</td><td>MP4 + DASH，Segments 9/159</td><td>SABR 流（自研自适应码率协议）</td>
+      <td>都是 DASH 思路：把视频切成小段按需下载。Buffer Health 18.22s 表示缓冲了 18 秒余量。</td>
+    </tr>
+    <tr>
+      <td>其他字段</td><td>Video Host：CDN 节点（腾讯云 mirrorcosov）</td><td>Color bt709/bt709；Viewport 1440×810×2.00（DPR 2 倍屏）；DRC 响度均衡</td>
+      <td><code>bt709</code> 是高清视频标准色域，两边一致。</td>
+    </tr>
+  </table>
+
+  <!-- ============ 2. 谁决定清晰度 ============ -->
+  <h2>② 哪个对清晰度影响最大？<span class="sub">What actually determines perceived quality?</span></h2>
+  <p>结论先给出：<b>对「清晰度」影响最大的是 分辨率 + 每像素码率（bpp），其次是编码效率；帧率影响的是流畅度，不是清晰度。</b></p>
+
+  <div class="card">
+    <div class="bar-row"><div class="bar-label">分辨率</div>
+      <div class="bar-track"><div class="bar-fill" style="width:95%;background:var(--accent)">★★★★★ 画面信息量的上限</div></div></div>
+    <div class="bar-row"><div class="bar-label">每像素码率 bpp</div>
+      <div class="bar-track"><div class="bar-fill" style="width:88%;background:var(--green)">★★★★★ 压缩损伤的程度</div></div></div>
+    <div class="bar-row"><div class="bar-label">编码效率（codec）</div>
+      <div class="bar-track"><div class="bar-fill" style="width:70%;background:var(--purple)">★★★★ 同码率下的画质倍增器</div></div></div>
+    <div class="bar-row"><div class="bar-label">帧率</div>
+      <div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--yellow)">★★ 影响流畅度而非清晰度</div></div></div>
+    <div class="bar-row"><div class="bar-label">音频码率</div>
+      <div class="bar-track"><div class="bar-fill" style="width:12%;background:#c9d4de">不影响画面</div></div></div>
+    <p class="muted">※ 条形长度表示对「主观清晰度」的相对影响权重，为示意排序，非精确测量。</p>
+  </div>
+
+  <h3>1）分辨率：清晰度的天花板</h3>
+  <p>1080p 约 207 万像素，4K 是它的 4 倍。分辨率决定了画面能承载的细节上限——上限不够，码率再高也糊。</p>
+
+  <h3>2）每像素码率（bpp）：决定你离天花板有多远</h3>
+  <p>同样的 1080p，用 256 Kbps 和 5000 Kbps 编码，画质天差地别。业界常用 <b>bits per pixel</b> 来衡量压缩强度：</p>
+  <p style="text-align:center"><code>bpp = 视频码率 ÷ (宽 × 高 × 帧率)</code></p>
+  <p>以 B 站这张截图为例：<code>256000 ÷ (1920 × 1080 × 29.97) ≈ 0.041 bpp</code> —— 这是非常激进的压缩。参考区间（AV1 编码）：</p>
+  <table>
+    <tr><th>bpp 区间（AV1 / 1080p）</th><th>观感</th></tr>
+    <tr><td>&lt; 0.04</td><td class="bad">明显压缩损伤：暗部色块、运动拖影、细节糊化（截图这档就在边缘）</td></tr>
+    <tr><td>0.04 – 0.08</td><td class="warn">静态画面尚可，运动场景露馅</td></tr>
+    <tr><td>0.08 – 0.15</td><td class="good">良好，大多数人满意</td></tr>
+    <tr><td>&gt; 0.15</td><td class="good">接近透明（很难看出压缩痕迹）</td></tr>
+  </table>
+  <p class="muted">注：H.264 需要大约 AV1 的 1.5~2 倍码率才能达到同等画质；HEVC/VP9 介于两者之间。所以同样是 0.04 bpp，AV1 已经是底线，H.264 则完全不可看。</p>
+
+  <h3>3）编码效率：同码率下的「画质倍增器」</h3>
+  <table>
+    <tr><th>编码</th><th>相对效率（越低越好）</th><th>达到良好 1080p 观感所需码率</th></tr>
+    <tr><td>H.264 / AVC（2013 普及）</td><td>基线 100%</td><td>~4500–6000 Kbps</td></tr>
+    <tr><td>VP9 / HEVC（2015 前后）</td><td>~60–70%</td><td>~3000–4000 Kbps</td></tr>
+    <tr><td><b>AV1（2020 前后）</b></td><td>~45–55%</td><td><b>~2000–3000 Kbps</b></td></tr>
+  </table>
+  <p>两家截图都选了 AV1，说明在低码率下它们都优先保画质效率。B 站敢把 1080p 压到 256 Kbps，正是「AV1 很高效」+「省带宽成本」共同作用的结果——代价就是你看到的画质偏软。</p>
+  <div class="card" style="border-color:rgba(179,136,255,.35)">
+    <p style="margin:0"><b>怎么读这张表：</b>「~4500–6000」和「~2000–3000」这两组数字表达的是<b>主观观感大致相当</b>的等效关系——即同样 1080p 典型内容，AV1 用大约一半的码率就能达到 H.264 的清晰度（这也是 Netflix/MSU 等测试中 AV1 相对 H.264 节省 40–50% 码率的结论）。但有两点保留：① <b>低码率区间 AV1 优势更大</b>（H.264 在低码率会块效应崩坏，AV1 只是细节变软），高码率区间两者差距收窄，都接近透明；② "等效"不等于"一样"——AV1 的损伤形态不同（少了块状伪影，多了一些细节平滑/涂抹感），且效果高度依赖<b>编码器实现</b>（x264 vs SVT-AV1）和编码参数，同一编码不同设置也能差出 20–30%。</p>
+  </div>
+
+  <h3>4）帧率：流畅度 ≠ 清晰度</h3>
+  <p>29.97fps 和 60fps 的<b>单帧静态截图锐度可能差不多</b>，但 60fps 的运动画面明显更顺滑。反过来，帧率翻倍会让 bpp 减半（同一码率要喂两倍的帧），所以低码率 + 高帧率反而可能更糊。这也是为什么低码率平台播 30fps 有时「看起来更清楚」。</p>
+
+  <!-- ============ 3. 码率策略 ============ -->
+  <h2>③ 两家的码率策略差异<span class="sub">Bitrate strategies</span></h2>
+  <div class="card">
+    <h3 style="margin-top:0"><span class="bili">B 站：固定转码档位 + 大胆压缩</span></h3>
+    <p>上传视频后由服务端<b>一次性转码</b>成有限的几个固定档位（360p / 480p / 720p / 1080p / 1080P高码率 / 大会员4K…），每档码率基本固定。为了省 CDN 成本，普遍采用激进压缩（如截图中的 256 Kbps AV1）。大会员、高投稿码率可以买到更好的档位。</p>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0"><span class="yt">YouTube：SABR 动态码率</span></h3>
+    <p>Mystery Text 里的 <b>SABR</b>（Self-Adjusting BitRate）是 YouTube 的自研自适应码率系统：不给固定的「1080p = 某码率」，而是<b>按内容复杂度和实时网络状况动态分配码率</b>——运动画面自动多给码率，静止画面省下来。所以面板上看不到视频码率，只有 Connection Speed（带宽）和 Buffer Health（缓冲余量）。这解释了为何 YouTube 同档位画质通常更稳：花在该花的地方。</p>
+  </div>
+
+  <!-- ============ 4. 交互计算器 ============ -->
+  <h2>④ 动手算一算：你的视频会被压成什么样？<span class="sub">Interactive bpp calculator</span></h2>
+  <div class="card">
+    <div class="calc">
+      <div>
+        <label>分辨率</label>
+        <select id="res">
+          <option value="854,480">854 × 480（480p）</option>
+          <option value="1280,720">1280 × 720（720p）</option>
+          <option value="1920,1080" selected>1920 × 1080（1080p）</option>
+          <option value="2560,1440">2560 × 1440（1440p）</option>
+          <option value="3840,2160">3840 × 2160（4K）</option>
+        </select>
+      </div>
+      <div>
+        <label>帧率</label>
+        <select id="fps">
+          <option value="24">24 fps</option>
+          <option value="29.97" selected>29.97 fps</option>
+          <option value="60">60 fps</option>
+        </select>
+      </div>
+      <div>
+        <label>视频码率（Kbps）</label>
+        <input type="number" id="bitrate" value="256" min="1">
+      </div>
+      <div>
+        <label>编码标准</label>
+        <select id="codec">
+          <option value="1">H.264</option>
+          <option value="0.65">VP9 / HEVC</option>
+          <option value="0.5" selected>AV1</option>
+        </select>
+      </div>
+    </div>
+    <div class="result">
+      <div class="muted">折算到 H.264 等效的每像素码率</div>
+      <div class="num" id="bppOut">—</div>
+      <div class="verdict" id="verdictOut">—</div>
+    </div>
+  </div>
+
+  <!-- ============ 5. FAQ ============ -->
+  <h2>⑤ 常见误区 FAQ<span class="sub">Misconceptions</span></h2>
+  <div class="qa"><div class="q">YouTube 的 Connection Speed 22442 Kbps 是视频码率吗？</div>
+    <div class="a">不是。这是你的网络下载带宽。YouTube 从不直接显示视频码率，真实视频码率被 SABR 动态控制，一般 1080p60 在 3000–8000 Kbps 之间浮动。</div></div>
+  <div class="qa"><div class="q">AV1 编码 = 高画质吗？</div>
+    <div class="a">AV1 只是「效率高」，即在相同码率下画质更好。256 Kbps 的 AV1 照样糊——编码决定性价比，码率才决定下限。</div></div>
+  <div class="qa"><div class="q">把帧率从 30 提到 60 会更清楚吗？</div>
+    <div class="a">会更「顺」，不会更「清楚」。清晰度主要由分辨率和 bpp 决定；且码率不变时提高帧率，单帧分到的比特反而变少。</div></div>
+  <div class="qa"><div class="q">Dropped Frames 是网络卡了吗？</div>
+    <div class="a">通常不是。丢帧多是设备端解码/渲染跟不上（比如 4K60 AV1 软解）。B 站截图 0/265 说明这台设备解码毫无压力。</div></div>
+  <div class="qa"><div class="q">为什么 B 站 1080p 只有 256 Kbps？</div>
+    <div class="a">平台在画质与带宽成本间取平衡：普通档位激进压缩（ bpp≈0.041 已到 AV1 底线），画质要求高时可投「高码率」稿件或开大会员解锁更高档位。</div></div>
+
+  <!-- ============ 6. bpp vs ppi ============ -->
+  <h2>⑥ bpp 与 ppi：一个管片源，一个管屏幕<span class="sub">Two different "per-pixel" metrics</span></h2>
+  <p>两个词都带"pixel"，但分属<b>完全不同的领域</b>：</p>
+  <table>
+    <tr><th></th><th>bpp（bits per pixel）</th><th>ppi（pixels per inch）</th></tr>
+    <tr><td>所属领域</td><td>视频压缩 / 编码</td><td>显示硬件 / 屏幕</td></tr>
+    <tr><td>含义</td><td>编码后<b>每个像素平均分到多少比特</b>，衡量压缩强度</td><td>屏幕<b>每英寸排了多少物理像素</b>，衡量显示精细度</td></tr>
+    <tr><td>由谁决定</td><td>平台转码时的码率策略（转码完成即固化）</td><td>屏幕物理规格（出厂即固化）</td></tr>
+    <tr><td>影响什么</td><td>片源<b>本身</b>有没有压缩损伤（马赛克、色带）</td><td>画面颗粒感、文字锐度、像素间过渡是否细腻</td></tr>
+    <tr><td>典型数值</td><td>0.04（很糊）～ 0.15+（很好），无量纲</td><td>手机 400–500，显示器 ~100–200，电视 ~50–90</td></tr>
+    <tr><td>类比</td><td>底片的冲洗质量——细节丢了就找不回来</td><td>相纸的细腻度——决定放大后颗粒感重不重</td></tr>
+  </table>
+  <p><b>关系：两者独立、互不补偿上限，但共同决定最终观感。</b>链路是：</p>
+  <p style="text-align:center"><code>高 bpp 片源 → 解码 → 缩放/后处理 → 屏幕（ppi、位深、对比度）→ 你的眼睛</code></p>
+  <p>bpp 决定送进屏幕的图像<b>已经损失了多少</b>；ppi（加上位深、对比度）决定剩下的信息<b>呈现得多细腻</b>。高 ppi 能把轻微压缩痕迹"摊薄"到看不见，但救不回已经丢掉的细节——<b>garbage in, garbage (smoothed) out</b>。</p>
+
+  <h2>⑦ 同一个片源，为什么好设备清晰、便宜设备像马赛克？<span class="sub">Same file, different devices</span></h2>
+  <p>先说破：<b>那些马赛克块其实已经存在于视频数据里</b>（低 bpp 编码产生的块效应），并不是便宜设备"变"出来的。区别在于：<b>好设备擅长掩盖，便宜设备只会放大</b>。差异主要出在四个环节：</p>
+  <div class="card">
+    <h3 style="margin-top:0">① 屏幕尺寸与有效 ppi</h3>
+    <p>同一个 1080p 片源，在 6 英寸手机上（~440 ppi）每个视频像素很小很细；投到 65 英寸电视上（~70 ppi），视频中的 8×8 像素块被放大成肉眼可见的方格。<b>屏幕越大、ppi 越低，压缩伪影越藏不住。</b>这解释了"同一视频手机上看还行、电视上全是马赛克"。</p>
+    <h3>② 缩放与后处理芯片/算法</h3>
+    <p>片源分辨率 ≠ 屏幕分辨率，中间必有一次缩放。电视/旗舰机有专门的图像处理（高质量插值、去块滤波 deblock、锐化、MEMC），能把块边缘"抹圆"；便宜设备用最基础的最近邻/双线性缩放，块状伪影原样甚至加倍呈现。</p>
+    <h3>③ 屏幕位深与抖动（6bit + FRC vs 10bit）</h3>
+    <p>暗场色带（banding）对位深极其敏感。便宜屏幕多为 6bit 面板靠 FRC 抖动模拟灰阶，本身就给暗部"补刀"；10bit 高对比度屏能把渐变过渡呈现得平滑，压缩色带反而不明显。</p>
+    <h3>④ 解码器差异</h3>
+    <p>好设备有 AV1 硬解，省下算力还能跑去块/降噪后处理；便宜设备可能软解掉帧（你截图中 YouTube 的 7 dropped frames 就是苗头），且没有余力做后处理。</p>
+  </div>
+  <div class="card" style="border-color:rgba(77,163,255,.4)">
+    <p style="margin:0"><b>结论：</b>换更好的设备能"掩盖"压缩损伤，但无法"还原"已丢失的细节。想根治暗部马赛克，只有一条路——<b>更高 bpp 的片源</b>（B 站投高码率稿件/开大会员高码率档、YouTube 传高码率让 VP9/AV1 编码器分到更多比特）。</p>
+  </div>
+
+  <!-- ============ 8. 行车记录仪场景 ============ -->
+  <h2>⑧ 延伸场景：个人行车记录仪怎么选？<span class="sub">Dashcam recording: H.265 vs AV1 in practice</span></h2>
+  <p>一个真实案例：某记录仪标称"3K"，实际 1 分钟录像约 180 MB。先算账：<code>180 MB/分钟 ≈ 24.6 Mbps</code>——按 3K（2880×1620）30fps 折算 bpp ≈ 0.175，按理说不该糊。"标称高清但不清晰"的原因通常有三个：</p>
+  <div class="card">
+    <p><b>① "3K"是插值出来的：</b>很多记录仪传感器原生只有 2.5K 甚至 2K，标称分辨率是放大填充的，码率花在了"放大的空数据"上。<b>② 镜头与传感器决定上限：</b>记录仪画质瓶颈通常在镜头解析力和 sensor 尺寸，不在码率。<b>③ 夜间崩坏与码率无关：</b>暗光靠传感器尺寸和 HDR/WDR，且夜间噪点多时编码器还会把码率浪费在噪点上。</p>
+  </div>
+
+  <h3>H.265 与 AV1 的区别</h3>
+  <table>
+    <tr><th></th><th>H.265 / HEVC</th><th>AV1</th></tr>
+    <tr><td>发布</td><td>2013，MPEG/VCEG（传统专利组织）</td><td>2018，AOMedia（Google/Netflix/Amazon/Intel 等联盟）</td></tr>
+    <tr><td>授权费</td><td>专利池收费，授权关系混乱</td><td><b>免专利费</b>——这是它诞生的核心动机</td></tr>
+    <tr><td>压缩效率</td><td>比 H.264 省约 50%</td><td>比 H.265 <b>再省约 20–40%</b></td></tr>
+    <tr><td>编码复杂度</td><td>高</td><td>极高（软编码慢 5–10 倍，极依赖硬件编码器）</td></tr>
+    <tr><td>硬件解码</td><td>几乎所有 2015+ 设备</td><td>2022+ 旗舰 SoC、RTX30+/Arc/RX6000+ 显卡、新电视盒子</td></tr>
+    <tr><td>硬件编码</td><td>遍地都是（记录仪/手机/监控芯片全支持）</td><td>刚起步：RTX40/Arc/RX7000、骁龙 8 Gen3、海思/联发科最新 SoC</td></tr>
+  </table>
+
+  <h3>设备支持现状与建议</h3>
+  <p><b>记录仪直录：</b>H.265 已是 2025 年在售主流记录仪标配（Novatek NT96675、SigmaStar、海思 Hi3559/Hi3516CV610 等芯片均支持），设置菜单常见"视频编码：H264/H265"切换项；<b>AV1 直录基本尚未落地</b>——编码芯片能力刚具备，消费级产品几乎没铺开，原因是记录仪要求低功耗低发热长时可靠写入，AV1 编码太重，且证据视频要在交警/保险/老设备上打开，H.265 兼容性远更稳妥。</p>
+  <div class="card" style="border-color:rgba(77,163,255,.4)">
+    <p style="margin:0"><b>实操建议：</b>① 设置里找"视频编码"选项，切到 <b>H.265</b>（若原为 H.264@24.6 Mbps，同画质体积可减半）；② 用 MediaInfo 确认当前编码；③ 分辨率选传感器<b>原生档</b>而非插值档（2.5K 原生 &gt; 3K 插值）；④ 码率参考：H.265 30fps 下 1080p→8–12 Mbps、2.5K→12–16 Mbps、4K→25–35 Mbps；⑤ 用<b>高耐久卡</b>（dashcam 专用），循环录像与事件锁定分开管理；⑥ 事故证据<b>存原件不重编码</b>，风景归档可 ffmpeg 转 AV1（<code>-c:v libsvtav1 -crf 32</code>）再省 50–70% 空间。</p>
+  </div>
+
+  <!-- ============ 9. 主流编码对比图表 ============ -->
+  <h2>⑨ 主流视频编码标准对比图表<span class="sub">H.264 / H.265 / VP9 / AV1 / H.266</span></h2>
+  <h3>图 A · 同画质所需相对码率（H.264 = 100%，条越短越高效）</h3>
+  <div class="card">
+    <div class="bar-row"><div class="bar-label">H.264/AVC（2003）</div>
+      <div class="bar-track"><div class="bar-fill" style="width:100%;background:#c9d4de">100%（基线）</div></div></div>
+    <div class="bar-row"><div class="bar-label">VP9（2013）</div>
+      <div class="bar-track"><div class="bar-fill" style="width:65%;background:var(--purple)">~65%</div></div></div>
+    <div class="bar-row"><div class="bar-label">H.265/HEVC（2013）</div>
+      <div class="bar-track"><div class="bar-fill" style="width:55%;background:var(--accent)">~55%</div></div></div>
+    <div class="bar-row"><div class="bar-label">AV1（2018）</div>
+      <div class="bar-track"><div class="bar-fill" style="width:50%;background:var(--green)">~50%</div></div></div>
+    <div class="bar-row"><div class="bar-label">H.266/VVC（2020）</div>
+      <div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--yellow)">~40%</div></div></div>
+    <p class="muted">※ 数值为同主观画质下相对 H.264 所需码率的典型区间中值，实际取决于内容与编码器实现。</p>
+  </div>
+  <h3>图 B · 典型编码速度（以 x264 medium 为 100% 基准，条越长越快）</h3>
+  <div class="card">
+    <div class="bar-row"><div class="bar-label">H.264/AVC</div>
+      <div class="bar-track"><div class="bar-fill" style="width:100%;background:#c9d4de">100%（软编可实时）</div></div></div>
+    <div class="bar-row"><div class="bar-label">H.265/HEVC</div>
+      <div class="bar-track"><div class="bar-fill" style="width:25%;background:var(--accent)">~25%</div></div></div>
+    <div class="bar-row"><div class="bar-label">VP9</div>
+      <div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--purple)"></div><span class="bar-val" style="left:calc(18% + 10px)">~18%</span></div></div>
+    <div class="bar-row"><div class="bar-label">AV1</div>
+      <div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--green)"></div><span class="bar-val" style="left:calc(20% + 10px)">~20%（SVT-AV1 优化后接近 VP9）</span></div></div>
+    <div class="bar-row"><div class="bar-label">H.266/VVC</div>
+      <div class="bar-track"><div class="bar-fill" style="width:6%;background:var(--yellow)"></div><span class="bar-val" style="left:calc(6% + 10px)">~5%（极慢）</span></div></div>
+  </div>
+  <h3>对比总表</h3>
+  <table>
+    <tr><th>维度</th><th>H.264/AVC</th><th>H.265/HEVC</th><th>VP9</th><th>AV1</th><th>H.266/VVC</th></tr>
+    <tr><td>发布年份 / 组织</td><td>2003 / MPEG·VCEG</td><td>2013 / MPEG·VCEG</td><td>2013 / Google</td><td>2018 / AOMedia</td><td>2020 / MPEG·VCEG</td></tr>
+    <tr><td>压缩方式</td><td>宏块 16×16 + 9 向帧内 + CABAC/CAVLC</td><td>CTU 64×64 四叉树 + 35 向帧内 + CABAC</td><td>64×64 超级块 + VP9 专属帧内/帧间工具</td><td>128×128 超级块 + 多叉分割 + 全新工具集</td><td>CTU 128×128 + 四叉/二叉/三叉分割</td></tr>
+    <tr><td>授权</td><td>专利池（便宜、覆盖广）</td><td>专利池（贵且混乱）</td><td>免版税</td><td><b>免版税</b></td><td>专利池（争议大）</td></tr>
+    <tr><td>解码复杂度</td><td>低（基准）</td><td>约 2×</td><td>约 2×</td><td>约 2–3×</td><td>约 4×（需 2024+ 芯片）</td></tr>
+    <tr><td>实现复杂度</td><td>低，生态最成熟</td><td>高</td><td>中高</td><td><b>最高</b>（工具多、搜索空间大）</td><td>最高且持续增长</td></tr>
+    <tr><td>硬件支持</td><td>全面</td><td>全面（2015+）</td><td>较广（电视/GPU）</td><td>解码广、编码刚普及</td><td>几乎没有</td></tr>
+  </table>
+
+  <!-- ============ 10. 编码原理与工作流程 ============ -->
+  <h2>⑩ 编码原理详解：H.265 与 AV1 的工作流程<span class="sub">Prediction → Transform → Quantization → Entropy coding</span></h2>
+  <p>现代视频编码全部基于同一套<b>混合编码框架</b>：图像分块 → 利用时空相关性<b>预测</b>出残差 → 对残差<b>变换</b>到频域 → <b>量化</b>丢弃人眼不敏感的高频信息 → <b>熵编码</b>无损压缩比特流，中间用<b>环路滤波</b>修复压缩损伤。各代标准的差异，本质是<b>每个环节可用的工具越来越多、搜索空间越来越大</b>。</p>
+
+  <h3>H.265/HEVC 的工作流程</h3>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0">
+    <span style="background:#202636;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px">分块 CTU≤64×64</span>
+    <span style="color:var(--muted)">→</span>
+    <span style="background:#202636;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px">帧内/帧间预测</span>
+    <span style="color:var(--muted)">→</span>
+    <span style="background:#202636;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px">整数变换 DCT/DST</span>
+    <span style="color:var(--muted)">→</span>
+    <span style="background:#202636;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px">量化</span>
+    <span style="color:var(--muted)">→</span>
+    <span style="background:#202636;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px">环路滤波 DBF+SAO</span>
+    <span style="color:var(--muted)">→</span>
+    <span style="background:#202636;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px">CABAC 熵编码</span>
+  </div>
+  <div class="card">
+    <p><b>① 分块（CTU）：</b>最大编码单元 64×64（H.264 宏块只有 16×16），按四叉树递归分割为 CU/PU/TU——平坦区域用大块省语法开销，细节区域切小块贴合纹理。<b>② 帧内预测：</b>35 种模式（33 方向 + DC + Planar），比 H.264 的 9 向精细得多，从已重建的邻块沿纹理方向外推。<b>③ 帧间预测：</b>运动估计精度 1/4 像素，配合 Merge/SKIP/AMVP 从时域空域候选中直接继承运动矢量，大幅省去逐块搜索。<b>④ 变换：</b>整数 DCT（4–32 阶），4×4 亮度块可选 DST（更贴合残差统计）。<b>⑤ 量化：</b>QP 0–51 控制精度，全程率失真优化（RDO）——编码器穷举候选，选"比特代价 ÷ 失真"最优的组合，这是 HEVC 编码慢的主因。<b>⑥ 环路滤波：</b>去块滤波（DBF）消除块边界 + SAO 样点自适应补偿修复振铃与色带，滤波后图像作为后续帧的参考（这就是"环路"的含义）。<b>⑦ 熵编码：</b>CABAC 上下文自适应二进制算术编码，接近香农极限的无损压缩。</p>
+  </div>
+
+  <h3>AV1 的工作流程（相对 HEVC 的关键升级）</h3>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0">
+    <span style="background:#202636;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px">超级块 128×128</span>
+    <span style="color:var(--muted)">→</span>
+    <span style="background:#202636;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px">帧内：多方向+调色板+CFL+IBC</span>
+    <span style="color:var(--muted)">→</span>
+    <span style="background:#202636;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px">帧间：复合预测/仿射/OBMC</span>
+    <span style="color:var(--muted)">→</span>
+    <span style="background:#202636;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px">多核变换 DCT/ADST</span>
+    <span style="color:var(--muted)">→</span>
+    <span style="background:#202636;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px">量化+量化矩阵</span>
+    <span style="color:var(--muted)">→</span>
+    <span style="background:#202636;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px">DBF+CDEF+LR 三级滤波</span>
+    <span style="color:var(--muted)">→</span>
+    <span style="background:#202636;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px">多符号算术编码+颗粒合成</span>
+  </div>
+  <div class="card">
+    <p><b>① 分块：</b>超级块 128×128（HEVC 的 2 倍），支持 10 种分割形状（四叉+多叉），贴合各种内容结构。<b>② 帧内预测：</b>方向模式大幅扩展，另加<b>调色板模式</b>（屏幕内容/动画逐块建色表）、<b>CFL</b>（色度直接从亮度预测）、<b>IBC 帧内块拷贝</b>（屏幕内容里复制本帧已有区域）。<b>③ 帧间预测：</b><b>复合预测</b>提供多种双向加权方式、<b>仿射/warp 全局运动模型</b>（摇镜头、旋转不再只能逐块平移）、<b>OBMC</b> 重叠块运动补偿平滑边界、<b>动态参考帧</b>。④ <b>变换：</b>DCT/ADST/翻转变体的多核组合，按块内容自适应挑选。⑤ <b>量化：</b>支持逐块量化矩阵。<b>⑥ 环路滤波三连：</b>DBF 去块 → <b>CDEF</b>（方向性去环，沿边缘方向定向平滑、保边去噪）→ <b>LR 环路复原</b>（维纳滤波/自引导投影），逐级修复损伤，这也是 AV1 低码率下"糊而不碎"的直接原因。<b>⑦ 熵编码：</b>多符号算术编码（MSAC），免去 CABAC 的二值化步骤。<b>⑧ 胶片颗粒合成：</b>编码端直接丢弃噪点颗粒、只传颗粒参数，解码端重新合成——电影类内容可省 15–30% 码率。</p>
+  </div>
+
+  <h3>适用场景速查</h3>
+  <table>
+    <tr><th>编码</th><th>最适场景</th><th>一句话定位</th></tr>
+    <tr><td>H.264/AVC</td><td>直播推流、视频会议、老设备兼容、嵌入式录制</td><td>兼容性之王——哪里都能播，编码快到可实时</td></tr>
+    <tr><td>H.265/HEVC</td><td><b>设备直录</b>（记录仪/无人机/手机 4K）、UHD 蓝光、监控</td><td>录制设备甜点——效率高、功耗低、生态成熟</td></tr>
+    <tr><td>VP9</td><td>YouTube 时代网络点播、WebRTC</td><td>免授权费先行者——正逐步让位 AV1</td></tr>
+    <tr><td>AV1</td><td>大平台流媒体分发（Netflix/YouTube/B站部分）、平台转码、<b>个人归档重编码</b></td><td>分发性价比之王——省带宽就是省钱</td></tr>
+    <tr><td>H.266/VVC</td><td>8K 广播等超高端场景</td><td>效率天花板但授权复杂、生态未起</td></tr>
+  </table>
+  <div class="card" style="border-color:rgba(77,163,255,.4)">
+    <p style="margin:0"><b>选型口诀：</b>录（设备端直录）用 H.265——编码快、功耗低、兼容稳；传（平台分发）与存（归档）用 AV1——免授权费、效率最高；要兼容、要实时（直播/会议）用 H.264。</p>
+  </div>
+
+  <!-- ============ 11. CTU 深入 ============ -->
+  <h2>⑪ 深入：CTU、四叉树与 CU/PU/TU<span class="sub">How H.265 splits and describes every block</span></h2>
+
+  <h3>宏块 vs CTU</h3>
+  <p><b>宏块（Macroblock）</b>是 H.264 的"处理格子"——固定 16×16 像素，编码器逐块处理，每块单独记录头信息，不管内容是纯色天空还是复杂纹理。<b>CTU（编码树单元）</b>是 H.265 的替代品：最大 64×64（面积是宏块的 16 倍），且允许按内容再往下切。这是 H.265 效率领先的最大来源之一。</p>
+  <svg viewBox="0 0 680 330" width="100%" role="img" style="max-width:640px;display:block;margin:12px auto">
+  <title>H.264 固定宏块与 H.265 CTU 对比</title>
+  <rect x="60" y="60" width="200" height="200" fill="#0C447C" stroke="#B5D4F4" stroke-width="0.5"/>
+  <path d="M110 60 V260 M160 60 V260 M210 60 V260" fill="none" stroke="#B5D4F4" stroke-width="0.75"/>
+  <path d="M60 110 H260 M60 160 H260 M60 210 H260" fill="none" stroke="#B5D4F4" stroke-width="0.75"/>
+  <text x="160" y="40" text-anchor="middle" font-size="13" font-weight="500" fill="#B5D4F4" font-family="sans-serif">H.264：固定宏块 16×16</text>
+  <text x="85" y="85" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#E6F1FB" font-family="sans-serif">16×16</text>
+  <text x="160" y="288" text-anchor="middle" font-size="12" fill="#9aa5b5" font-family="sans-serif">同一 64×64 区域 → 16 个块，每块一份头信息</text>
+  <rect x="420" y="60" width="200" height="200" fill="#085041" stroke="#9FE1CB" stroke-width="0.5"/>
+  <text x="520" y="40" text-anchor="middle" font-size="13" font-weight="500" fill="#9FE1CB" font-family="sans-serif">H.265：CTU 最大 64×64</text>
+  <text x="520" y="150" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#E1F5EE" font-family="sans-serif">64×64</text>
+  <text x="520" y="172" text-anchor="middle" dominant-baseline="central" font-size="11.5" fill="#9FE1CB" font-family="sans-serif">单个 CTU，可不分割</text>
+  <text x="520" y="288" text-anchor="middle" font-size="12" fill="#9aa5b5" font-family="sans-serif">同一区域 → 1 个块，头信息只写一次</text>
+  </svg>
+
+  <h3>四叉树：按内容自适应分割</h3>
+  <p><b>四叉树（Quadtree）</b>是一种递归分割结构：每个块要么不切，要么切成等大的 4 块，切出的每块可继续切，最细到 8×8。切不切由编码器 <b>RDO（率失真优化）</b>试算决定——把"切"与"不切"都算一遍，谁的总比特少用谁。于是平坦的天空自动是大块，树枝纹理自动碎成小块：</p>
+  <svg viewBox="0 0 680 390" width="100%" role="img" style="max-width:640px;display:block;margin:12px auto">
+  <title>四叉树按内容自适应分割示例</title>
+  <rect x="60" y="70" width="256" height="256" fill="#085041" stroke="#B4B2A9" stroke-width="1"/>
+  <path d="M188 70 V326 M60 198 H316" fill="none" stroke="#B4B2A9" stroke-width="1"/>
+  <path d="M252 70 V198 M188 134 H316" fill="none" stroke="#9FE1CB" stroke-width="0.75"/>
+  <rect x="188" y="70" width="64" height="64" fill="#712B13" stroke="#F0997B" stroke-width="0.75"/>
+  <rect x="60" y="198" width="128" height="128" fill="#712B13" stroke="#F0997B" stroke-width="0.75"/>
+  <path d="M124 198 V326 M60 262 H188" fill="none" stroke="#F0997B" stroke-width="0.5"/>
+  <path d="M92 198 V262 M60 230 H124" fill="none" stroke="#F5C4B3" stroke-width="0.5"/>
+  <path d="M252 198 V326 M188 262 H316" fill="none" stroke="#F0997B" stroke-width="0.5"/>
+  <text x="124" y="186" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#E1F5EE" font-family="sans-serif">32×32</text>
+  <text x="124" y="208" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#9FE1CB" font-family="sans-serif">天空 · 平坦 · 不再切</text>
+  <text x="220" y="94" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="500" fill="#FAECE7" font-family="sans-serif">16×16</text>
+  <text x="220" y="112" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#F5C4B3" font-family="sans-serif">飞鸟 · 在动</text>
+  <text x="124" y="286" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#F5C4B3" font-family="sans-serif">树枝 · 细节</text>
+  <text x="92" y="246" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#FAECE7" font-family="sans-serif">8×8</text>
+  <text x="252" y="286" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="500" fill="#FAECE7" font-family="sans-serif">16×16 草地</text>
+  <rect x="60" y="344" width="16" height="16" rx="3" fill="#085041" stroke="#9FE1CB" stroke-width="0.5"/>
+  <text x="84" y="352" font-size="12" fill="#9aa5b5" font-family="sans-serif">平坦区 → 大块（少写头信息）</text>
+  <rect x="300" y="344" width="16" height="16" rx="3" fill="#712B13" stroke="#F0997B" stroke-width="0.5"/>
+  <text x="324" y="352" font-size="12" fill="#9aa5b5" font-family="sans-serif">细节/运动区 → 切小块（预测更贴合）</text>
+  </svg>
+
+  <h3>为什么每个块要写「头信息 + 残差」两部分？</h3>
+  <div class="card">
+    <p style="margin-top:0">压缩的目标是让解码器<b>用最少的比特重建画面</b>，但解码器不能凭空知道画面长什么样。编码器的策略是：<b>解码器和我共享同一套预测方法，所以我只需要告诉它两件事</b>——</p>
+    <p><b>① 头信息（语法元素，控制流）：</b>"按什么方式重建"。包括分割标记（重建四叉树结构）、编码模式（帧内/帧间及具体方向）、运动矢量（去参考帧哪里取块）、QP（量化粗细）等。这些是<b>指令</b>，每份只有几十比特，但缺了它解码器就不知道拿哪块、怎么拼。<b>② 残差数据（数据流）：</b>"预测和真实画面的差"。预测不可能完美，把差值变换、量化后写入码流。残差小到可以忽略时（平坦区），可以直接标记 cbf=0（无残差），一个比特都不写。</p>
+    <p style="margin-bottom:0">两者缺一不可：只有头信息 → 得到一块模糊的预测近似；只有残差 → 解码器不知道往哪贴、怎么贴。"大块省语法开销"省的就是①——同样的区域，头信息从 16 份变 1 份。</p>
+  </div>
+
+  <h3>CU / PU / TU：三层分工</h3>
+  <p>四叉树切出来的每个叶子是一个 <b>CU</b>（决定大小与帧内/帧间模式）；CU 内部可再划成 <b>PU</b>（每个 PU 独立预测、各有运动矢量）；预测后的残差按 <b>TU</b>（另一棵小四叉树，4×4~32×32）做变换和量化。三层嵌套、各司其职：</p>
+  <svg viewBox="0 0 680 310" width="100%" role="img" style="max-width:640px;display:block;margin:12px auto">
+  <title>CU、PU、TU 三层嵌套分工</title>
+  <defs>
+  <marker id="arrowdoc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+  <path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  </defs>
+  <text x="130" y="44" text-anchor="middle" font-size="13" font-weight="500" fill="#B5D4F4" font-family="sans-serif">CU 编码单元</text>
+  <rect x="60" y="58" width="140" height="140" fill="#0C447C" stroke="#85B7EB" stroke-width="0.75"/>
+  <text x="130" y="118" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="500" fill="#E6F1FB" font-family="sans-serif">切多大？</text>
+  <text x="130" y="140" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#B5D4F4" font-family="sans-serif">帧内 还是 帧间？</text>
+  <text x="130" y="158" text-anchor="middle" dominant-baseline="central" font-size="10.5" fill="#B5D4F4" font-family="sans-serif">（四叉树节点，8×8~64×64）</text>
+  <path d="M212 128 H258" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrowdoc)"/>
+  <text x="235" y="112" text-anchor="middle" font-size="10.5" fill="#9aa5b5" font-family="sans-serif">内部划分</text>
+  <text x="340" y="44" text-anchor="middle" font-size="13" font-weight="500" fill="#F5C4B3" font-family="sans-serif">PU 预测单元</text>
+  <rect x="270" y="58" width="140" height="140" fill="#712B13" stroke="#F0997B" stroke-width="0.75"/>
+  <path d="M270 128 H410" fill="none" stroke="#F5C4B3" stroke-width="0.75" stroke-dasharray="4 3"/>
+  <path d="M310 78 H368" fill="none" stroke="#FAECE7" stroke-width="1.5" marker-end="url(#arrowdoc)"/>
+  <path d="M310 172 H368" fill="none" stroke="#FAECE7" stroke-width="1.5" marker-end="url(#arrowdoc)"/>
+  <text x="340" y="110" text-anchor="middle" dominant-baseline="central" font-size="10.5" fill="#FAECE7" font-family="sans-serif">PU1 自己的运动</text>
+  <text x="340" y="146" text-anchor="middle" dominant-baseline="central" font-size="10.5" fill="#FAECE7" font-family="sans-serif">PU2 自己的运动</text>
+  <path d="M422 128 H468" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arrowdoc)"/>
+  <text x="445" y="112" text-anchor="middle" font-size="10.5" fill="#9aa5b5" font-family="sans-serif">内部划分</text>
+  <text x="550" y="44" text-anchor="middle" font-size="13" font-weight="500" fill="#C0DD97" font-family="sans-serif">TU 变换单元</text>
+  <rect x="480" y="58" width="140" height="140" fill="#27500A" stroke="#97C459" stroke-width="0.75"/>
+  <path d="M515 58 V198 M550 58 V198 M585 58 V198 M480 93 H620 M480 128 H620 M480 163 H620" fill="none" stroke="#97C459" stroke-width="0.5"/>
+  <text x="550" y="118" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#EAF3DE" font-family="sans-serif">残差格子</text>
+  <text x="550" y="140" text-anchor="middle" dominant-baseline="central" font-size="10.5" fill="#C0DD97" font-family="sans-serif">4×4 ~ 32×32</text>
+  <text x="60" y="240" font-size="12" fill="#9aa5b5" font-family="sans-serif">CU 决定「块多大、什么模式」→ PU 决定「预测怎么拆、各用各的运动矢量」→ TU 决定「残差用什么格子变换」</text>
+  <text x="60" y="262" font-size="12" fill="#9aa5b5" font-family="sans-serif">三层都来自同一棵四叉树。类比：CU 是房间隔断方案，PU 是每个房间怎么"抄"参考帧，TU 是残差装多大的箱子</text>
+  </svg>
+
+  <h3>码流里是怎么逐层记录的？</h3>
+  <p><b>不是整个 CTU 只写一个头。</b>CTU 自身只写"分割标记"，真正的头信息是<b>每个叶子 CU 一份</b>，残差挂在 TU 上，按四叉树深度优先（Z 字形）顺序逐层交错写入：</p>
+  <table>
+    <tr><th>层级</th><th>写入内容</th><th>作用</th></tr>
+    <tr><td>SPS / PPS</td><td>分辨率、档位、量化默认值等</td><td>全局参数，整个流只写一次（或极少次）</td></tr>
+    <tr><td>Slice（片）</td><td>一帧的一段独立解码区间</td><td>错误恢复与并行单位</td></tr>
+    <tr><td>CTU ×N（光栅扫描）</td><td><b>split_flag 序列</b>：每个内部节点一个比特"切/不切"</td><td>解码器据此重建整棵四叉树</td></tr>
+    <tr><td>叶子 CU（Z 字顺序）</td><td>CU 头：帧内/帧间模式 → PU 语法：划分方式、参考帧索引、运动矢量差 MVD</td><td>"这个块怎么预测"</td></tr>
+    <tr><td>TU 树（CU 内）</td><td>TU 尺寸/分割 + cbf（有无残差）+ <b>量化后的变换系数</b></td><td>"残差长什么样"——真正的数据</td></tr>
+  </table>
+  <p>也就是说：头信息和残差<b>逐 CU 各带各的、预测信息后紧跟该 CU 的残差系数</b>。平坦大块的 TU 标记 cbf=0，残差零比特——这正是"大块省开销"在码流层面的直接体现。</p>
+
+  <!-- ============ 12. 帧内 vs 帧间 ============ -->
+  <h2>⑫ 帧内编码 vs 帧间编码<span class="sub">Intra vs Inter coding</span></h2>
+  <p><b>帧内编码（Intra）</b>：只用<b>当前帧内部</b>已重建的邻块做预测（利用<b>空间相关性</b>）。左边、上方的块已经解出来了，就从它们的边缘像素沿某个方向外推——H.265 提供 35 种方向/平面/DC 模式。天空用 DC（均匀填充），栅栏沿角度方向外推。产物：I 帧。<b>帧间编码（Inter）</b>：从<b>其他帧</b>（之前或之后的已解码帧）中找相似块，只记录运动矢量 + 残差（利用<b>时间相关性</b>）。只参考过去的帧叫 P 帧，可双向参考的叫 B 帧。</p>
+  <table>
+    <tr><th></th><th>帧内编码</th><th>帧间编码</th></tr>
+    <tr><td>预测来源</td><td>本帧内的邻块</td><td>其他帧（过去/未来）</td></tr>
+    <tr><td>利用的相关性</td><td>空间</td><td>时间</td></tr>
+    <tr><td>压缩效率</td><td>较低（本帧自足）</td><td>极高（动一动十：只写位移+差异）</td></tr>
+    <tr><td>解码依赖</td><td>独立，可单独解码</td><td>必须先有参考帧</td></tr>
+    <tr><td>典型角色</td><td>I 帧：起播/拖进度条的入口、场景切换、错误恢复边界</td><td>P/B 帧：占视频绝大多数帧</td></tr>
+  </table>
+  <p>帧序列按 <b>GOP（图像组）</b>组织：I P P B P B … I 帧是"锚点"，seek 和起播都从最近的 I 帧开始；GOP 越长越省空间，但拖动越不灵敏、坏一帧影响越远（部分记录仪允许自定义 GOP 长度）。</p>
+  <div class="card" style="border-color:rgba(255,200,87,.4)">
+    <p style="margin:0"><b>运动矢量（MV）的准确理解——纠正一个常见误解：</b>MV 记录的<b>不是"这个块未来会移动到哪"，而是"当前块的内容在参考帧里的哪个位置能找到"</b>。编码时在参考帧中<b>搜索</b>与当前块最相似的像素块，得到位移就是 MV；解码时按 MV 从参考帧把那块像素<b>复制</b>过来，再加上残差修正。所以你的理解一半对一半错：<b>"不是重新渲染内容"——完全正确</b>，解码器只做搬移+打补丁，计算量很小；<b>"记录未来位置"——反了</b>，记录的是来源位置（B 帧虽可参考显示顺序上的"未来帧"，但那依然是内容的来源，不是预测轨迹的去向）。补充两个细节：MV 是相对位移，(0,0) 表示原地不动；精度可达 1/4 甚至 1/8 像素（靠插值），相邻块还可通过 Merge 模式共享运动信息、几乎零开销。</p>
+  </div>
+
+  <!-- ============ 13. 术语表 ============ -->
+  <h2>⑬ 术语表<span class="sub">Glossary</span></h2>
+  <p>提示：正文中带<span class="term" data-term="CTU">蓝色虚线下划线</span>的术语，鼠标悬停或点击即可查看简明解释（全文首次出现处自动标注）；下表为完整版，新增术语只需在页面脚本顶部的字典中添加一行。</p>
+  <table>
+    <tr><th>缩写</th><th>英文全称</th><th>中文</th><th>一句话说明</th></tr>
+    <tr><td>Macroblock</td><td>Macroblock</td><td>宏块</td><td>H.264 的固定 16×16 处理格子</td></tr>
+    <tr><td>CTU</td><td>Coding Tree Unit</td><td>编码树单元</td><td>H.265 最大 64×64 的弹性区块，四叉树分割的根</td></tr>
+    <tr><td>CU</td><td>Coding Unit</td><td>编码单元</td><td>四叉树叶节点，决定块大小与帧内/帧间模式</td></tr>
+    <tr><td>PU</td><td>Prediction Unit</td><td>预测单元</td><td>CU 内的预测划分，各自拥有运动信息</td></tr>
+    <tr><td>TU</td><td>Transform Unit</td><td>变换单元</td><td>残差做变换/量化的单元，4×4~32×32</td></tr>
+    <tr><td>SB</td><td>Superblock</td><td>超级块</td><td>AV1 的 128×128 最大块，10 种分割形状</td></tr>
+    <tr><td>Quadtree</td><td>Quadtree Partitioning</td><td>四叉树分割</td><td>每块可递归切成 4 等块的树形结构</td></tr>
+    <tr><td>Intra</td><td>Intra Coding</td><td>帧内编码</td><td>用本帧邻块做空间预测，产物为 I 帧</td></tr>
+    <tr><td>Inter</td><td>Inter Coding</td><td>帧间编码</td><td>用其他帧做时间预测，产物为 P/B 帧</td></tr>
+    <tr><td>GOP</td><td>Group of Pictures</td><td>图像组</td><td>两个 I 帧之间的帧序列结构</td></tr>
+    <tr><td>MV</td><td>Motion Vector</td><td>运动矢量</td><td>当前块内容在参考帧中的来源位置（位移）</td></tr>
+    <tr><td>MVD</td><td>Motion Vector Difference</td><td>运动矢量差</td><td>实际 MV 与预测 MV 的差，只编码差值省比特</td></tr>
+    <tr><td>Merge/SKIP</td><td>Merge / Skip Mode</td><td>合并/跳过模式</td><td>直接继承邻块运动信息；SKIP 连残差都没有</td></tr>
+    <tr><td>Residual</td><td>Residual</td><td>残差</td><td>真实画面与预测结果的差</td></tr>
+    <tr><td>DCT</td><td>Discrete Cosine Transform</td><td>离散余弦变换</td><td>把残差从像素域转到频率域</td></tr>
+    <tr><td>Q / QP</td><td>Quantization / Quantization Parameter</td><td>量化 / 量化参数</td><td>丢弃人眼不敏感的高频精度；QP 越大压得越狠</td></tr>
+    <tr><td>CBF</td><td>Coded Block Flag</td><td>编码块标志</td><td>标记某 TU 是否含残差，为 0 则完全不写系数</td></tr>
+    <tr><td>CABAC</td><td>Context-adaptive Binary Arithmetic Coding</td><td>上下文自适应二进制算术编码</td><td>H.264/H.265 的熵编码器</td></tr>
+    <tr><td>MSAC</td><td>Multi-Symbol Arithmetic Coding</td><td>多符号算术编码</td><td>AV1 的熵编码器，免去二值化步骤</td></tr>
+    <tr><td>RDO</td><td>Rate-Distortion Optimization</td><td>率失真优化</td><td>试算多种方案，选"比特代价÷失真"最优者</td></tr>
+    <tr><td>DBF</td><td>Deblocking Filter</td><td>去块滤波</td><td>平滑块边界，修复块效应</td></tr>
+    <tr><td>SAO</td><td>Sample Adaptive Offset</td><td>样点自适应补偿</td><td>H.265 环路滤波第二级，修复振铃/色带</td></tr>
+    <tr><td>CDEF</td><td>Constraint-based Directional Enhancement Filter</td><td>方向性增强滤波</td><td>AV1 特有，沿边缘方向去环保边</td></tr>
+    <tr><td>LR</td><td>Loop Restoration</td><td>环路复原</td><td>AV1 环路滤波第三级，维纳滤波修复全局损伤</td></tr>
+    <tr><td>Bitstream</td><td>Bitstream</td><td>码流</td><td>编码后最终的二进制比特序列</td></tr>
+  </table>
+
+  <div class="foot">
+    一句话总结：清晰度 = 分辨率（上限）× 每像素码率（保真度）× 编码效率（倍增器）；帧率管流畅，音频码率管听觉。<br>
+    面板数据截图于 2026-10-05 · 生成 by WorkBuddy
+  </div>
+</div>
+
+<script>
+function calc(){
+  const [w,h] = document.getElementById('res').value.split(',').map(Number);
+  const fps = parseFloat(document.getElementById('fps').value);
+  const kbps = parseFloat(document.getElementById('bitrate').value) || 0;
+  const eff = parseFloat(document.getElementById('codec').value);
+  const bpp = kbps*1000/(w*h*fps);
+  const eq = bpp/eff; // 折算为H.264等效bpp
+  document.getElementById('bppOut').textContent = eq.toFixed(3)+' bpp';
+  let v,c;
+  if(eq < 0.04){v='明显压缩损伤：暗部色块、运动拖影。这就是「省流量档」。';c='var(--red)';}
+  else if(eq < 0.08){v='及格边缘：静态画面尚可，运动场景会露馅。';c='var(--yellow)';}
+  else if(eq < 0.15){v='良好：大多数人满意，日常观看无压力。';c='var(--green)';}
+  else{v='非常充裕：接近透明画质，很难看出压缩痕迹。';c='var(--green)';}
+  document.getElementById('verdictOut').textContent = v;
+  document.getElementById('bppOut').style.color = c;
+  document.getElementById('verdictOut').style.color = c;
+}
+document.querySelectorAll('.calc input,.calc select').forEach(el=>el.addEventListener('input',calc));
+calc();
+</script>
+<div id="tip"></div>
+<script>
+(function(){
+  var DICT={
+    "码率":["Bitrate 码率","每秒视频消耗的数据量，单位 Kbps/Mbps。同画质下码率越低，代表压缩效率越高。"],
+    "分辨率":["Resolution 分辨率","画面由多少像素组成，如 1920×1080。决定画面能承载的细节上限。"],
+    "帧率":["Frame Rate 帧率","每秒显示的帧数（fps）。影响运动流畅度，不直接决定清晰度。"],
+    "bpp":["Bits per Pixel","每像素平均分到的比特数 = 码率÷（宽×高×帧率），衡量压缩强度的核心指标。"],
+    "ppi":["Pixels per Inch","屏幕每英寸的物理像素数，衡量显示精细度。手机约 400–500，电视约 50–90。"],
+    "位深":["Bit Depth","每像素每颜色通道用多少比特记录。6bit≈26 万色、8bit≈1670 万色、10bit≈10.7 亿色；位深不足是暗部色带的元凶之一。"],
+    "色带":["Banding","渐变区域出现的阶梯状条纹，低码率压缩与低位深屏幕都会引发。"],
+    "块效应":["Blocking","低码率下块边界可见的格子状伪影，H.264 尤其明显。"],
+    "HDR":["High Dynamic Range 高动态范围","同时保留亮部与暗部细节的技术；行车记录仪中称 WDR，逆光/隧道场景关键。"],
+    "H.264":["AVC（2003）","最普及的视频编码标准，兼容性最好、编码最快，效率已被新标准超越。"],
+    "H.265":["HEVC（2013）","H.264 的后继者，同画质省约 50% 码率，录制设备的主流选择。"],
+    "AV1":["AOMedia Video 1（2018）","免专利费的开放编码标准，比 H.265 再省 20–40% 码率，流媒体分发首选。"],
+    "SABR":["Self-Adjusting BitRate","YouTube 自研动态码率系统，按画面复杂度与网络状况实时分配码率，因此面板上看不到固定码率。"],
+    "DASH":["Dynamic Adaptive Streaming over HTTP","把视频切成小段按需下载的自适应流媒体协议，B 站等平台普遍采用。"],
+    "宏块":["Macroblock","H.264 固定的 16×16 像素处理格子，每块单独写一份头信息。"],
+    "CTU":["Coding Tree Unit 编码树单元","H.265 最大 64×64 的弹性区块，可按内容用四叉树自适应分割。"],
+    "CU":["Coding Unit 编码单元","四叉树叶节点，决定块大小与帧内/帧间编码模式。"],
+    "PU":["Prediction Unit 预测单元","CU 内部的预测划分，每个 PU 拥有独立的运动信息。"],
+    "TU":["Transform Unit 变换单元","残差做变换和量化的单元，尺寸 4×4～32×32。"],
+    "超级块":["Superblock（SB）","AV1 的 128×128 最大块，支持 10 种分割形状。"],
+    "四叉树":["Quadtree","每块要么不切、要么切成等大 4 块的递归分割结构，最细到 8×8，切分由编码器试算决定。"],
+    "帧内编码":["Intra Coding","只用本帧已重建邻块做空间预测，产物为 I 帧，可独立解码。"],
+    "帧间编码":["Inter Coding","从其他帧中找相似块做时间预测，只记位移与差异，压缩率极高，产物为 P/B 帧。"],
+    "I 帧":["Intra Frame 关键帧","全部块帧内编码、可独立解码的帧，是起播与拖动进度条的入口。"],
+    "P 帧":["Predicted Frame","只参考过去帧的帧间编码帧，记录运动矢量与残差。"],
+    "B 帧":["Bidirectional Frame","可同时参考过去与未来帧，压缩率最高，但会增加解码延迟。"],
+    "GOP":["Group of Pictures 图像组","两个 I 帧之间的帧序列。越长越省空间，但 seek 越不灵敏、误码影响越远。"],
+    "运动矢量":["Motion Vector（MV）","当前块内容在参考帧中的来源位置（相对位移）。解码时据此复制像素，再加残差修正。"],
+    "残差":["Residual","真实画面与预测结果的差，经变换、量化后写入码流。"],
+    "头信息":["Syntax Elements 语法元素","描述块如何被编码的指令：分割标记、模式、运动矢量、QP 等，与画面数据（残差）相对。"],
+    "变换":["Transform","把残差从像素域转到频率域（如 DCT），便于丢弃人眼不敏感的高频成分。"],
+    "量化":["Quantization","按 QP 步长对频率系数取整，丢弃人眼不敏感的精度——有损压缩的核心环节。"],
+    "QP":["Quantization Parameter 量化参数","控制量化粗细的参数（0–51）：越大丢得越多、压缩越狠、画质越低。"],
+    "Merge":["Merge / SKIP 模式","Merge 直接继承相邻块的运动信息、几乎零开销；SKIP 更进一步，连残差都不写。"],
+    "熵编码":["Entropy Coding","对量化结果做无损压缩（CABAC/MSAC），逼近信息论压缩极限的最后一步。"],
+    "CABAC":["Context-adaptive Binary Arithmetic Coding","H.264/H.265 采用的上下文自适应二进制算术熵编码器。"],
+    "CBF":["Coded Block Flag 编码块标志","标记某 TU 是否含残差；为 0 时系数完全不写，平坦大块因此极省比特。"],
+    "RDO":["Rate-Distortion Optimization 率失真优化","编码器穷举候选方案，选比特代价与失真综合最优者。编码速度慢的主因。"],
+    "SPS":["Sequence Parameter Set 序列参数集","码流开头的全局参数（分辨率、档位等），整个流共享，只需写一次或极少次。"]
+  };
+  var keys=Object.keys(DICT).sort(function(a,b){return b.length-a.length;});
+  var used={},re;
+  (function(){
+    var esc=function(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');};
+    var parts=keys.map(function(k){
+      return /^[A-Za-z0-9.\-]+$/.test(k)? '\\b'+esc(k)+'\\b' : esc(k);
+    });
+    re=new RegExp('('+parts.join('|')+')','g');
+  })();
+  function wrap(node){
+    var text=node.nodeValue; if(!text||!text.trim())return;
+    re.lastIndex=0; var m,out=[],last=0,changed=false;
+    while((m=re.exec(text))){
+      var t=m[1],key=null;
+      for(var i=0;i<keys.length;i++){ if(keys[i]===t){key=keys[i];break;} }
+      out.push(text.slice(last,m.index)); last=m.index+t.length;
+      if(key&&!used[key]){
+        used[key]=1;changed=true;
+        var s=document.createElement('span');
+        s.className='term';s.setAttribute('data-term',key);s.textContent=t;
+        out.push(s);
+      }else{out.push(t);}
+    }
+    if(!changed)return;
+    out.push(text.slice(last));
+    var frag=document.createDocumentFragment();
+    out.forEach(function(x){frag.appendChild(typeof x==='string'?document.createTextNode(x):x);});
+    node.parentNode.replaceChild(frag,node);
+  }
+  var walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:function(n){
+    var p=n.parentElement;if(!p)return NodeFilter.FILTER_REJECT;
+    if(p.closest('script,style,svg,code,h1,h2,h3,#tip,.term,.bar-fill,.bar-val,.bar-label'))return NodeFilter.FILTER_REJECT;
+    return NodeFilter.FILTER_ACCEPT;}});
+  var nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
+  nodes.forEach(wrap);
+  var tip=document.getElementById('tip'),hideT;
+  function show(el){
+    var d=DICT[el.getAttribute('data-term')];if(!d)return;
+    tip.innerHTML='';
+    var e1=document.createElement('div');e1.className='t-en';e1.textContent=d[0];
+    var e2=document.createElement('div');e2.className='t-def';e2.textContent=d[1];
+    tip.appendChild(e1);tip.appendChild(e2);
+    tip.style.display='block';
+    var r=el.getBoundingClientRect(),tw=tip.offsetWidth,th=tip.offsetHeight;
+    var x=Math.min(Math.max(8,r.left+r.width/2-tw/2),window.innerWidth-tw-8);
+    var y=r.top-th-10;if(y<8)y=r.bottom+10;
+    tip.style.left=x+'px';tip.style.top=y+'px';
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.term'),function(el){
+    el.addEventListener('mouseenter',function(){clearTimeout(hideT);show(el);});
+    el.addEventListener('mouseleave',function(){hideT=setTimeout(function(){tip.style.display='none';},150);});
+    el.addEventListener('click',function(e){e.stopPropagation();show(el);});
+  });
+  document.addEventListener('click',function(e){if(!e.target.closest('.term'))tip.style.display='none';});
+  window.addEventListener('scroll',function(){tip.style.display='none';},true);
+})();
+</script>
+</body>
+</html>
