@@ -3,106 +3,210 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WorkBuddy 页面集 · 索引</title>
+<title>WorkBuddy Pages · 数字花园</title>
 <style>
   :root {
-    --bg: #f6f7f9;
-    --card: #ffffff;
-    --text: #1f2328;
-    --muted: #656d76;
-    --accent: #0969da;
-    --border: #d8dee4;
+    --bg: #0b0b10;
+    --surface: rgba(255, 255, 255, 0.04);
+    --surface-hover: rgba(255, 255, 255, 0.07);
+    --border: rgba(255, 255, 255, 0.09);
+    --text: #f2f2f5;
+    --muted: #9b9ba6;
+    --faint: #63636e;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "HarmonyOS Sans SC", "Segoe UI", sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    padding: 48px 20px;
+    overflow-x: hidden;
   }
-  .container { max-width: 880px; margin: 0 auto; }
-  header { text-align: center; margin-bottom: 40px; }
-  header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-  header p { color: var(--muted); font-size: 14px; }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
+
+  /* ---------- aurora background ---------- */
+  .aurora { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(110px); opacity: .35; }
+  .blob-1 { width: 560px; height: 560px; top: -180px; left: -120px; background: #5b3df5; animation: drift 18s ease-in-out infinite alternate; }
+  .blob-2 { width: 460px; height: 460px; top: 10%; right: -140px; background: #0e7ae6; animation: drift 22s ease-in-out infinite alternate-reverse; }
+  .blob-3 { width: 380px; height: 380px; bottom: -140px; left: 30%; background: #0f9d76; opacity: .22; animation: drift 26s ease-in-out infinite alternate; }
+  @keyframes drift {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(70px, 50px) scale(1.12); }
   }
-  a.card {
-    display: block;
-    background: var(--card);
+
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- hero ---------- */
+  header { padding: 110px 0 64px; text-align: left; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12.5px; color: var(--muted);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    text-decoration: none;
-    color: var(--text);
-    transition: transform .15s ease, box-shadow .15s ease;
+    background: var(--surface);
+    padding: 6px 14px; border-radius: 100px;
+    margin-bottom: 28px;
+    backdrop-filter: blur(10px);
   }
-  a.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  .badge .dot { width: 7px; height: 7px; border-radius: 50%; background: #34d399; box-shadow: 0 0 10px #34d399; }
+  h1 {
+    font-size: clamp(38px, 6vw, 58px);
+    font-weight: 700; letter-spacing: -0.03em; line-height: 1.1;
+    margin-bottom: 18px;
   }
-  .card .tag {
-    display: inline-block;
-    font-size: 12px;
-    padding: 2px 10px;
-    border-radius: 20px;
-    margin-bottom: 12px;
-    background: #ddf4ff;
-    color: var(--accent);
+  h1 .grad {
+    background: linear-gradient(100deg, #a78bfa 0%, #60a5fa 45%, #34d399 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
   }
-  .card h2 { font-size: 17px; margin-bottom: 8px; line-height: 1.4; }
-  .card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
-  .card .meta { margin-top: 14px; font-size: 12px; color: #a0a8b2; }
-  footer {
-    text-align: center;
-    margin-top: 48px;
-    color: var(--muted);
-    font-size: 13px;
+  .sub { font-size: 16px; color: var(--muted); line-height: 1.8; max-width: 540px; }
+
+  /* ---------- filter ---------- */
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; margin: 44px 0 36px; }
+  .chip {
+    font-size: 13.5px; color: var(--muted);
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 8px 18px; border-radius: 100px;
+    cursor: pointer; transition: all .2s ease;
+    backdrop-filter: blur(10px);
+    font-family: inherit;
   }
+  .chip:hover { color: var(--text); border-color: rgba(255,255,255,.25); }
+  .chip.active { color: #fff; background: rgba(255,255,255,.13); border-color: rgba(255,255,255,.35); }
+
+  /* ---------- cards ---------- */
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+
+  .card {
+    position: relative;
+    display: flex; flex-direction: column; gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 26px 26px 24px;
+    text-decoration: none; color: var(--text);
+    backdrop-filter: blur(14px);
+    transition: transform .25s ease, border-color .25s ease, background .25s ease, box-shadow .25s ease;
+    opacity: 0; transform: translateY(16px);
+    animation: rise .6s ease forwards;
+  }
+  .card:nth-child(1) { animation-delay: .05s; }
+  .card:nth-child(2) { animation-delay: .12s; }
+  .card:nth-child(3) { animation-delay: .19s; }
+  .card:nth-child(4) { animation-delay: .26s; }
+  .card:nth-child(5) { animation-delay: .33s; }
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+  .card:hover { transform: translateY(-5px); background: var(--surface-hover); }
+  .card:hover .arrow { opacity: 1; transform: translate(2px, -2px); }
+
+  .card .top { display: flex; align-items: center; justify-content: space-between; }
+  .tag {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 12px; color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 4px 12px; border-radius: 100px;
+  }
+  .tag i { width: 6px; height: 6px; border-radius: 50%; }
+  .arrow { color: var(--faint); opacity: 0; transition: all .25s ease; font-size: 17px; }
+
+  .card h2 { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.4; }
+  .card p { font-size: 13.5px; color: var(--muted); line-height: 1.75; }
+  .card .meta { margin-top: auto; padding-top: 14px; font-size: 12px; color: var(--faint); display: flex; gap: 14px; }
+
+  /* per-card accents */
+  .a-purple { --ac: #a78bfa; }
+  .a-pink   { --ac: #f472b6; }
+  .a-teal   { --ac: #34d399; }
+  .a-blue   { --ac: #60a5fa; }
+  .a-amber  { --ac: #fbbf24; }
+  .card:hover { border-color: color-mix(in srgb, var(--ac) 45%, transparent); box-shadow: 0 12px 44px -12px color-mix(in srgb, var(--ac) 30%, transparent); }
+  .card .tag i { background: var(--ac); box-shadow: 0 0 8px color-mix(in srgb, var(--ac) 70%, transparent); }
+  .card h2:hover { color: var(--ac); }
+
+  /* ---------- footer ---------- */
+  footer { margin: 72px 0 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer .line { flex: 1; height: 1px; background: var(--border); }
+  footer span { font-size: 12.5px; color: var(--faint); }
+
+  .empty { display: none; text-align: center; color: var(--faint); padding: 60px 0; font-size: 14px; }
 </style>
 </head>
 <body>
-<div class="container">
+<div class="aurora"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
+
+<div class="wrap">
   <header>
-    <h1>WorkBuddy 页面集</h1>
-    <p>由 WorkBuddy 生成的 HTML 页面索引 · 共 5 篇</p>
+    <div class="badge"><span class="dot"></span>Hosted on GitHub Pages</div>
+    <h1>数字花园<br><span class="grad">Digital Garden</span></h1>
+    <p class="sub">由 WorkBuddy 生成、沉淀下来的页面合集。探索、学习、记录 —— 每一篇都是一次思考的痕迹。</p>
   </header>
-  <div class="grid">
-    <a class="card" href="enfj-deep-dive.html">
-      <span class="tag">性格解析</span>
+
+  <nav class="filters" id="filters">
+    <button class="chip active" data-f="all">全部 · 5</button>
+    <button class="chip" data-f="persona">性格与关系</button>
+    <button class="chip" data-f="tool">工具报告</button>
+    <button class="chip" data-f="learn">科普学习</button>
+    <button class="chip" data-f="life">生活方式</button>
+  </nav>
+
+  <main class="grid" id="grid">
+    <a class="card a-purple" href="enfj-deep-dive.html" data-c="persona">
+      <div class="top"><span class="tag"><i></i>性格解析</span><span class="arrow">↗</span></div>
       <h2>ENFJ 深度解析</h2>
-      <p>从认知功能到真实生活，全面解读 ENFJ 主人公型人格。</p>
-      <div class="meta">2026-10-05</div>
+      <p>从认知功能栈到真实生活场景，全面拆解「主人公」型人格的内在运作机制。</p>
+      <div class="meta"><span>2026-10-05</span><span>约 9 分钟</span></div>
     </a>
-    <a class="card" href="enfj-infp-guide.html">
-      <span class="tag">人际关系</span>
-      <h2>ENFJ × INFP 相处与互补指南</h2>
-      <p>两种理想主义者的碰撞与互补，相处要点全梳理。</p>
-      <div class="meta">2026-10-05</div>
+    <a class="card a-pink" href="enfj-infp-guide.html" data-c="persona">
+      <div class="top"><span class="tag"><i></i>人际关系</span><span class="arrow">↗</span></div>
+      <h2>ENFJ × INFP 相处指南</h2>
+      <p>两种理想主义者的相遇：冲突从何而来，互补如何发生，相处要点一次讲透。</p>
+      <div class="meta"><span>2026-10-05</span><span>约 6 分钟</span></div>
     </a>
-    <a class="card" href="mac-health-check.html">
-      <span class="tag">工具报告</span>
+    <a class="card a-teal" href="mac-health-check.html" data-c="tool">
+      <div class="top"><span class="tag"><i></i>工具报告</span><span class="arrow">↗</span></div>
       <h2>Mac 体检报告</h2>
-      <p>系统健康状态检查结果与优化建议。</p>
-      <div class="meta">2026-10-05</div>
+      <p>系统健康状态检查结果可视化呈现，附可执行的优化建议清单。</p>
+      <div class="meta"><span>2026-10-05</span><span>交互报告</span></div>
     </a>
-    <a class="card" href="video-bitrate-guide.html">
-      <span class="tag">科普讲解</span>
+    <a class="card a-blue" href="video-bitrate-guide.html" data-c="learn">
+      <div class="top"><span class="tag"><i></i>科普学习</span><span class="arrow">↗</span></div>
       <h2>视频码率与清晰度</h2>
-      <p>B站 vs YouTube 统计面板解读，看懂码率背后的画质逻辑。</p>
-      <div class="meta">2026-10-05</div>
+      <p>B 站 vs YouTube 统计面板对照解读，看懂码率背后的画质逻辑。</p>
+      <div class="meta"><span>2026-10-05</span><span>约 12 分钟</span></div>
     </a>
-    <a class="card" href="laundry-guide.html">
-      <span class="tag">生活指南</span>
+    <a class="card a-amber" href="laundry-guide.html" data-c="life">
+      <div class="top"><span class="tag"><i></i>生活方式</span><span class="arrow">↗</span></div>
       <h2>洗衣避坑指南</h2>
-      <p>5 个常见误区与正确洗护清单，衣物护理一次讲清。</p>
-      <div class="meta">2026-08-28</div>
+      <p>5 个最常见的洗衣误区逐一拆解，附一份可以照着做的正确洗护清单。</p>
+      <div class="meta"><span>2026-08-28</span><span>图文清单</span></div>
     </a>
-  </div>
-  <footer>Generated by WorkBuddy · Hosted on GitHub Pages</footer>
+  </main>
+  <p class="empty" id="empty">这个分类下暂时还没有页面</p>
+
+  <footer>
+    <span>WorkBuddy · Pages</span>
+    <div class="line"></div>
+    <span>snake34475.github.io</span>
+  </footer>
 </div>
+
+<script>
+  const chips = document.querySelectorAll('.chip');
+  const cards = document.querySelectorAll('.card');
+  const empty = document.getElementById('empty');
+  chips.forEach(chip => chip.addEventListener('click', () => {
+    chips.forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    const f = chip.dataset.f;
+    let visible = 0;
+    cards.forEach(card => {
+      const show = f === 'all' || card.dataset.c === f;
+      card.style.display = show ? '' : 'none';
+      if (show) { visible++; card.style.animation = 'none'; card.offsetHeight; card.style.animation = 'rise .45s ease forwards'; }
+    });
+    empty.style.display = visible ? 'none' : 'block';
+  }));
+</script>
 </body>
 </html>
