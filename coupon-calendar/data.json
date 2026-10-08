@@ -1,0 +1,435 @@
+{
+ "CATS": [
+  {
+   "id": "fastfood",
+   "name": "快餐披萨"
+  },
+  {
+   "id": "tea",
+   "name": "茶饮"
+  },
+  {
+   "id": "coffee",
+   "name": "咖啡"
+  },
+  {
+   "id": "snack",
+   "name": "零食/零售"
+  }
+ ],
+ "BRANDS": [
+  {
+   "id": "tatao",
+   "name": "茶百道",
+   "cat": "coffee"
+  },
+  {
+   "id": "sbux",
+   "name": "星巴克",
+   "cat": "coffee"
+  },
+  {
+   "id": "manner",
+   "name": "MANNER COFFEE",
+   "cat": "coffee",
+   "short": "M"
+  },
+  {
+   "id": "luckin",
+   "name": "瑞幸咖啡",
+   "cat": "coffee",
+   "short": "瑞"
+  },
+  {
+   "id": "cotti",
+   "name": "库迪咖啡",
+   "cat": "coffee",
+   "short": "库"
+  },
+  {
+   "id": "tims",
+   "name": "Tims 天好咖啡",
+   "cat": "coffee",
+   "short": "T"
+  },
+  {
+   "id": "luckycup",
+   "name": "幸运咖",
+   "cat": "coffee",
+   "short": "幸"
+  },
+  {
+   "id": "nowwa",
+   "name": "NOWWA 挪瓦咖啡",
+   "cat": "coffee",
+   "short": "N"
+  },
+  {
+   "id": "mcd",
+   "name": "麦当劳",
+   "cat": "fastfood"
+  },
+  {
+   "id": "kfc",
+   "name": "肯德基",
+   "cat": "fastfood"
+  },
+  {
+   "id": "domino",
+   "name": "达美乐",
+   "cat": "fastfood"
+  },
+  {
+   "id": "tastien",
+   "name": "塔斯汀",
+   "cat": "fastfood"
+  },
+  {
+   "id": "pizzahut",
+   "name": "必胜客",
+   "cat": "fastfood"
+  },
+  {
+   "id": "bk",
+   "name": "汉堡王",
+   "cat": "fastfood"
+  },
+  {
+   "id": "zhengxin",
+   "name": "正新鸡排",
+   "cat": "fastfood"
+  },
+  {
+   "id": "wallace",
+   "name": "华莱士",
+   "cat": "fastfood"
+  },
+  {
+   "id": "dicos",
+   "name": "德克士",
+   "cat": "fastfood"
+  },
+  {
+   "id": "bawang",
+   "name": "霸王茶姬/1点点",
+   "cat": "tea"
+  },
+  {
+   "id": "heytea",
+   "name": "喜茶",
+   "cat": "tea"
+  },
+  {
+   "id": "mixue",
+   "name": "蜜雪冰城",
+   "cat": "tea"
+  },
+  {
+   "id": "shuyi",
+   "name": "书亦烧仙草",
+   "cat": "tea"
+  },
+  {
+   "id": "yihetang",
+   "name": "益禾堂",
+   "cat": "tea"
+  },
+  {
+   "id": "guming",
+   "name": "古茗",
+   "cat": "tea"
+  },
+  {
+   "id": "coco",
+   "name": "CoCo 都可",
+   "cat": "tea",
+   "short": "Co"
+  },
+  {
+   "id": "hotmaxx",
+   "name": "好特卖 HotMaxx",
+   "cat": "snack"
+  },
+  {
+   "id": "luming",
+   "name": "零食有鸣",
+   "cat": "snack"
+  },
+  {
+   "id": "snackhb",
+   "name": "零食很忙",
+   "cat": "snack"
+  },
+  {
+   "id": "zym",
+   "name": "赵一鸣零食",
+   "cat": "snack"
+  },
+  {
+   "id": "hxl",
+   "name": "好想来",
+   "cat": "snack"
+  }
+ ],
+ "WEEKLY": [
+  {
+   "brand": "tatao",
+   "dow": [
+    1
+   ],
+   "desc": "周一会员日：美式 1.9 元、瑰夏美式 3.9 元（小程序下单）",
+   "warn": "⚠ 限时活动，约 2700 家门店有咖啡机，下单前先看门店"
+  },
+  {
+   "brand": "tims",
+   "dow": [
+    1
+   ],
+   "desc": "周一领券：指定超大杯第二杯半价",
+   "warn": "⚠ 官方 2026 年 6 月公布的每周一活动；当期券是否仍发放、成都门店是否适用，以小程序券面为准",
+   "source": "https://www.weibo.com/p/1006066969784101/home?mod=TAB"
+  },
+  {
+   "brand": "mcd",
+   "dow": [
+    1
+   ],
+   "desc": "会员日：App 领券，随心配 1+1 等特价"
+  },
+  {
+   "brand": "bawang",
+   "dow": [
+    1
+   ],
+   "desc": "霸王茶姬 / 1点点：免费升大杯"
+  },
+  {
+   "brand": "heytea",
+   "dow": [
+    1
+   ],
+   "desc": "喜茶：下单免配送费"
+  },
+  {
+   "brand": "domino",
+   "dow": [
+    2,
+    3,
+    4
+   ],
+   "desc": "比萨 7 折（接二连三四，营业时间全天）",
+   "warn": "⚠ 指定城市活动，限酥香烤盘/经典手拍/轻巧薄脆三种饼底"
+  },
+  {
+   "brand": "tastien",
+   "dow": [
+    2
+   ],
+   "desc": "会员日：小程序领券（买一送一等）"
+  },
+  {
+   "brand": "pizzahut",
+   "dow": [
+    2
+   ],
+   "desc": "会员日"
+  },
+  {
+   "brand": "shuyi",
+   "dow": [
+    2
+   ],
+   "desc": "周二会员日：小程序输口令抽免单",
+   "warn": "✅ 限四川等地区，成都适用"
+  },
+  {
+   "brand": "luming",
+   "dow": [
+    2
+   ],
+   "desc": "会员积分翻倍日"
+  },
+  {
+   "brand": "zhengxin",
+   "dow": [
+    2
+   ],
+   "desc": "鸡排 15 元 2 个"
+  },
+  {
+   "brand": "hotmaxx",
+   "dow": [
+    3
+   ],
+   "desc": "每周三会员日：特价基础上折上折 / 随机立减"
+  },
+  {
+   "brand": "pizzahut",
+   "dow": [
+    3
+   ],
+   "desc": "尖叫星期三（买一送一等）"
+  },
+  {
+   "brand": "mixue",
+   "dow": [
+    3
+   ],
+   "desc": "满 12 减 2"
+  },
+  {
+   "brand": "bk",
+   "dow": [
+    3
+   ],
+   "desc": "国王日 9.9 元套餐"
+  },
+  {
+   "brand": "sbux",
+   "dow": [
+    3
+   ],
+   "desc": "会员日：外卖免配送费"
+  },
+  {
+   "brand": "coco",
+   "dow": [
+    3
+   ],
+   "desc": "周三 Co 粉日：到店买饮品可领指定零食礼包",
+   "warn": "⚠ 需在小程序领券并满足指定消费金额；礼品和门店参与情况以活动页为准",
+   "source": "https://weibo.com/2/detail/5343713326268856"
+  },
+  {
+   "brand": "kfc",
+   "dow": [
+    4
+   ],
+   "desc": "🔥 疯狂星期四：19.9 元 15 块热辣香骨鸡等",
+   "warn": "部分爆款限量供应"
+  },
+  {
+   "brand": "bk",
+   "dow": [
+    4
+   ],
+   "desc": "活动期免费薯条"
+  },
+  {
+   "brand": "wallace",
+   "dow": [
+    5
+   ],
+   "desc": "会员日：买一送一"
+  },
+  {
+   "brand": "tastien",
+   "dow": [
+    5
+   ],
+   "desc": "6 元翅根桶（用券）"
+  },
+  {
+   "brand": "tastien",
+   "dow": [
+    6,
+    0
+   ],
+   "desc": "周末五折券：美团搜「五折外卖」满 40-20 / 60-30 / 80-40 / 100-50",
+   "warn": "⚠ 部分门店不参与"
+  },
+  {
+   "brand": "kfc",
+   "dow": [
+    6,
+    0
+   ],
+   "desc": "周末 8 拼 5 折 / 28 元 8 个帕尼尼"
+  }
+ ],
+ "MONTHLY": [
+  {
+   "brand": "hotmaxx",
+   "date": 5,
+   "desc": "会员等级变更日，卡包自动派本月礼券"
+  },
+  {
+   "brand": "luming",
+   "date": 6,
+   "desc": "全场正价 8.8 折（特价/日化/粮油除外）"
+  },
+  {
+   "brand": "snackhb",
+   "date": 7,
+   "desc": "全场 8.8 折（特价商品除外）"
+  },
+  {
+   "brand": "zym",
+   "date": 8,
+   "desc": "全场 8.8 折",
+   "warn": "⚠ 成都部分门店会员日设在 18 号，以门店为准"
+  },
+  {
+   "brand": "hxl",
+   "date": 8,
+   "desc": "全场 8.8 折"
+  },
+  {
+   "brand": "yihetang",
+   "date": 8,
+   "desc": "会员日半价 / 买 1 送 1"
+  },
+  {
+   "brand": "zym",
+   "date": 18,
+   "desc": "会员日 8.8 折",
+   "warn": "⚠ 仅部分成都门店"
+  },
+  {
+   "brand": "dicos",
+   "date": 18,
+   "desc": "会员日买 1 送 1"
+  },
+  {
+   "brand": "guming",
+   "date": 20,
+   "desc": "会员日券包 / 折扣（蹲小程序）"
+  }
+ ],
+ "FLEXIBLE": [
+  {
+   "brand": "manner",
+   "tag": "每天",
+   "desc": "自带可重复使用的杯子到店购买咖啡，立减 5 元",
+   "warn": "以门店实际规则为准",
+   "source": "https://www.wearemanner.com/"
+  },
+  {
+   "brand": "luckin",
+   "tag": "App 福利",
+   "desc": "App 福利中心每周有券；具体金额、适用饮品和领取时间以账户展示为准",
+   "source": "https://apps.apple.com/cn/app/%E7%91%9E%E5%B9%B8%E5%92%96%E5%95%A1/id1296749505"
+  },
+  {
+   "brand": "cotti",
+   "tag": "App 福利",
+   "desc": "下载 App 可领取 2 张 8.8 元任饮券；新客首单礼包以账户展示为准",
+   "warn": "新客/下载福利，不能按每周重复领取",
+   "source": "https://apps.apple.com/cn/app/%E5%BA%93%E8%BF%AA%E5%92%96%E5%95%A1/id1661236690"
+  },
+  {
+   "brand": "luckycup",
+   "tag": "App 福利",
+   "desc": "App 每日幸运券可领取优惠券或折扣券，新客还有首杯立减券",
+   "warn": "金额和适用门店以当天券面为准",
+   "source": "https://apps.apple.com/cn/app/%E5%B9%B8%E8%BF%90%E5%92%96%E5%95%A1/id6474704511"
+  },
+  {
+   "brand": "nowwa",
+   "tag": "关注活动",
+   "desc": "官网会发布阶段性送券活动；目前未核实到可持续领取的固定优惠",
+   "warn": "历史活动不可按月历日期重复使用",
+   "source": "https://www.nowwacafe.com/"
+  }
+ ]
+}

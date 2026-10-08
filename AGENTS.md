@@ -48,6 +48,11 @@
 
 ## 其他约定
 
-- 页面均为自包含单文件（内联 CSS/JS），不引入构建步骤
+- 页面默认自包含单文件（内联 CSS/JS），不引入构建步骤
+- 例外：数据驱动页可拆为「文件夹 + 页面 + 数据 JSON」（先例 `coupon-calendar/`：
+  `index.html` 运行时 fetch 同目录 `data.json`，外部脚本/小组件可直读该 JSON 而不必抓取解析 HTML）。
+  此类页面本地预览需起 HTTP 服务（如 `python3 -m http.server`），`file://` 直开会被 CORS 拦截
+- 迁移已有页面到文件夹时，旧路径保留一个跳转桩（JS `location.replace`，带上原 query 与 hash），
+  并同步更新首页、归档、`nav.json` 三处入口
 - `index.html` / `archive.html` / `about.html` 是站点结构页，功能页不要反向依赖它们
 - 中文内容为主，提交信息用中文 conventional commits（`feat:` / `fix:` / `blog:` 等）
