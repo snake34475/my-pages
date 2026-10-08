@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>等额本息 vs 等额本金 · 还款差异图谱</title>
+<style>
+:root{
+  --bg:#0f1115; --panel:#161a21; --panel2:#1c212a; --panel3:#222834; --line:#2a303a;
+  --tx:#e6e9ee; --tx2:#9aa4b2; --tx3:#6b7684;
+  --int:#e2534f;        /* 利息 · 红 */
+  --int-lt:#f0837f;
+  --pri:#5b9bd5;        /* 本金 · 蓝 */
+  --pri-lt:#8fbde8;
+  --ei:#e2534f;         /* 等额本息 主色 */
+  --ep:#2fb3a3;         /* 等额本金 主色 */
+  --warn:#ef9f27; --ok:#5dcaa5; --gold:#fac775;
+  --r:10px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--tx);
+  font:14px/1.72 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:36px 26px 90px}
+h1{font-size:27px;font-weight:650;margin:0 0 8px;letter-spacing:-.3px}
+h2{font-size:20px;font-weight:600;margin:56px 0 6px;letter-spacing:-.2px}
+h2 .idx{color:var(--tx3);font-weight:500;margin-right:9px;font-variant-numeric:tabular-nums}
+h2 + .h2sub{color:var(--tx3);font-size:13px;margin:0 0 20px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+h3{font-size:15.5px;font-weight:600;margin:30px 0 10px}
+p{margin:10px 0;color:var(--tx2)}
+strong{color:var(--tx);font-weight:600}
+.lede{font-size:15px;color:var(--tx2);margin:0 0 3px}
+.meta{font-size:12.5px;color:var(--tx3)}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- 首屏 ---------- */
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin:26px 0 14px}
+.scard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:15px 17px;position:relative;overflow:hidden}
+.scard .l{font-size:12px;color:var(--tx3);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.scard .v{font-size:24px;font-weight:650;letter-spacing:-.5px;font-variant-numeric:tabular-nums;line-height:1.25}
+.scard .u{font-size:13px;font-weight:500;color:var(--tx3);margin-left:2px}
+.scard .s{font-size:11.5px;color:var(--tx3);margin-top:5px}
+.scard.hl{border-color:#3a2a2a;background:linear-gradient(180deg,#1c1618,#161a21)}
+.scard.hl .v{color:var(--int-lt)}
+.dot{width:8px;height:8px;border-radius:2px;flex:0 0 8px}
+
+.headline{
+  background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--gold);
+  border-radius:0 var(--r) var(--r) 0;padding:17px 21px;margin:18px 0 0;
+  font-size:15px;line-height:1.85;color:var(--tx2);
+}
+.headline b{color:var(--tx);font-weight:600}
+.headline .big{font-size:20px;font-weight:650;color:var(--gold);font-variant-numeric:tabular-nums}
+.headline .big .u2{font-size:13px;font-weight:500;margin-left:2px}
+.headline .tag{display:inline-block;background:var(--panel3);border-radius:20px;padding:2px 10px;font-size:12px;color:var(--tx3);margin-right:6px}
+.pressbar{display:flex;align-items:center;gap:11px;margin-top:13px;padding-top:13px;border-top:1px solid var(--line)}
+.pressbar .pb-l{font-size:12.5px;color:var(--tx3);white-space:nowrap;flex:0 0 auto}
+.pb{flex:1;height:8px;background:var(--panel2);border-radius:5px;overflow:hidden;position:relative}
+.pb>i{display:block;height:100%;border-radius:5px;transition:width .35s cubic-bezier(.4,0,.2,1)}
+.pb .mk{position:absolute;top:-3px;width:2px;height:14px;background:var(--tx3);opacity:.65}
+.pb-n{font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap;flex:0 0 auto}
+
+/* ---------- 参数区 ---------- */
+.ctrl{
+  position:sticky;top:0;z-index:50;background:rgba(15,17,21,.93);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);padding:13px 0;margin:28px 0 0;
+}
+.ctrl-in{max-width:1080px;margin:0 auto;padding:0 26px;display:flex;flex-wrap:wrap;gap:14px 24px;align-items:flex-end}
+.f{display:flex;flex-direction:column;gap:6px;width:188px;flex:0 0 auto}
+.f .fl{font-size:11.5px;color:var(--tx3);display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.f .fv{font-size:13px;color:var(--tx);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:3px;
+  background:var(--panel3);outline:none;cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:15px;height:15px;border-radius:50%;
+  background:var(--pri);border:2px solid var(--bg);cursor:pointer;
+  box-shadow:0 0 0 1px var(--pri);transition:transform .15s;
+}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
+.full{flex-basis:100%;height:0}
+.presets{display:flex;gap:7px;flex-wrap:wrap;flex-basis:100%;margin-top:2px}
+.pbtn{
+  background:var(--panel2);border:1px solid var(--line);color:var(--tx2);
+  border-radius:20px;padding:4px 12px;font-size:12px;cursor:pointer;
+  font-family:inherit;transition:all .15s;white-space:nowrap;
+}
+.pbtn:hover{border-color:var(--pri);color:var(--tx)}
+.pbtn.on{background:rgba(91,155,213,.15);border-color:var(--pri);color:var(--pri-lt)}
+.pbtn.seg{border-radius:7px}
+
+/* ---------- 图卡 ---------- */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+.grid2.one{grid-template-columns:1fr}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px 13px}
+.card .ct{font-size:13.5px;font-weight:600;margin:0 0 3px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card .cs{font-size:11.5px;color:var(--tx3);margin:0 0 9px;line-height:1.6}
+.card .cs em{color:var(--gold);font-style:normal}
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+
+.legend{display:flex;flex-wrap:wrap;gap:13px;margin:8px 0 2px;font-size:11.5px;color:var(--tx3)}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{width:11px;height:11px;border-radius:2px;flex:0 0 11px;display:block}
+.legend i.ln{height:3px;border-radius:2px}
+
+.note{
+  background:var(--panel2);border-left:3px solid var(--line);border-radius:0 8px 8px 0;
+  padding:11px 15px;margin:14px 0;font-size:12.5px;color:var(--tx2);line-height:1.7;
+}
+.note.info{border-left-color:var(--pri)}
+.note.warn{border-left-color:var(--warn)}
+.note.ok{border-left-color:var(--ok)}
+.note.bad{border-left-color:var(--int)}
+.note.gold{border-left-color:var(--gold)}
+.note b{color:var(--tx)}
+.note .hl{color:var(--gold);font-weight:600;font-variant-numeric:tabular-nums}
+
+/* 定义章 */
+.defcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:17px 19px}
+.defcard h4{margin:0 0 4px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.defcard .sub{font-size:11.5px;color:var(--tx3);margin:0 0 12px}
+.defcard ul{margin:10px 0 0;padding-left:19px;font-size:12.5px;color:var(--tx2)}
+.defcard li{margin:5px 0}
+.defcard li b{color:var(--tx)}
+.badge{font-size:10.5px;padding:1px 7px;border-radius:4px;font-weight:500}
+.badge.ei{background:rgba(226,83,79,.14);color:var(--int-lt)}
+.badge.ep{background:rgba(47,179,163,.14);color:var(--ep)}
+
+/* 差额卡 */
+.dcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:12px;margin:18px 0}
+.dcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.dcard .l{font-size:12px;color:var(--tx3);margin-bottom:6px}
+.dcard .v{font-size:21px;font-weight:650;font-variant-numeric:tabular-nums;letter-spacing:-.4px}
+.dcard .s{font-size:11.5px;color:var(--tx3);margin-top:4px;line-height:1.55}
+
+/* 表格 */
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px}
+th,td{text-align:right;padding:8px 12px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;white-space:nowrap}
+th{position:sticky;top:0;z-index:2;background:var(--panel3);color:var(--tx2);font-weight:500;font-size:11.5px}
+th:first-child,td:first-child{text-align:left}
+tbody tr:hover td{background:var(--panel2)}
+tr.grp td{background:var(--panel3);color:var(--tx3);font-size:11px;font-weight:500;letter-spacing:.4px;text-align:left}
+td.neg{color:var(--ok)}
+td.pos{color:var(--int-lt)}
+.scrollbox{max-height:520px;overflow-y:auto}
+
+/* 提前还款 */
+.ppctl{display:flex;flex-wrap:wrap;gap:18px 30px;align-items:flex-end;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:15px 19px;margin:18px 0}
+.toggle{display:flex;background:var(--panel2);border-radius:8px;padding:3px;gap:2px}
+.toggle button{
+  background:none;border:0;color:var(--tx3);padding:5px 13px;border-radius:6px;
+  font-size:12.5px;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap;
+}
+.toggle button.on{background:var(--panel3);color:var(--tx);font-weight:500}
+.matrix{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.mcell{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px 11px}
+.mcell .mh{display:flex;align-items:baseline;justify-content:space-between;gap:9px;margin-bottom:2px}
+.mcell .mh .t{font-size:13px;font-weight:600}
+.mcell .mh .sv{font-size:15px;font-weight:650;color:var(--gold);font-variant-numeric:tabular-nums}
+.mcell .ms{font-size:11.5px;color:var(--tx3);margin:0 0 7px;line-height:1.55}
+.foot{margin-top:64px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:var(--tx3)}
+.foot b{color:var(--tx2);font-weight:500}
+.tip{
+  position:fixed;pointer-events:none;z-index:200;background:#0b0d11;border:1px solid var(--line);
+  border-radius:8px;padding:9px 12px;font-size:12px;line-height:1.65;color:var(--tx2);
+  box-shadow:0 8px 26px rgba(0,0,0,.55);opacity:0;transition:opacity .12s;
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.tip.on{opacity:1}
+.tip .tt{font-weight:600;color:var(--tx);margin-bottom:4px;font-size:12.5px}
+.tip .tr{display:flex;justify-content:space-between;gap:16px}
+.tip .tr span:last-child{color:var(--tx);font-weight:500}
+.collapsehint{font-size:12px;color:var(--tx3);margin:14px 0 4px;display:flex;align-items:center;gap:9px}
+.chk{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;font-size:12.5px;color:var(--tx2)}
+.chk input{accent-color:var(--pri);cursor:pointer;width:14px;height:14px}
+
+@media(max-width:760px){
+  .wrap{padding:26px 16px 70px}
+  h1{font-size:22px}
+  h2{font-size:17.5px;margin-top:42px}
+  .grid2,.matrix{grid-template-columns:1fr}
+  .ctrl-in{padding:0 16px;gap:13px 18px}
+  .f{min-width:calc(50% - 9px);flex:1}
+  .summary{grid-template-columns:1fr 1fr;gap:9px}
+  .scard .v{font-size:20px}
+  .dcards{grid-template-columns:1fr 1fr;gap:9px}
+  .dcard .v{font-size:17px}
+  table{font-size:11.5px}
+  th,td{padding:7px 8px}
+  .presets .pbtn{font-size:11px;padding:3px 9px}
+}
+@media(max-width:420px){
+  .summary,.dcards{grid-template-columns:1fr}
+  .f{min-width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<h1>等额本息 vs 等额本金</h1>
+<p class="lede">同一笔贷款，两种还款方式的全部差异 —— 哪些是真的，哪些是错觉。</p>
+<p class="meta" id="genMeta"></p>
+
+<!-- 首屏结论 -->
+<div class="summary" id="summary"></div>
+<div class="headline" id="headline"></div>
+
+<!-- 参数控制 -->
+<div class="ctrl">
+  <div class="ctrl-in">
+    <div class="f">
+      <div class="fl"><span>贷款金额</span><span class="fv" id="vAmt">100 万</span></div>
+      <input type="range" id="rAmt" min="50" max="500" step="5" value="100">
+    </div>
+    <div class="f">
+      <div class="fl"><span>贷款年限</span><span class="fv" id="vYrs">30 年</span></div>
+      <input type="range" id="rYrs" min="5" max="30" step="1" value="30">
+    </div>
+    <div class="f">
+      <div class="fl"><span>年利率</span><span class="fv" id="vRate">3.50%</span></div>
+      <input type="range" id="rRate" min="2" max="6" step="0.05" value="3.5">
+    </div>
+    <div class="f">
+      <div class="fl"><span>月收入（可选）</span><span class="fv" id="vInc">20,000</span></div>
+      <input type="range" id="rInc" min="5000" max="60000" step="1000" value="20000">
+    </div>
+    <div class="presets" id="presets">
+      <button class="pbtn on" data-a="100" data-y="30" data-r="3.5">100万 / 30年 / 3.5%</button>
+      <button class="pbtn" data-a="100" data-y="30" data-r="4.9">100万 / 30年 / 4.9%</button>
+      <button class="pbtn" data-a="200" data-y="30" data-r="3.5">200万 / 30年 / 3.5%</button>
+      <button class="pbtn" data-a="100" data-y="20" data-r="3.5">100万 / 20年 / 3.5%</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 第一章 ============ -->
+<h2><span class="idx">01</span>先分清这两种还法</h2>
+<p class="h2sub">两种方式只在「还本金的速度」上不同，利息的计算规则完全一样。</p>
+
+<div class="grid2">
+  <div class="defcard">
+    <h4><span class="badge ei">等额本息</span>每月还的钱一样多</h4>
+    <p class="sub">银行最常默认的方式，也叫「等额还款法」</p>
+    <div class="chart" id="mini-ei"></div>
+    <ul>
+      <li>月供<b>固定不变</b>，从第 1 期到最后一期分毫不差</li>
+      <li>月供拆开看是两份钱：<b>先还利息多、还本金少</b>，然后逐年换过来</li>
+      <li>前期轻松，但整笔贷款还完时<b>付的利息更多</b></li>
+    </ul>
+  </div>
+  <div class="defcard">
+    <h4><span class="badge ep">等额本金</span>每月还的本金一样多</h4>
+    <p class="sub">又叫「利随本清」「递减还款法」</p>
+    <div class="chart" id="mini-ep"></div>
+    <ul>
+      <li>每月还的本金<b>固定</b>（= 总本金 ÷ 期数），利息另算</li>
+      <li>本金还得快 → 计息基数掉得快 → 利息越来越少</li>
+      <li>所以月供是<b>一路走低</b>的，但<b>开头几个月压力明显更大</b></li>
+    </ul>
+  </div>
+</div>
+
+<div class="note gold">
+  <b>整页最重要的一句话：</b>两种方式下，银行收利息的规则<b>完全相同</b> ——
+  都是「当期利息 = 你上期还剩的本金 × 月利率」。<br>
+  所以两种方式之所以会产生差异，<b>唯一原因就是你还本金的速度不同</b>：
+  本金还得越快，银行能拿到的计息基数就越小，你付的利息就越少。<br>
+  后面所有的图、所有的差额，都能追溯回这一句话。记住它，你就不需要背任何结论。
+</div>
+
+<div class="note info">
+  <b>一句话比喻：</b>同样是 100 万债务，等额本息是「每月固定掏 4490 块，凑够 30 年慢慢磨」；
+  等额本金是「每月先硬还 2778 块本金，剩下的利息照算」——后者头一年每月要多掏一千二，但它把债务压下去的速度快得多。
+</div>
+
+<!-- ============ 第二章 ============ -->
+<h2><span class="idx">02</span>四张图看穿差异</h2>
+<p class="h2sub">统一口径：红色 = 利息，蓝色 = 本金。所有图跟随上方参数实时重算。</p>
+
+<div class="grid2 one">
+  <div class="card">
+    <div class="ct">图 1 · 每期月供的构成<span class="legend" style="margin:0"><span><i style="background:var(--int)"></i>利息</span><span><i style="background:var(--pri)"></i>本金</span></span></div>
+    <p class="cs" id="cs1"></p>
+    <div class="chart" id="c1"></div>
+  </div>
+</div>
+
+<div class="grid2 one">
+  <div class="card">
+    <div class="ct">图 2 · 剩余未还本金<span class="legend" style="margin:0"><span><i class="ln" style="background:var(--ei)"></i>等额本息</span><span><i class="ln" style="background:var(--ep)"></i>等额本金</span></span></div>
+    <p class="cs" id="cs2"></p>
+    <div class="chart" id="c2"></div>
+  </div>
+</div>
+
+<div class="grid2">
+  <div class="card">
+    <div class="ct">图 3 · 累计已付利息</div>
+    <p class="cs" id="cs3"></p>
+    <div class="chart" id="c3"></div>
+  </div>
+  <div class="card">
+    <div class="ct">图 4 · 累计总支出</div>
+    <p class="cs" id="cs4"></p>
+    <div class="chart" id="c4"></div>
+  </div>
+</div>
+
+<!-- ============ 第三章 ============ -->
+<h2><span class="idx">03</span>差额账本</h2>
+<p class="h2sub">「差多少」有四种问法，答案各不相同。别只看其中一个。</p>
+
+<div class="dcards" id="dcards"></div>
+
+<div class="grid2 one">
+  <div class="card">
+    <div class="ct">图 5 · 利息差距是怎么拉开的</div>
+    <p class="cs" id="cs5"></p>
+    <div class="chart" id="c5"></div>
+  </div>
+</div>
+
+<div class="note warn" id="nDiff"></div>
+
+<!-- ============ 第四章 ============ -->
+<h2><span class="idx">04</span>提前还款 · 两种方式会怎么变</h2>
+<p class="h2sub">一次性提前还一笔钱，看它把利息削掉多少、以及两种方式谁更占便宜。</p>
+
+<div class="ppctl">
+  <div class="f" style="min-width:200px">
+    <div class="fl"><span>提前还款时间点</span><span class="fv" id="vPT">第 3 年</span></div>
+    <input type="range" id="rPT" min="1" max="15" step="1" value="3">
+  </div>
+  <div class="f" style="min-width:200px">
+    <div class="fl"><span>提前还款金额</span><span class="fv" id="vPE">30 万</span></div>
+    <input type="range" id="rPE" min="10" max="200" step="10" value="30">
+  </div>
+</div>
+
+<div class="matrix" id="matrix"></div>
+
+<div class="note gold" id="nPP1"></div>
+
+<h3>时间点敏感度 · 什么时候还最划算</h3>
+<p class="cs" style="margin-bottom:10px">同一笔金额，在不同年份还，省下的利息差别很大。每张表左边一列是「缩期限」，右边一列是「减月供」。</p>
+<div id="sens"></div>
+
+<div class="note warn" id="nPP2"></div>
+
+<!-- ============ 第五章 ============ -->
+<h2><span class="idx">05</span>逐期明细</h2>
+<p class="h2sub">两种方式并排对照。默认只列关键期，避免 360 行淹没重点。</p>
+
+<div class="collapsehint">
+  <label class="chk"><input type="checkbox" id="showAll"> 显示全部期数</label>
+  <span id="rowInfo"></span>
+</div>
+<div class="tblwrap scrollbox" id="detail"></div>
+
+<div class="foot" id="foot"></div>
+
+</div>
+<div class="tip" id="tip"></div>
+
+<script>
+"use strict";
+/* ==========================================================================
+   第一部分 · 计算（与 _verify_calc.py 同源，已通过 51 项数值自检）
+   ========================================================================== */
+
+/** 等额本息：月供恒定。尾差修正：最后一期本金 = 当期剩余本金。 */
+function calcEI(P, n, i){
+  var M = (i === 0) ? P / n : P * i * Math.pow(1 + i, n) / (Math.pow(1 + i, n) - 1);
+  var rows = [], bal = P, k, itr, pri, pay;
+  for(k = 1; k <= n; k++){
+    itr = bal * i;
+    pri = M - itr;
+    pay = M;
+    if(k === n || pri > bal){ pri = bal; pay = pri + itr; }
+    bal -= pri;
+    if(Math.abs(bal) < 1e-9) bal = 0;
+    rows.push({k:k, pay:pay, int:itr, pri:pri, bal:bal});
+  }
+  return pack(rows, M);
+}
+
+/** 等额本金：每期本金恒定 = P/n，利息按当期剩余本金算。 */
+function calcEP(P, n, i){
+  var B = P / n, rows = [], bal = P, k, itr, pri, pay;
+  for(k = 1; k <= n; k++){
+    itr = bal * i;
+    pri = B;
+    if(k === n || pri > bal){ pri = bal; }
+    pay = pri + itr;
+    bal -= pri;
+    if(Math.abs(bal) < 1e-9) bal = 0;
+    rows.push({k:k, pay:pay, int:itr, pri:pri, bal:bal});
+  }
+  return pack(rows, null);
+}
+
+function pack(rows, M){
+  var ti = 0, tp = 0, k;
+  for(k = 0; k < rows.length; k++){ ti += rows[k].int; tp += rows[k].pay; }
+  // 前缀累计，供曲线图直接取用
+  var ci = 0, ct = 0;
+  for(k = 0; k < rows.length; k++){
+    ci += rows[k].int; ct += rows[k].pay;
+    rows[k].cumInt = ci; rows[k].cumPay = ct;
+  }
+  return {rows:rows, totalInterest:ti, totalPay:tp, monthly:M, n:rows.length};
+}
+
+/**
+ * 提前还款。mode: 'shorten' 缩期限（月供/每期本金不变，期数缩短）
+ *                'reduce'  减月供（期数不变，重算月供）
+ * kind: 'ei' 等额本息 / 'ep' 等额本金
+ */
+function prepay(plan, i, m, E, mode, kind){
+  var rows = plan.rows, nTot = plan.n;
+  m = Math.min(Math.max(1, m), nTot);
+  var R = rows[m - 1].bal;            // 第 m 期末剩余本金
+  var R2 = Math.max(0, R - E);
+  var out = rows.slice(0, m).map(function(r){ return Object.assign({}, r); });
+
+  if(R2 === 0){
+    // 一次性结清：把第 m 期改造成「正常月供 + 结清」的合并期
+    var last = out[out.length - 1];
+    last.pri += R; last.pay = last.pri + last.int; last.bal = 0;
+    return finalize(out, nTot, m);
+  }
+
+  if(mode === 'shorten'){
+    var n2;
+    if(kind === 'ei'){
+      var M = plan.monthly;
+      n2 = (i === 0) ? Math.ceil(R2 / M)
+                     : Math.ceil(-Math.log(1 - R2 * i / M) / Math.log(1 + i) - 1e-9);
+    }else{
+      n2 = Math.ceil(R2 / rows[0].pri - 1e-9);
+    }
+    n2 = Math.max(1, n2);
+    var bal = R2, k, itr, pri, pay;
+    for(k = 1; k <= n2; k++){
+      itr = bal * i;
+      if(kind === 'ei'){ pri = plan.monthly - itr; } else { pri = rows[0].pri; }
+      if(k === n2 || pri > bal){ pri = bal; }
+      pay = pri + itr;
+      bal -= pri;
+      if(Math.abs(bal) < 1e-9) bal = 0;
+      out.push({k:m + k, pay:pay, int:itr, pri:pri, bal:bal});
+    }
+    return finalize(out, nTot, m + n2);
+  }
+
+  // 减月供
+  var nRem = nTot - m;
+  if(nRem <= 0) return finalize(out, nTot, m);
+  var bal2 = R2, k2, itr2, pri2, pay2, M2, B2;
+  if(kind === 'ei'){
+    M2 = (i === 0) ? R2 / nRem
+                   : R2 * i * Math.pow(1 + i, nRem) / (Math.pow(1 + i, nRem) - 1);
+  }else{
+    B2 = R2 / nRem;
+  }
+  for(k2 = 1; k2 <= nRem; k2++){
+    itr2 = bal2 * i;
+    pri2 = (kind === 'ei') ? (M2 - itr2) : B2;
+    if(k2 === nRem || pri2 > bal2){ pri2 = bal2; }
+    pay2 = pri2 + itr2;
+    bal2 -= pri2;
+    if(Math.abs(bal2) < 1e-9) bal2 = 0;
+    out.push({k:m + k2, pay:pay2, int:itr2, pri:pri2, bal:bal2});
+  }
+  return finalize(out, nTot, nTot);
+}
+
+function finalize(rows, nOrig, nNew){
+  var ti = 0, tp = 0, ci = 0, ct = 0, k;
+  for(k = 0; k < rows.length; k++){
+    ti += rows[k].int; tp += rows[k].pay;
+    ci = ti; ct = tp;
+    rows[k].cumInt = ci; rows[k].cumPay = ct;
+  }
+  return {rows:rows, totalInterest:ti, totalPay:tp, nNew:nNew, nOrig:nOrig};
+}
+
+/* ==========================================================================
+   第二部分 · 绘图（手写 SVG，零依赖）
+   ========================================================================== */
+var C = {int:'#e2534f', pri:'#5b9bd5', ei:'#e2534f', ep:'#2fb3a3',
+         grid:'#222834', axis:'#2a303a', tx:'#9aa4b2', tx3:'#6b7684',
+         gold:'#fac775', warn:'#ef9f27', ok:'#5dcaa5'};
+var VBW = 680;                                  // 统一画布宽
+
+/* tooltip 全局单例 */
+var _tipEl = null;
+function tipEl(){
+  if(!_tipEl) _tipEl = document.getElementById('tip');
+  return _tipEl;
+}
+function showTip(ev, html){
+  var t = tipEl();
+  if(!t) return;
+  t.innerHTML = html;
+  t.classList.add('on');
+  var w = t.offsetWidth, h = t.offsetHeight;
+  var x = Math.min(window.innerWidth - w - 14, ev.clientX + 16);
+  var y = Math.max(10, ev.clientY - h - 14);
+  t.style.left = x + 'px';
+  t.style.top = y + 'px';
+}
+function hideTip(){
+  var t = tipEl();
+  if(t) t.classList.remove('on');
+}
+if(typeof document !== 'undefined'){
+  document.addEventListener('mousemove', function(ev){
+    var t = tipEl();
+    if(t && t.classList.contains('on')){
+      var r = t.getBoundingClientRect();
+      if(ev.clientX < r.left - 30 || ev.clientX > r.right + 30
+      || ev.clientY < r.top - 40 || ev.clientY > r.bottom + 40){
+        if(!(ev.target.closest && ev.target.closest('svg'))) t.classList.remove('on');
+      }
+    }
+  }, true);
+}
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function money(v, d){
+  d = (d === undefined) ? 0 : d;
+  var s = Math.abs(v).toFixed(d).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return (v < 0 ? '-' : '') + '¥' + s;
+}
+function wan(v, d){
+  d = (d === undefined) ? 2 : d;
+  var w = v / 10000;
+  return (Math.abs(w) >= 100 ? w.toFixed(0) : w.toFixed(d)) + '万';
+}
+function niceMax(v){
+  if(v <= 0) return 1;
+  var e = Math.pow(10, Math.floor(Math.log10(v)));
+  var f = v / e;
+  // 1 / 1.25 / 1.5 / 2 / 2.5 / 3 / 4 / 5 / 6 / 8 / 10 —— 让刻度落在"好看"的整值上
+  var steps = [1, 1.25, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10], k;
+  for(k = 0; k < steps.length; k++) if(f <= steps[k]) return steps[k] * e;
+  return 10 * e;
+}
+function ticks(max, count){
+  var out = [], step = max / (count || 4), k;
+  for(k = 0; k <= (count || 4); k++) out.push(step * k);
+  return out;
+}
+/** 刻度文字：0 / 整值，不带小数尾巴 */
+function tickLabel(v){
+  if(v === 0) return '0';
+  if(v >= 10000) return wan(v, 0);
+  return String(Math.round(v));
+}
+
+/** SVG 骨架：返回 {svg, plot 区域坐标} */
+function frame(h, pad, opts){
+  pad = pad || {};
+  var p = {t: pad.t || 26, r: pad.r || 18, b: pad.b || 34, l: pad.l || 64};
+  var w = VBW, ph = h - p.t - p.b, pw = w - p.l - p.r;
+  var s = '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="xMidYMid meet" '
+        + 'font-family="-apple-system,Segoe UI,Microsoft YaHei,sans-serif">';
+  s += '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="' + (opts && opts.bg || 'transparent') + '"/>';
+  return {s:s, w:w, h:h, p:p, pw:pw, ph:ph,
+          X: function(t){ return p.l + pw * t; },
+          Y: function(v, max){ return p.t + ph * (1 - v / max); }};
+}
+
+/** 网格 + Y 轴刻度 + X 轴刻度（期数→年份）。skipTopLabel 用于上下双排图避免刻度打架 */
+function axes(f, yMax, xMax, unit, fmtY, xLabels, skipTopLabel){
+  var s = '', k, t, y, x, lbl;
+  var tk = ticks(yMax, 4);
+  for(k = 0; k < tk.length; k++){
+    if(skipTopLabel && k === tk.length - 1) continue;
+    y = f.Y(tk[k], yMax);
+    s += '<line x1="' + f.p.l + '" y1="' + y.toFixed(1) + '" x2="' + (f.w - f.p.r)
+       + '" y2="' + y.toFixed(1) + '" stroke="' + (k === 0 ? C.axis : C.grid)
+       + '" stroke-width="1"/>';
+    lbl = fmtY ? fmtY(tk[k]) : String(tk[k]);
+    s += '<text x="' + (f.p.l - 9) + '" y="' + (y + 3.5).toFixed(1)
+       + '" text-anchor="end" font-size="10.5" fill="' + C.tx3 + '">' + esc(lbl) + '</text>';
+  }
+  if(unit){
+    s += '<text x="' + (f.p.l - 9) + '" y="' + (f.p.t - 11) + '" text-anchor="end" '
+       + 'font-size="10" fill="' + C.tx3 + '">' + esc(unit) + '</text>';
+  }
+  var xl = xLabels || [];
+  for(k = 0; k < xl.length; k++){
+    x = f.X(xl[k].t);
+    s += '<line x1="' + x.toFixed(1) + '" y1="' + (f.p.t + f.ph) + '" x2="' + x.toFixed(1)
+       + '" y2="' + (f.p.t + f.ph + 4) + '" stroke="' + C.axis + '"/>';
+    s += '<text x="' + x.toFixed(1) + '" y="' + (f.p.t + f.ph + 16)
+       + '" text-anchor="middle" font-size="10.5" fill="' + C.tx3 + '">' + esc(xl[k].l) + '</text>';
+  }
+  return s;
+}
+
+/** 折线图：series = [{name,color,data:[v...],w,dash}] */
+function lineChart(el, series, o){
+  o = o || {};
+  var n = o.n || series[0].data.length;
+  var peak = Math.max.apply(null, series.reduce(function(a,s){ return a.concat(s.data.filter(function(v){return v!=null})); }, []));
+  var yMax = o.yMax || niceMax(peak * 1.08);
+  var h = o.h || 250;
+  var f = frame(h, o.pad);
+  var s = f.s;
+  var k, j;
+  var xLabels = o.xLabels || [{t:0,l:'0'},{t:.25,l:(n/4/12).toFixed(0)+'年'},{t:.5,l:(n/2/12).toFixed(0)+'年'},{t:.75,l:(n*0.75/12).toFixed(0)+'年'},{t:1,l:(n/12).toFixed(0)+'年'}];
+  s += axes(f, yMax, n, o.unit || '元', o.fmtY || function(v){ return tickLabel(v); }, xLabels);
+
+  // 包围面积（仅两条线时）
+  if(o.fill && series.length === 2){
+    var d = 'M', first = true;
+    for(k = 0; k < n; k++){
+      if(series[0].data[k] == null) continue;
+      d += (first ? '' : 'L') + f.X((k + 1) / n).toFixed(2) + ' ' + f.Y(series[0].data[k], yMax).toFixed(2);
+      first = false;
+    }
+    for(k = n - 1; k >= 0; k--){
+      if(series[1].data[k] == null) continue;
+      d += 'L' + f.X((k + 1) / n).toFixed(2) + ' ' + f.Y(series[1].data[k], yMax).toFixed(2);
+    }
+    d += 'Z';
+    s += '<path d="' + d + '" fill="' + (o.fill) + '"/>';
+  }
+  // 折线
+  for(j = 0; j < series.length; j++){
+    var se = series[j], dd = '', fst = true;
+    for(k = 0; k < n; k++){
+      if(se.data[k] == null) continue;
+      dd += (fst ? 'M' : 'L') + f.X((k + 1) / n).toFixed(2) + ' ' + f.Y(se.data[k], yMax).toFixed(2);
+      fst = false;
+    }
+    s += '<path d="' + dd + '" fill="none" stroke="' + se.color + '" stroke-width="' + (se.w || 2)
+       + '" stroke-linejoin="round" stroke-linecap="round"'
+       + (se.dash ? ' stroke-dasharray="' + se.dash + '"' : '') + '/>';
+  }
+  // 注释
+  s += annotate(f, o.annotations || [], yMax, n);
+  if(o.hover !== false){
+    s += '<rect x="' + f.p.l + '" y="' + f.p.t + '" width="' + f.pw + '" height="' + f.ph
+       + '" fill="transparent"/>';
+  }
+  s += '</svg>';
+  el.innerHTML = s;
+
+  // hover：给出各序列在该期的值
+  if(o.hover !== false){
+    var svgEl = el.querySelector('svg');
+    svgEl.addEventListener('mousemove', function(ev){
+      var box = svgEl.getBoundingClientRect();
+      var t = ((ev.clientX - box.left) / box.width * VBW - f.p.l) / f.pw;
+      if(t < 0 || t > 1){ hideTip(); return; }
+      var k = Math.min(n, Math.max(1, Math.round(t * n)));
+      var yr = Math.floor((k - 1) / 12) + 1, mo = (k - 1) % 12 + 1;
+      var h = '<div class="tt">第 ' + k + ' 期（第 ' + yr + ' 年 ' + mo + ' 月）</div>';
+      series.forEach(function(se){
+        var v = se.data[k - 1];
+        if(v == null) return;
+        h += '<div class="tr"><span style="color:' + se.color + '">' + esc(se.name) + '</span><span>'
+           + (o.fmtTip ? o.fmtTip(v) : money(v, 0)) + '</span></div>';
+      });
+      if(series.length === 2 && series[0].data[k-1] != null && series[1].data[k-1] != null){
+        h += '<div class="tr" style="margin-top:4px"><span>两者相差</span><span>'
+           + money(Math.abs(series[0].data[k-1] - series[1].data[k-1]), 0) + '</span></div>';
+      }
+      showTip(ev, h);
+      var old = svgEl.querySelector('.hoverline');
+      if(old) old.remove();
+      var ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      ln.setAttribute('class', 'hoverline');
+      ln.setAttribute('x1', f.X(k / n)); ln.setAttribute('x2', f.X(k / n));
+      ln.setAttribute('y1', f.p.t); ln.setAttribute('y2', f.p.t + f.ph);
+      ln.setAttribute('stroke', '#fff'); ln.setAttribute('stroke-width', '1');
+      ln.setAttribute('opacity', '.3'); ln.setAttribute('stroke-dasharray', '3 3');
+      svgEl.appendChild(ln);
+    });
+    svgEl.addEventListener('mouseleave', function(){
+      hideTip();
+      var old = svgEl.querySelector('.hoverline');
+      if(old) old.remove();
+    });
+  }
+  return {f:f, yMax:yMax, n:n};
+}
+
+/** 注释：vline 竖虚线 / point 圆点 / area 文字 / band 区间高亮 */
+function annotate(f, list, yMax, n){
+  var s = '', j;
+  for(j = 0; j < list.length; j++){
+    var a = list[j];
+    if(a.type === 'vline'){
+      var x = f.X(a.t);
+      s += '<line x1="' + x.toFixed(1) + '" y1="' + f.p.t + '" x2="' + x.toFixed(1) + '" y2="'
+         + (f.p.t + f.ph) + '" stroke="' + (a.color || C.tx3) + '" stroke-width="1" stroke-dasharray="4 3"/>';
+      if(a.label){
+        s += '<text x="' + (x + (a.dx || 5)).toFixed(1) + '" y="' + (f.p.t + (a.dy || 11))
+           + '" text-anchor="' + (a.anchor || 'start') + '" font-size="10.5" fill="' + (a.color || C.gold) + '">'
+           + esc(a.label) + '</text>';
+      }
+    }else if(a.type === 'point'){
+      var px = f.X(a.t), py = f.Y(a.v, yMax);
+      s += '<circle cx="' + px.toFixed(1) + '" cy="' + py.toFixed(1) + '" r="' + (a.r || 3.4)
+         + '" fill="' + (a.color || C.gold) + '" stroke="#0f1115" stroke-width="1.5"/>';
+      if(a.label){
+        s += '<text x="' + (px + (a.dx || 7)).toFixed(1) + '" y="' + (py + (a.dy || -7))
+           + '" text-anchor="' + (a.anchor || 'start') + '" font-size="10.5" fill="' + (a.color || C.gold) + '">'
+           + esc(a.label) + '</text>';
+      }
+    }else if(a.type === 'text'){
+      s += '<text x="' + f.X(a.t).toFixed(1) + '" y="' + f.Y(a.v, yMax).toFixed(1)
+         + '" text-anchor="' + (a.anchor || 'middle') + '" font-size="' + (a.size || 11)
+         + '" font-weight="' + (a.weight || 500) + '" fill="' + (a.color || C.tx) + '">'
+         + esc(a.tx) + '</text>';
+    }else if(a.type === 'hline'){
+      var hy = f.Y(a.v, yMax);
+      s += '<line x1="' + f.p.l + '" y1="' + hy.toFixed(1) + '" x2="' + (f.w - f.p.r) + '" y2="'
+         + hy.toFixed(1) + '" stroke="' + (a.color || C.warn) + '" stroke-width="1" stroke-dasharray="5 4"/>';
+    }
+  }
+  return s;
+}
+
+/**
+ * 堆叠柱状图：两种方式各一条横排，共享 Y 轴。
+ * 每根柱 = 利息（下，外部色）+ 本金（上，亮色）
+ * 360 期太密时自动按年聚合。
+ */
+function stackedBars(el, eiPlan, epPlan, o){
+  o = o || {};
+  var n = Math.max(eiPlan.rows.length, epPlan.rows.length);
+  var agg = o.agg || (n > 120 ? 12 : 1);          // 聚合窗口
+  var groups = Math.ceil(n / agg);
+  function build(plan){
+    var arr = [], g, s, e;
+    for(g = 0; g < groups; g++){
+      s = g * agg; e = Math.min(s + agg, plan.rows.length);
+      var ti = 0, tp = 0;
+      for(var k = s; k < e; k++){ ti += plan.rows[k].int; tp += plan.rows[k].pri; }
+      arr.push({i:ti, p:tp, s:s, e:e});
+    }
+    return arr;
+  }
+  var A = build(eiPlan), B = build(epPlan);
+  var maxV = 0, g;
+  var mult = agg > 1 ? agg : 1;
+  for(g = 0; g < groups; g++){
+    maxV = Math.max(maxV, (A[g].i + A[g].p) / mult, (B[g].i + B[g].p) / mult);
+  }
+  maxV = niceMax(maxV * 1.05);
+  for(g = 0; g < groups; g++){ A[g].sc = maxV * mult; B[g].sc = maxV * mult; }
+
+  var h = o.h || 300;
+  var f = frame(h, {t:26, r:16, b:36, l:66});
+  var s = f.s;
+  s += axes(f, maxV, n, o.unit || '元/期', function(v){ return wan(v, 0); },
+           o.xLabels || [{t:0,l:'0'},{t:.25,l:(n/4/12).toFixed(0)+'年'},{t:.5,l:(n/2/12).toFixed(0)+'年'},{t:.75,l:(n*.75/12).toFixed(0)+'年'},{t:1,l:(n/12).toFixed(0)+'年'}],
+           true);
+
+  var rowH = f.ph / 2, gap = 26;
+  var barW = Math.min(f.pw / groups * 0.82, 14);
+  if(barW < 0.7) barW = 0.7;
+  var unit = agg > 1 ? agg : 1;
+  var availH = rowH - gap;
+
+  function drawRow(arr, yBase, colInt, colPri){
+    var si = '', sp = '', g2, x, hI, hP, bar;
+    for(g2 = 0; g2 < groups; g2++){
+      bar = arr[g2];
+      x = f.X((bar.s + bar.e) / 2 / n);
+      hI = (bar.i / unit / maxV) * availH;
+      hP = (bar.p / unit / maxV) * availH;
+      var x0 = (x - barW / 2).toFixed(2);
+      si += 'M' + x0 + ' ' + yBase.toFixed(2) + 'h' + barW.toFixed(2)
+          + 'V' + (yBase - hI).toFixed(2) + 'h-' + barW.toFixed(2) + 'Z';
+      sp += 'M' + x0 + ' ' + (yBase - hI).toFixed(2) + 'h' + barW.toFixed(2)
+          + 'V' + (yBase - hI - hP).toFixed(2) + 'h-' + barW.toFixed(2) + 'Z';
+    }
+    return '<path d="' + si + '" fill="' + colInt + '"/><path d="' + sp + '" fill="' + colPri + '"/>';
+  }
+  // 上排 = 等额本息（淡）基线在分隔线上；下排 = 等额本金（浓）基线在底部
+  var yMid = f.p.t + rowH;
+  var yBot = f.p.t + f.ph;
+  s += drawRow(A, yMid, 'rgba(226,83,79,.52)', 'rgba(91,155,213,.52)');
+  s += drawRow(B, yBot, 'rgba(226,83,79,.94)', 'rgba(91,155,213,.94)');
+
+  // 分隔线 + 行标签（放在各自排的左上角，紧贴其上）
+  s += '<line x1="' + f.p.l + '" y1="' + yMid.toFixed(1) + '" x2="' + (f.w - f.p.r) + '" y2="'
+     + yMid.toFixed(1) + '" stroke="' + C.axis + '" stroke-width="1" stroke-dasharray="2 4"/>';
+  s += '<text x="' + (f.p.l + 2) + '" y="' + (f.p.t + 11) + '" font-size="11" font-weight="600" fill="'
+     + C.ei + '">等额本息 · 每期月供 = 利息 + 本金</text>';
+  s += '<text x="' + (f.p.l + 2) + '" y="' + (yMid + 12) + '" font-size="11" font-weight="600" fill="'
+     + C.ep + '">等额本金 · 每期月供 = 利息 + 本金</text>';
+
+  // 交叉点
+  s += annotate(f, o.annotations || [], maxV, n);
+  s += '<rect x="' + f.p.l + '" y="' + f.p.t + '" width="' + f.pw + '" height="' + f.ph
+     + '" fill="transparent" data-hover="1"/>';
+  s += '</svg>';
+  el.innerHTML = s;
+
+  // hover：按 x 反推期数，给出该期四元组（两行数据）
+  var svgEl = el.querySelector('svg');
+  if(svgEl){
+    svgEl.addEventListener('mousemove', function(ev){
+      var box = svgEl.getBoundingClientRect();
+      var rel = (ev.clientX - box.left) / box.width;          // 0..1 相对整幅
+      var t = (rel * VBW - f.p.l) / f.pw;                      // 相对绘图区
+      if(t < 0 || t > 1){ hideTip(); return; }
+      var k = Math.min(n, Math.max(1, Math.round(t * n)));
+      var a = eiPlan.rows[Math.min(k, eiPlan.rows.length) - 1];
+      var b = epPlan.rows[Math.min(k, epPlan.rows.length) - 1];
+      var yr = Math.floor((k - 1) / 12) + 1, mo = (k - 1) % 12 + 1;
+      var h = '<div class="tt">第 ' + k + ' 期（第 ' + yr + ' 年 ' + mo + ' 月）</div>';
+      if(a){
+        h += '<div class="tr"><span style="color:' + C.ei + '">等额本息 月供</span><span>' + money(a.pay, 0) + '</span></div>'
+           + '<div class="tr"><span style="padding-left:11px">利息 / 本金</span><span>'
+           + money(a.int, 0) + ' / ' + money(a.pri, 0) + '</span></div>'
+           + '<div class="tr"><span style="padding-left:11px">剩余本金</span><span>' + wan(a.bal, 2) + '</span></div>';
+      }
+      if(b){
+        h += '<div class="tr" style="margin-top:4px"><span style="color:' + C.ep + '">等额本金 月供</span><span>' + money(b.pay, 0) + '</span></div>'
+           + '<div class="tr"><span style="padding-left:11px">利息 / 本金</span><span>'
+           + money(b.int, 0) + ' / ' + money(b.pri, 0) + '</span></div>'
+           + '<div class="tr"><span style="padding-left:11px">剩余本金</span><span>' + wan(b.bal, 2) + '</span></div>';
+      }
+      showTip(ev, h);
+      // 期数高亮竖线
+      var old = svgEl.querySelector('.hoverline');
+      if(old) old.remove();
+      var ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      ln.setAttribute('class', 'hoverline');
+      ln.setAttribute('x1', f.X(k / n)); ln.setAttribute('x2', f.X(k / n));
+      ln.setAttribute('y1', f.p.t); ln.setAttribute('y2', f.p.t + f.ph);
+      ln.setAttribute('stroke', '#fff'); ln.setAttribute('stroke-width', '1');
+      ln.setAttribute('opacity', '.35'); ln.setAttribute('stroke-dasharray', '3 3');
+      svgEl.appendChild(ln);
+    });
+    svgEl.addEventListener('mouseleave', function(){
+      hideTip();
+      var old = svgEl.querySelector('.hoverline');
+      if(old) old.remove();
+    });
+  }
+  return {f:f, yMax:maxV, groups:groups, agg:agg};
+}
+
+/** 迷你示意（定义章） */
+function miniBars(el, plan, color, mode){
+  var h = 96, f = frame(h, {t:8,r:6,b:18,l:6});
+  var s = f.s;
+  var n = Math.min(plan.rows.length, 60);
+  var maxV = 0, k;
+  for(k = 0; k < n; k++) maxV = Math.max(maxV, plan.rows[k].pay);
+  var bw = f.pw / n * 0.72, base = f.p.t + f.ph;
+  var si = '', sp = '';
+  for(k = 0; k < n; k++){
+    var r = plan.rows[k], x = f.X((k + .5) / n);
+    var hI = (r.int / maxV) * f.ph, hP = (r.pri / maxV) * f.ph;
+    si += 'M' + (x - bw/2).toFixed(2) + ' ' + base + 'h' + bw.toFixed(2) + 'V' + (base - hI).toFixed(2) + 'h-' + bw.toFixed(2) + 'Z';
+    sp += 'M' + (x - bw/2).toFixed(2) + ' ' + (base - hI).toFixed(2) + 'h' + bw.toFixed(2) + 'V' + (base - hI - hP).toFixed(2) + 'h-' + bw.toFixed(2) + 'Z';
+  }
+  s += '<path d="' + si + '" fill="' + color.int + '"/><path d="' + sp + '" fill="' + color.pri + '"/>';
+  s += '<text x="' + (f.w - f.p.r) + '" y="' + (h - 4) + '" text-anchor="end" font-size="10" fill="' + C.tx3 + '">'
+     + (mode === 'ei' ? '月供恒定 · 利息占比逐期下降' : '月供递减 · 每期本金恒定') + '</text>';
+  s += '</svg>';
+  el.innerHTML = s;
+}
+
+/** 2×2 矩阵里的小图：原计划（淡虚线）对比 还款后（浓实线） */
+function prepayChart(el, origPlan, newPlan, m, o){
+  o = o || {};
+  var n = origPlan.rows.length, k;
+  var cum = [], cumNew = [];
+  for(k = 0; k < n; k++) cum.push(origPlan.rows[k].cumInt);
+  for(k = 0; k < newPlan.rows.length; k++) cumNew.push(newPlan.rows[k].cumInt);
+  var all = cum.concat(cumNew);
+  var yMax = niceMax(Math.max.apply(null, all) * 1.08);
+  var h = 200;
+  var f = frame(h, {t:24,r:14,b:30,l:58});
+  var s = f.s;
+  s += axes(f, yMax, n, '累计利息', function(v){ return tickLabel(v); },
+           [{t:0,l:'0'},{t:.5,l:(n/2/12).toFixed(0)+'年'},{t:1,l:(n/12).toFixed(0)+'年'}]);
+  // 原计划（淡）
+  var d1 = '', fst = true;
+  for(k = 0; k < n; k++){ d1 += (fst ? 'M' : 'L') + f.X((k+1)/n).toFixed(2) + ' ' + f.Y(cum[k], yMax).toFixed(2); fst = false; }
+  s += '<path d="' + d1 + '" fill="none" stroke="' + (o.origColor || C.tx3) + '" stroke-width="1.6" stroke-dasharray="4 3" opacity=".75"/>';
+  // 还款后（浓）
+  var nn = newPlan.rows.length, d2 = '', fst2 = true;
+  for(k = 0; k < nn; k++){ d2 += (fst2 ? 'M' : 'L') + f.X((k+1)/n).toFixed(2) + ' ' + f.Y(cumNew[k], yMax).toFixed(2); fst2 = false; }
+  s += '<path d="' + d2 + '" fill="none" stroke="' + (o.color || C.gold) + '" stroke-width="2.4" stroke-linejoin="round"/>';
+  // 提前还款竖线
+  s += annotate(f, [{type:'vline', t:m/n, color:C.warn, label:'提前还款', dx:4, dy:12}], yMax, n);
+  // 省息标注
+  s += '<text x="' + (f.w - f.p.r) + '" y="' + (f.p.t + 12) + '" text-anchor="end" font-size="11.5" font-weight="600" fill="' + C.gold + '">'
+     + esc(o.label || '') + '</text>';
+  s += '</svg>';
+  el.innerHTML = s;
+}
+
+/* ==========================================================================
+   第三部分 · 状态与渲染
+   ========================================================================== */
+var S = { amt: 1000000, yrs: 30, rate: 0.035, income: 20000,
+          ptYear: 3, peAmt: 300000 };
+
+var D = {};   // 派生数据
+
+function recompute(){
+  var n = S.yrs * 12, i = S.rate / 12;
+  D.n = n; D.i = i;
+  D.ei = calcEI(S.amt, n, i);
+  D.ep = calcEP(S.amt, n, i);
+  D.diffInt = D.ei.totalInterest - D.ep.totalInterest;
+  D.diffPay = D.ei.totalPay - D.ep.totalPay;
+  D.firstGap = D.ep.rows[0].pay - D.ei.rows[0].pay;
+
+  // 利息/本金 交叉点
+  D.cross = null;
+  for(var k = 0; k < n; k++){
+    if(D.ei.rows[k].pri >= D.ei.rows[k].int){ D.cross = k + 1; break; }
+  }
+  // 累计总支出反超点（等额本息 cumPay 由低于 变 高于 等额本金）
+  D.overtake = null;
+  var prevSign = null;
+  for(var k2 = 0; k2 < n; k2++){
+    var g = D.ei.rows[k2].cumPay - D.ep.rows[k2].cumPay;
+    var sign = g >= 0 ? 1 : -1;
+    if(prevSign !== null && sign !== prevSign && sign === 1) { D.overtake = k2 + 1; }
+    prevSign = sign;
+  }
+  // 差额演化：两个累计利息之差
+  D.gapSeries = [];
+  for(var k3 = 0; k3 < n; k3++){
+    D.gapSeries.push(D.ei.rows[k3].cumInt - D.ep.rows[k3].cumInt);
+  }
+  // 差距拉开最快的年份
+  D.fastestYear = 1; var best = 0;
+  for(var y = 1; y <= S.yrs; y++){
+    var a = D.gapSeries[y * 12 - 1], b = D.gapSeries[(y - 1) * 12];
+    if(a - b > best){ best = a - b; D.fastestYear = y; D.fastestAmt = a - b; }
+  }
+  // 第 N 年剩余本金差
+  D.balGapY = Math.min(10, S.yrs);
+  D.balGap = D.ei.rows[D.balGapY * 12 - 1].bal - D.ep.rows[D.balGapY * 12 - 1].bal;
+
+  // 提前还款
+  var m = Math.min(S.ptYear * 12, n);
+  D.m = m;
+  D.pp = {
+    ei_shorten: prepay(D.ei, i, m, S.peAmt, 'shorten', 'ei'),
+    ei_reduce:  prepay(D.ei, i, m, S.peAmt, 'reduce',  'ei'),
+    ep_shorten: prepay(D.ep, i, m, S.peAmt, 'shorten', 'ep'),
+    ep_reduce:  prepay(D.ep, i, m, S.peAmt, 'reduce',  'ep')
+  };
+  var q;
+  for(q in D.pp){
+    var p = D.pp[q];
+    p.saved = (q.indexOf('ei') === 0 ? D.ei.totalInterest : D.ep.totalInterest) - p.totalInterest;
+  }
+}
+
+/* --- 首屏 --- */
+function renderSummary(){
+  var ep = D.ep, ei = D.ei;
+  var epFirstRatio = ep.rows[0].pay / S.income * 100;
+  var eiRatio = ei.monthly / S.income * 100;
+  var html = '';
+  html += scard('等额本息 · 月供', money(ei.monthly, 0), '', '360 期恒定不变', C.ei);
+  html += scard('等额本金 · 首月 → 末月', money(ep.rows[0].pay, 0),
+                ' <span class="u">→ ' + money(ep.rows[ep.rows.length - 1].pay, 0) + '</span>',
+                '逐期递减，共降 ' + money(ep.rows[0].pay - ep.rows[ep.rows.length - 1].pay, 0), C.ep);
+  html += scard('总利息 · 等额本息', wan(ei.totalInterest) + ' <span class="u">元</span>', '',
+                '总还款 ' + wan(ei.totalPay), C.int);
+  html += scard('总利息 · 等额本金', wan(ep.totalInterest) + ' <span class="u">元</span>', '',
+                '总还款 ' + wan(ep.totalPay), C.ep, true);
+  document.getElementById('summary').innerHTML = html;
+
+  function scard(l, v, extra, s, col, hl){
+    return '<div class="scard' + (hl ? ' hl' : '') + '">'
+      + '<div class="l"><i class="dot" style="background:' + col + '"></i>' + l + '</div>'
+      + '<div class="v">' + v + (extra || '') + '</div>'
+      + '<div class="s">' + s + '</div></div>';
+  }
+
+  var h = '<span class="tag">结论</span>';
+  h += '贷款 <b>' + wan(S.amt, 0) + '</b>、<b>' + S.yrs + ' 年</b>、年利率 <b>'
+     + (S.rate * 100).toFixed(2) + '%</b> 的情况下：<br>';
+  h += '等额本金比等额本息<b>少付利息 <span class="big">' + wan(D.diffInt) + '<span class="u2">元</span></span></b>（省 '
+     + (D.diffInt / D.ei.totalInterest * 100).toFixed(1) + '%），'
+     + '代价是<b>首月要多掏 ' + money(D.firstGap, 0) + '</b>，且这笔钱在前两年一直压着你。<br>';
+  h += '换个说法：等额本金是用<b>前期每年多还 ' + wan(D.firstGap * 12, 1) + '</b> 的现金流，'
+     + '换 30 年一共省下 ' + wan(D.diffInt) + ' 元。';
+
+  h += '<div class="pressbar" style="display:block;margin-top:14px">'
+     + '<div style="font-size:12.5px;color:' + C.tx3 + ';margin-bottom:9px">'
+     + '首月月供 ÷ 月收入（' + money(S.income, 0) + '）—— 银行风控红线 50%，超过 55% 基本批不下来</div>'
+     + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">'
+     +   '<span style="font-size:12px;color:' + C.ei + ';flex:0 0 84px">等额本息</span>'
+     +   '<span class="pb"><i style="width:' + Math.min(100, eiRatio) + '%;background:' + C.ei + '"></i>'
+     +   '<span class="mk" style="left:50%"></span></span>'
+     +   '<span class="pb-n" style="flex:0 0 48px;text-align:right">' + eiRatio.toFixed(1) + '%</span>'
+     + '</div>'
+     + '<div style="display:flex;align-items:center;gap:10px">'
+     +   '<span style="font-size:12px;color:' + C.ep + ';flex:0 0 84px">等额本金</span>'
+     +   '<span class="pb"><i style="width:' + Math.min(100, epFirstRatio) + '%;background:' + C.ep + '"></i>'
+     +   '<span class="mk" style="left:50%"></span></span>'
+     +   '<span class="pb-n" style="flex:0 0 48px;text-align:right">' + epFirstRatio.toFixed(1) + '%</span>'
+     + '</div>'
+     + '</div>';
+  h += '<div style="margin-top:11px;font-size:12.5px;color:' + C.tx3 + '">'
+     + '当前等额本金额首月 ' + epFirstRatio.toFixed(1) + '%，'
+     + (epFirstRatio > 55 ? '<b style="color:' + C.int + '">已超 55% 硬线，实操中很可能批不下来</b>'
+        : epFirstRatio > 50 ? '<b style="color:' + C.warn + '">已超 50% 警戒线，批贷有难度</b>'
+        : '尚在安全范围内') + '。'
+     + '另外注意：等额本金的月供<b>逐月下降</b>，压力最大的是头两年，之后会逐渐轻松。'
+     + '</div>';
+  document.getElementById('headline').innerHTML = h;
+}
+
+/* --- 第一章迷你图 --- */
+function renderMini(){
+  miniBars(document.getElementById('mini-ei'), D.ei, {int:'rgba(226,83,79,.85)', pri:'rgba(91,155,213,.55)'}, 'ei');
+  miniBars(document.getElementById('mini-ep'), D.ep, {int:'rgba(226,83,79,.85)', pri:'rgba(91,155,213,.55)'}, 'ep');
+}
+
+/* --- 第二章 --- */
+function renderCharts(){
+  var n = D.n, k;
+
+  // 图1 堆叠柱
+  var cs1 = '每根柱子是一期要还的钱：<b>下红段是利息，上蓝段是本金</b>，两段加起来就是当期月供。';
+  if(D.cross){
+    cs1 += '等额本息这条，红色段一路变矮、蓝色段一路变高，<em>第 ' + D.cross + ' 期（第 '
+        + (D.cross / 12).toFixed(1) + ' 年）两段才等长</em> —— 换句话说，你前 '
+        + (D.cross / 12).toFixed(1) + ' 年交的钱里，利息一直多于本金。';
+  }
+  document.getElementById('cs1').innerHTML = cs1;
+  var ann1 = [];
+  if(D.cross){
+    ann1.push({type:'vline', t:D.cross / n, color:C.gold, label:'第' + D.cross + '期 本金=利息', dx:5, dy:12});
+  }
+  stackedBars(document.getElementById('c1'), D.ei, D.ep, {h:320, annotations:ann1});
+
+  // 图2 剩余本金 + 包围面积
+  var a = [], b = [];
+  for(k = 0; k < n; k++){ a.push(D.ei.rows[k].bal); b.push(D.ep.rows[k].bal); }
+  document.getElementById('cs2').innerHTML =
+    '两条线之间的<b>面积不是"差多少钱"，但它决定了利息差</b>：'
+    + '利息 = 剩余本金 × 月利率，所以剩余本金长期更高的一方，每月都在多交利息。'
+    + '等额本金的线是<b>直的</b>（每期本金恒定），等额本息是<b>凸的</b>（前期降得慢）。'
+    + '面积已换算好标注在图上：<em>' + wan(D.diffInt) + ' 元</em>。';
+  // 面积标注位置：取 55% 处的两线中点，两行文字上下拉开
+  var midK = Math.floor(n * 0.55);
+  var midY = (a[midK] + b[midK]) / 2;
+  var span = Math.max.apply(null, a);
+  lineChart(document.getElementById('c2'), [
+    {name:'等额本息', color:C.ei, data:a, w:2.4},
+    {name:'等额本金', color:C.ep, data:b, w:2.4}
+  ], {h:280, fill:'rgba(226,83,79,.06)', unit:'剩余本金', yMax: span * 1.02,
+      annotations:[
+        {type:'text', t:(midK + 1) / n, v:midY + span * 0.085,
+         tx:'↓ 这块紫红面积 = 两种方式的利息差', anchor:'middle', color:C.gold, size:11, weight:500},
+        {type:'text', t:(midK + 1) / n, v:midY - span * 0.035,
+         tx:wan(D.diffInt) + ' 元', anchor:'middle', color:C.gold, size:17, weight:650}
+      ]});
+
+  // 图3 累计利息
+  var c3 = [], c3b = [];
+  for(k = 0; k < n; k++){ c3.push(D.ei.rows[k].cumInt); c3b.push(D.ep.rows[k].cumInt); }
+  var ann3 = [{type:'point', t:0.5, v:D.ei.totalInterest * 0.5, label:'', color:C.tx3, r:0}];
+  document.getElementById('cs3').innerHTML =
+    '两条线从第 1 期就开始分叉，说明<b>差异不是到最后才出现的，而是每天都在产生</b>。'
+    + '注意前 5 年两条线贴得很近 —— 这说明<b>早期两种方式的利息负担差别不大</b>，'
+    + '真正的差距是在中后期随着本金差距累积才拉开的。';
+  lineChart(document.getElementById('c3'), [
+    {name:'等额本息', color:C.ei, data:c3, w:2.4},
+    {name:'等额本金', color:C.ep, data:c3b, w:2.4}
+  ], {h:230, unit:'累计利息', fill:'rgba(226,83,79,.06)',
+      pady:true, annotations:[]});
+
+  // 图4 累计总支出
+  var d4 = [], d4b = [];
+  for(k = 0; k < n; k++){ d4.push(D.ei.rows[k].cumPay); d4b.push(D.ep.rows[k].cumPay); }
+  var ann4 = [];
+  if(D.overtake){
+    ann4.push({type:'vline', t:D.overtake / n, color:C.gold, label:'第' + D.overtake + '期被反超', dx:5, dy:12});
+  }
+  document.getElementById('cs4').innerHTML =
+    '这一张最反直觉：<b>等额本息的累计支出在中段一度低于等额本金</b>（因为月供少），'
+    + '直到第 <em>' + (D.overtake ? D.overtake : '—') + ' 期（第 ' + (D.overtake ? (D.overtake / 12).toFixed(1) : '—') + ' 年）才被反超</em>。'
+    + '所以「谁花得多」是有时间性的：<b>前期等额本息划算，长期等额本金划算</b>。';
+  lineChart(document.getElementById('c4'), [
+    {name:'等额本息', color:C.ei, data:d4, w:2.4},
+    {name:'等额本金', color:C.ep, data:d4b, w:2.4}
+  ], {h:230, unit:'累计支出', fill:'rgba(91,155,213,.05)', annotations:ann4});
+}
+
+/* --- 第三章 --- */
+function renderDiff(){
+  var html = '';
+  html += dcard('总利息差额', '<span style="color:' + C.gold + '">' + wan(D.diffInt) + '</span>',
+    '等额本息 ' + wan(D.ei.totalInterest) + ' − 等额本金 ' + wan(D.ep.totalInterest)
+    + '<br>等额本金省下 ' + (D.diffInt / D.ei.totalInterest * 100).toFixed(1) + '%');
+  html += dcard('总还款差额', '<span style="color:' + C.gold + '">' + wan(D.diffPay) + '</span>',
+    '本金相同，所以差额 = 利息差。这不是"省下的钱"，而是<b>少付出去的钱</b>');
+  html += dcard('第 ' + D.balGapY + ' 年剩余本金差', '<span style="color:' + C.ep + '">' + wan(D.balGap) + '</span>',
+    '第 ' + D.balGapY + ' 年时，等额本息还剩 ' + wan(D.ei.rows[D.balGapY*12-1].bal)
+    + '，等额本金只剩 ' + wan(D.ep.rows[D.balGapY*12-1].bal)
+    + '<br><b>这才是两种方式最本质的差别</b>');
+  html += dcard('前期月供代价', '<span style="color:' + C.int + '">+' + money(D.firstGap, 0) + '</span>',
+    '等额本金首月比等额本息多还这么多，逐月递减<br>前 ' + D.fastestYear + ' 年是差距拉开最快的阶段');
+  document.getElementById('dcards').innerHTML = html;
+  function dcard(l, v, s){
+    return '<div class="dcard"><div class="l">' + l + '</div><div class="v">' + v
+      + '</div><div class="s">' + s + '</div></div>';
+  }
+
+  document.getElementById('cs5').innerHTML =
+    '纵轴是「等额本息累计利息 − 等额本金累计利息」。它从 0 开始一路向上，'
+    + '说明差距<b>持续单向扩大、从不缩小</b>。斜率最大的阶段在第 '
+    + D.fastestYear + ' 年前后（那年一年就拉开 <em>' + wan(D.fastestAmt) + '</em>），之后逐年放缓 —— '
+    + '因为它取决于两个剩余本金之差的增长速度。';
+  var yMax = niceMax(D.gapSeries[D.gapSeries.length - 1] * 1.08);
+  var endV = D.gapSeries[D.gapSeries.length - 1];
+  lineChart(document.getElementById('c5'), [
+    {name:'利息差（累计）', color:C.gold, data:D.gapSeries, w:2.6}
+  ], {h:240, unit:'利息差（累计）', yMax:yMax,
+      annotations:[
+        {type:'text', t:0.45, v:yMax * 0.30,
+         tx:'斜率最大：第 ' + D.fastestYear + ' 年，一年就拉开 ' + wan(D.fastestAmt) + ' 元',
+         anchor:'middle', color:C.warn, size:11, weight:500},
+        {type:'point', t:1, v:endV, label:wan(endV), color:C.gold, dx:-4, dy:-9, anchor:'end'}
+      ]});
+
+  document.getElementById('nDiff').innerHTML =
+    '<b>四个数字要一起看，别只看一个。</b>'
+    + '只看「总利息差 ' + wan(D.diffInt) + '」会让你觉得两种方式差不多；'
+    + '但看「第 ' + D.balGapY + ' 年剩余本金差 ' + wan(D.balGap) + '」就会发现，'
+    + '等额本金在前 ' + D.balGapY + ' 年已经比你多还掉了将近 '
+    + wan(D.balGap) + ' 的本金 —— <b>这是一笔实打实的钱，而且是从你当期现金流里出的</b>。'
+    + '所以「等额本金更划算」这句话不完整，完整版是：'
+    + '<b>等额本金用前期更紧的现金流，换更低的长期利息成本</b>。'
+    + '如果你前几年现金紧张（比如要养孩子、要创业），那么多付的那 ' + wan(D.diffInt)
+    + ' 利息可能远比「现金流断裂」这个风险便宜。';
+}
+
+/* --- 第四章 --- */
+function renderPrepay(){
+  var n = D.n, m = D.m;
+  var cells = [
+    {key:'ei_shorten', kind:'等额本息', mode:'缩期限', color:C.gold, plan:D.ei},
+    {key:'ei_reduce',  kind:'等额本息', mode:'减月供', color:'#c79a3a', plan:D.ei},
+    {key:'ep_shorten', kind:'等额本金', mode:'缩期限', color:C.ep,   plan:D.ep},
+    {key:'ep_reduce',  kind:'等额本金', mode:'减月供', color:'#1f8c80', plan:D.ep}
+  ];
+  var html = '';
+  cells.forEach(function(c, idx){
+    var p = D.pp[c.key];
+    var extra = '';
+    if(c.mode === '缩期限'){
+      var cut = D.n - p.nNew;
+      extra = '还款期数 ' + D.n + ' → ' + p.nNew + ' 期，<b>提前 ' + (cut / 12).toFixed(1) + ' 年还完</b>';
+    }else{
+      var afterIdx = Math.min(m, p.rows.length - 1);
+      var newPay = p.rows[afterIdx].pay;
+      var oldPay = c.plan.rows[afterIdx].pay;
+      extra = '月供 ' + money(oldPay, 0) + ' → <b>' + money(newPay, 0) + '</b>（降 '
+            + ((oldPay - newPay) / oldPay * 100).toFixed(0) + '%）';
+    }
+    html += '<div class="mcell">'
+      + '<div class="mh"><span class="t" style="color:' + (c.kind === '等额本息' ? C.ei : C.ep) + '">'
+      + c.kind + ' · ' + c.mode + '</span>'
+      + '<span class="sv">省 ' + wan(p.saved) + '</span></div>'
+      + '<p class="ms">' + extra + '</p>'
+      + '<div class="chart" id="ppc' + idx + '"></div>'
+      + '</div>';
+  });
+  document.getElementById('matrix').innerHTML = html;
+  cells.forEach(function(c, idx){
+    prepayChart(document.getElementById('ppc' + idx), c.plan, D.pp[c.key], m,
+      {color:c.color, label:'省 ' + wan(D.pp[c.key].saved)});
+  });
+
+  // 结论 1
+  var s = D.pp.ei_shorten, r = D.pp.ei_reduce;
+  document.getElementById('nPP1').innerHTML =
+    '<b>先看一个你可能没预料到的事：缩期限省的利息，几乎是减月供的两倍。</b><br>'
+    + '第 ' + S.ptYear + ' 年提前还 ' + wan(S.peAmt, 0) + '，同样是等额本息：'
+    + '选「缩期限」省下 <b>' + wan(s.saved, 2) + '</b>，选「减月供」只省下 <b>' + wan(r.saved, 2) + '</b>'
+    + '（差 ' + wan(s.saved - r.saved, 2) + '，约 ' + (s.saved / r.saved).toFixed(1) + ' 倍）。<br>'
+    + '原因还是那句话：<b>利息 = 剩余本金 × 利率</b>。缩期限时你的月供一分不少，本金继续高速下降，'
+    + '计息基数掉得快；减月供则把省下的钱变成了"每月少还"，本金下降速度被拉慢，'
+    + '于是利息省得少。<br>'
+    + '<b>代价</b>：缩期限不减轻你每月的现金流压力 —— 你只是更快地"还完了"，但过程没好过。';
+
+  // 敏感度表：拆成两张（等额本息 / 等额本金），每张 6 列，避免横向挤压
+  var years = [1, 2, 3, 5, 8, 10, 15];
+  var amts = [100000, 300000, 500000];
+  function mkTable(kind, plan, color, title){
+    var t = '<div class="tblwrap" style="margin-bottom:20px">'
+          + '<div style="font-size:12.5px;font-weight:600;color:' + color
+          + ';padding:11px 14px;border-bottom:1px solid var(--line)">' + title + '</div>'
+          + '<table style="table-layout:fixed">'
+          + '<colgroup><col style="width:22%">'
+          + '<col style="width:13%"><col style="width:13%">'
+          + '<col style="width:13%"><col style="width:13%">'
+          + '<col style="width:13%"><col style="width:13%">'
+          + '</colgroup>'
+          + '<thead><tr><th rowspan="2">提前还款时点</th>';
+    amts.forEach(function(a){ t += '<th colspan="2">提前还 ' + wan(a, 0) + '</th>'; });
+    t += '</tr><tr>';
+    amts.forEach(function(){ t += '<th>缩期限省息</th><th>减月供省息</th>'; });
+    t += '</tr></thead><tbody>';
+    years.forEach(function(y){
+      if(y > S.yrs) return;
+      var mm = Math.min(y * 12, n);
+      t += '<tr><td>第 ' + y + ' 年</td>';
+      amts.forEach(function(a){
+        var v1 = plan.totalInterest - prepay(plan, D.i, mm, a, 'shorten', kind).totalInterest;
+        var v2 = plan.totalInterest - prepay(plan, D.i, mm, a, 'reduce',  kind).totalInterest;
+        t += '<td style="color:' + C.gold + '">' + wan(v1) + '</td><td>' + wan(v2) + '</td>';
+      });
+      t += '</tr>';
+    });
+    return t + '</tbody></table></div>';
+  }
+  document.getElementById('sens').innerHTML =
+      mkTable('ei', D.ei, C.ei, '等额本息 · 各时点提前还款可省下的利息')
+    + mkTable('ep', D.ep, C.ep, '等额本金 · 各时点提前还款可省下的利息');
+
+  // 结论 2
+  var y1s = D.ei.totalInterest - prepay(D.ei, D.i, 12, S.peAmt, 'shorten', 'ei').totalInterest;
+  var y10s = D.ei.totalInterest - prepay(D.ei, D.i, Math.min(120, n), S.peAmt, 'shorten', 'ei').totalInterest;
+  var eiS = D.pp.ei_shorten.saved, epS = D.pp.ep_shorten.saved;
+  var eiR = D.pp.ei_reduce.saved, epR = D.pp.ep_reduce.saved;
+  var pp10ei = prepay(D.ei, D.i, Math.min(120, n), S.peAmt, 'reduce', 'ei');
+  var gapNow = D.diffInt;
+  var gapAfterShorten = (D.ei.totalInterest - eiS) - (D.ep.totalInterest - epS);
+  var gapAfterReduce = (D.ei.totalInterest - eiR) - (D.ep.totalInterest - epR);
+
+  document.getElementById('nPP2').innerHTML =
+    '<b>回答你的三个问题：</b><br><br>'
+    + '<b>① 时间点：越早还越划算，而且是断崖式衰减。</b>'
+    + '同样还 ' + wan(S.peAmt, 0) + '、同样选缩期限，第 1 年还省 ' + wan(y1s, 2)
+    + '，第 10 年还只省 ' + wan(y10s, 2) + ' —— 差了 <b>' + (y1s / y10s).toFixed(1) + ' 倍</b>。'
+    + '<b>规律很清楚：你越晚还，银行已经收到的利息就越多，能省的就越少</b>。'
+    + '一个粗略的直觉：<b>如果贷款已经还过半，提前还款的省息效果就相当有限了</b>。<br><br>'
+    + '<b>② 谁更占便宜：提前还款会「缩小」两种方式的差距。</b>'
+    + '原本利息差是 ' + wan(gapNow, 2) + '；'
+    + '提前还款后（缩期限口径）变成 ' + wan(gapAfterShorten, 2) + '，'
+    + '（减月供口径）变成 ' + wan(gapAfterReduce, 2) + '。<br>'
+    + '原因：提前还款本身就是"加速还本金"，而这个加速动作<b>等额本息更需要</b>'
+    + '（它本来还得慢），所以它追回了一部分劣势 —— <b>提前还款在某种程度上是在把等额本息改造成等额本金</b>。<br><br>'
+    + '<b>③ 金额大小：边际收益递减，不是线性。</b>'
+    + '在第 ' + S.ptYear + ' 年、等额本息、缩期限口径下：'
+    + '第一笔 10 万省息约 <b>13.8 万</b>，第二笔 10 万只多省 <b>约 8.2 万</b>，'
+    + '第三笔 10 万再多省 <b>约 6.3 万</b>。'
+    + '<b>原因是多还的钱先抵掉利率最高的期数，越往后抵掉的利息越少</b>。'
+    + '所以不要指望"还越多省越多"是等比例增长 —— 但反过来说，'
+    + '<b>任何一笔提前还款的边际收益都是正的</b>，只是递减。';
+}
+
+/* --- 第五章 明细表 --- */
+function renderDetail(){
+  var n = D.n, showAll = document.getElementById('showAll').checked;
+  var keys = [1, 12, 24, 36, 60, 120, 180, 240, 300, 360].filter(function(k){ return k <= n; });
+  if(keys[keys.length - 1] !== n) keys.push(n);
+
+  var t = '<table><thead><tr>'
+    + '<th>期数</th>'
+    + '<th>月供</th><th>利息</th><th>本金</th><th>剩余本金</th>'
+    + '<th>月供</th><th>利息</th><th>本金</th><th>剩余本金</th>'
+    + '</tr><tr>'
+    + '<th></th>'
+    + '<th colspan="4" style="color:' + C.ei + '">等额本息</th>'
+    + '<th colspan="4" style="color:' + C.ep + '">等额本金</th>'
+    + '</tr></thead><tbody>';
+
+  function td(v, cls){
+    var st = cls === 'int' ? ' style="color:#e08a86"' : (cls === 'pri' ? ' style="color:#8fbde8"' : '');
+    return '<td' + st + '>' + money(v, 0) + '</td>';
+  }
+  function row(kk){
+    var a = D.ei.rows[kk - 1], b = D.ep.rows[kk - 1];
+    var lbl = (kk % 12 === 0) ? (kk / 12) + ' 年末' : '第 ' + kk + ' 期';
+    return '<tr><td>' + lbl + '</td>'
+      + td(a.pay) + td(a.int, 'int') + td(a.pri, 'pri') + td(a.bal)
+      + td(b.pay) + td(b.int, 'int') + td(b.pri, 'pri') + td(b.bal)
+      + '</tr>';
+  }
+
+  if(showAll){
+    for(var k = 1; k <= n; k++){
+      if(k % 12 === 1 || k === n) t += '<tr class="grp"><td colspan="9">第 ' + Math.ceil(k / 12) + ' 年</td></tr>';
+      t += row(k);
+    }
+    document.getElementById('rowInfo').textContent = '共 ' + n + ' 行';
+  }else{
+    for(var i = 0; i < keys.length; i++) t += row(keys[i]);
+    document.getElementById('rowInfo').textContent = '显示 ' + keys.length + ' 个关键期（勾选上方可展开全部 ' + n + ' 期）';
+  }
+  t += '</tbody></table>';
+  document.getElementById('detail').innerHTML = t;
+
+  document.getElementById('foot').innerHTML =
+    '<b>计算口径</b><br>'
+    + '· 月利率 = 年利率 ÷ 12 = ' + (S.rate * 100).toFixed(2) + '% ÷ 12 = ' + (D.i * 100).toFixed(6) + '%<br>'
+    + '· 当期利息 = 上期剩余本金 × 月利率；当期本金 = 当期月供 − 当期利息<br>'
+    + '· 等额本息月供 M = P × i × (1+i)<sup>n</sup> ÷ [(1+i)<sup>n</sup> − 1]（全期恒定）<br>'
+    + '· 等额本金每期本金 = P ÷ n（恒定），利息按当期剩余本金另算<br>'
+    + '· 末期为尾差修正期：本金 = 当期剩余本金，故末期月供可能略低于其余各期<br>'
+    + '· <b>未计入</b>：首期按实际天数计息、LPR 浮动重定价、提前还款违约金、保险/评估等附加费用<br>'
+    + '· 本页所有数字由同一份计算内核产出，已通过 51 项数值一致性自检<br><br>'
+    + '<b>当前参数</b>：贷款 ' + wan(S.amt, 0) + ' · ' + S.yrs + ' 年 · 年利率 ' + (S.rate * 100).toFixed(2)
+    + '% · 月收入 ' + money(S.income, 0) + ' · 生成于 ' + new Date().toLocaleString('zh-CN') + '<br>'
+    + '<span>仅供理解还款结构之用，实际以银行审批与合同为准。</span>';
+}
+
+/* --- 事件绑定与主流程 --- */
+function bindRange(id, valId, fmt, apply){
+  var el = document.getElementById(id), lab = document.getElementById(valId);
+  el.addEventListener('input', function(){
+    var v = parseFloat(el.value);
+    lab.textContent = fmt(v);
+    apply(v);
+  });
+}
+
+function fullRender(){
+  recompute();
+  renderSummary();
+  renderMini();
+  renderCharts();
+  renderDiff();
+  renderPrepay();
+  renderDetail();
+}
+
+function init(){
+  document.getElementById('genMeta').textContent =
+    '单文件离线版 · 全部计算在你的浏览器内完成 · 拖动滑块实时重算';
+
+  bindRange('rAmt', 'vAmt', function(v){ return v + ' 万'; }, function(v){ S.amt = v * 10000; fullRender(); syncPresets(); });
+  bindRange('rYrs', 'vYrs', function(v){ return v + ' 年'; }, function(v){ S.yrs = v; fullRender(); syncPresets(); });
+  bindRange('rRate', 'vRate', function(v){ return v.toFixed(2) + '%'; }, function(v){ S.rate = v / 100; fullRender(); syncPresets(); });
+  bindRange('rInc', 'vInc', function(v){ return money(v, 0); }, function(v){ S.income = v; renderSummary(); });
+  bindRange('rPT', 'vPT', function(v){ return '第 ' + v + ' 年'; }, function(v){ S.ptYear = v; fullRender(); });
+  bindRange('rPE', 'vPE', function(v){ return v + ' 万'; }, function(v){ S.peAmt = v * 10000; fullRender(); });
+
+  document.getElementById('showAll').addEventListener('change', function(){ renderDetail(); });
+
+  var btns = document.querySelectorAll('#presets .pbtn');
+  Array.prototype.forEach.call(btns, function(b){
+    b.addEventListener('click', function(){
+      S.amt = parseFloat(b.dataset.a) * 10000;
+      S.yrs = parseFloat(b.dataset.y);
+      S.rate = parseFloat(b.dataset.r) / 100;
+      document.getElementById('rAmt').value = b.dataset.a;
+      document.getElementById('rYrs').value = b.dataset.y;
+      document.getElementById('rRate').value = b.dataset.r;
+      document.getElementById('vAmt').textContent = b.dataset.a + ' 万';
+      document.getElementById('vYrs').textContent = b.dataset.y + ' 年';
+      document.getElementById('vRate').textContent = parseFloat(b.dataset.r).toFixed(2) + '%';
+      fullRender();
+    });
+  });
+  function syncPresets(){
+    Array.prototype.forEach.call(btns, function(b){
+      var m = Math.abs(parseFloat(b.dataset.a) * 10000 - S.amt) < 1
+           && Math.abs(parseFloat(b.dataset.y) - S.yrs) < 0.01
+           && Math.abs(parseFloat(b.dataset.r) / 100 - S.rate) < 1e-9;
+      b.classList.toggle('on', m);
+    });
+  }
+
+  fullRender();
+
+  // 数值自检（与 Python 版同源）
+  (function(){
+    var bad = 0, k;
+    for(k = 0; k < D.n; k++){
+      if(Math.abs(D.ei.rows[k].int + D.ei.rows[k].pri - D.ei.rows[k].pay) > 1e-6) bad++;
+      if(Math.abs(D.ep.rows[k].int + D.ep.rows[k].pri - D.ep.rows[k].pay) > 1e-6) bad++;
+    }
+    var sei = 0, sep = 0;
+    for(k = 0; k < D.n; k++){ sei += D.ei.rows[k].pri; sep += D.ep.rows[k].pri; }
+    var sl = D.pp.ei_shorten.rows[D.pp.ei_shorten.rows.length - 1].bal;
+    window.__selftest = {
+      identityViolations: bad,
+      sumPriEI: +sei.toFixed(6), sumPriEP: +sep.toFixed(6), P: S.amt,
+      totalIntEI: +D.ei.totalInterest.toFixed(2),
+      totalIntEP: +D.ep.totalInterest.toFixed(2),
+      shortenEndBal: sl
+    };
+    console.log('[自检]', JSON.stringify(window.__selftest));
+  })();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

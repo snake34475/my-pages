@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>原码 · 反码 · 补码 · 移码 —— 四兄弟的爱恨情仇（软考版）</title>
+<style>
+:root{
+  --bg:#faf7f2;
+  --card:#ffffff;
+  --ink:#2a2a30;
+  --muted:#6d6d78;
+  --line:#e9e2d7;
+  --soft:#f5f1ea;
+  --orig:#ef9a1f;
+  --orig-soft:#fdf3e3;
+  --ones:#7c6cf0;
+  --ones-soft:#f1eeff;
+  --twos:#12a594;
+  --twos-soft:#e4f7f4;
+  --bias:#e0557a;
+  --bias-soft:#fdecef;
+  --ok:#1f9d55;
+  --warn:#d97706;
+  --radius:14px;
+  --mono:"JetBrains Mono",Consolas,"SF Mono",Menlo,"Courier New",monospace;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px 90px;}
+
+/* ---------- Hero ---------- */
+.hero{padding:56px 0 30px;text-align:center;}
+.kicker{
+  display:inline-block;font-size:12.5px;letter-spacing:.14em;color:var(--muted);
+  border:1px solid var(--line);border-radius:999px;padding:5px 16px;background:var(--card);
+}
+h1{font-size:38px;line-height:1.25;margin:20px 0 12px;letter-spacing:-.5px;}
+h1 .hl{
+  background:linear-gradient(180deg,transparent 62%,#ffe6a7 62%);
+  padding:0 2px;
+}
+.sub{color:var(--muted);font-size:16.5px;max-width:660px;margin:0 auto;}
+.joke{
+  margin:26px auto 0;max-width:720px;background:var(--card);border:1px solid var(--line);
+  border-left:4px solid var(--orig);border-radius:10px;padding:16px 20px;text-align:left;font-size:15px;
+}
+.joke b{color:var(--orig);}
+
+/* ---------- section ---------- */
+section{margin-top:56px;}
+h2{
+  font-size:25px;margin:0 0 6px;display:flex;align-items:center;gap:12px;letter-spacing:-.3px;
+}
+h2 .num{
+  font-family:var(--mono);font-size:14px;color:#fff;background:var(--ink);
+  width:30px;height:30px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;flex:none;
+}
+.lead{color:var(--muted);margin:0 0 22px;font-size:15px;}
+
+/* ---------- cards ---------- */
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px 22px;position:relative;overflow:hidden;
+}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;}
+.card.o::before{background:var(--orig);}
+.card.r::before{background:var(--ones);}
+.card.b::before{background:var(--twos);}
+.card.y::before{background:var(--bias);}
+.card h3{margin:0 0 2px;font-size:19px;display:flex;align-items:baseline;gap:9px;}
+.card h3 em{font-style:normal;font-size:12px;font-family:var(--mono);color:var(--muted);letter-spacing:.04em;}
+.tag{
+  display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:999px;margin-bottom:10px;font-weight:600;
+}
+.tag.o{background:var(--orig-soft);color:#b4700a;}
+.tag.r{background:var(--ones-soft);color:#5a49d6;}
+.tag.b{background:var(--twos-soft);color:#0b7f70;}
+.tag.y{background:var(--bias-soft);color:#bf3557;}
+.card p{margin:8px 0;font-size:14.5px;color:#43434c;}
+.card .quip{
+  font-size:13.5px;color:var(--muted);background:var(--soft);border-radius:9px;
+  padding:9px 13px;margin-top:12px;
+}
+.formula{
+  font-family:var(--mono);font-size:13px;background:#2f2f37;color:#eae6f5;
+  border-radius:8px;padding:10px 13px;margin-top:12px;overflow-x:auto;white-space:nowrap;
+}
+.formula span{color:#ffd479;}
+
+/* ---------- lab ---------- */
+.lab{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;
+}
+.lab-bar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:18px;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{font-size:12px;color:var(--muted);letter-spacing:.04em;}
+input[type=number]{
+  font-family:var(--mono);font-size:15px;padding:8px 12px;border:1px solid var(--line);
+  border-radius:9px;width:150px;background:#fff;color:var(--ink);
+}
+input[type=number]:focus{outline:none;border-color:var(--twos);box-shadow:0 0 0 3px var(--twos-soft);}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;}
+.seg button{
+  border:0;background:#fff;padding:8px 15px;font-size:14px;cursor:pointer;color:var(--muted);
+  font-family:var(--mono);border-right:1px solid var(--line);
+}
+.seg button:last-child{border-right:0;}
+.seg button.on{background:var(--ink);color:#fff;}
+.btn{
+  border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 14px;
+  font-size:13.5px;cursor:pointer;color:var(--ink);
+}
+.btn:hover{background:var(--soft);}
+.btn.primary{background:var(--twos);border-color:var(--twos);color:#fff;}
+.btn.primary:hover{filter:brightness(1.07);}
+
+.row{
+  display:grid;grid-template-columns:88px 1fr 130px;align-items:center;gap:14px;
+  padding:13px 0;border-top:1px dashed var(--line);
+}
+.row:first-of-type{border-top:0;}
+.row .name{font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:7px;}
+.dot{width:9px;height:9px;border-radius:50%;flex:none;}
+.dot.o{background:var(--orig);}
+.dot.r{background:var(--ones);}
+.dot.b{background:var(--twos);}
+.dot.y{background:var(--bias);}
+.bits{display:flex;gap:4px;flex-wrap:wrap;}
+.bit{
+  width:29px;height:36px;border-radius:7px;border:1px solid var(--line);background:#fff;
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:15px;
+  cursor:pointer;user-select:none;transition:.12s;
+}
+.bit:hover{transform:translateY(-2px);}
+.bit.sign{border-width:2px;}
+.bit.s1.o{background:var(--orig);border-color:var(--orig);color:#fff;}
+.bit.s1.r{background:var(--ones);border-color:var(--ones);color:#fff;}
+.bit.s1.b{background:var(--twos);border-color:var(--twos);color:#fff;}
+.bit.s1.y{background:var(--bias);border-color:var(--bias);color:#fff;}
+.bit.s0{color:#b9b9c2;}
+.val{font-family:var(--mono);font-size:14px;text-align:right;color:#43434c;}
+.val .bad{color:var(--warn);font-size:12px;display:block;}
+
+.hint{
+  margin-top:16px;background:var(--orig-soft);border:1px solid #f6dfb6;border-radius:10px;
+  padding:11px 15px;font-size:13.5px;color:#8a5a08;
+}
+.hint b{color:#7a4e05;}
+
+.readback{
+  margin-top:20px;border-top:1px solid var(--line);padding-top:18px;
+}
+.readback h4{margin:0 0 4px;font-size:15px;}
+.readback .desc{font-size:13px;color:var(--muted);margin:0 0 12px;}
+.read-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.read-cell{
+  border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:#fff;
+}
+.read-cell .k{font-size:12px;color:var(--muted);}
+.read-cell .v{font-family:var(--mono);font-size:19px;font-weight:600;margin-top:2px;}
+.read-cell.o .v{color:var(--orig);}
+.read-cell.r .v{color:var(--ones);}
+.read-cell.b .v{color:var(--twos);}
+.read-cell.y .v{color:var(--bias);}
+
+/* ---------- range ---------- */
+.range-box{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;}
+.axis-scale{
+  position:relative;height:20px;margin:26px 0 4px;font-family:var(--mono);font-size:11.5px;color:var(--muted);
+}
+.axis-scale span{position:absolute;transform:translateX(-50%);}
+.track{position:relative;height:42px;border-radius:9px;background:
+  repeating-linear-gradient(90deg,#f2eee7 0 9px,#f7f4ef 9px 18px);margin-bottom:8px;overflow:hidden;}
+.fill{position:absolute;top:5px;height:32px;border-radius:7px;display:flex;align-items:center;
+  justify-content:center;color:#fff;font-size:12px;font-family:var(--mono);white-space:nowrap;
+  box-shadow:0 1px 2px rgba(0,0,0,.08);}
+.fill.o{background:var(--orig);}
+.fill.r{background:var(--ones);}
+.fill.b{background:var(--twos);}
+.fill.y{background:var(--bias);}
+.zero-mark{position:absolute;top:0;bottom:0;width:2px;background:#3a3a44;opacity:.35;}
+.track-label{font-size:13.5px;font-weight:600;margin-bottom:-2px;}
+.track-label small{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:6px;}
+.track-group{margin-bottom:20px;}
+
+table.tb{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px;}
+table.tb th,table.tb td{border:1px solid var(--line);padding:9px 12px;text-align:center;}
+table.tb th{background:var(--soft);font-weight:600;font-size:13px;}
+table.tb td.mono{font-family:var(--mono);font-size:13px;}
+table.tb caption{caption-side:top;text-align:left;font-size:13px;color:var(--muted);padding-bottom:8px;}
+
+/* ---------- flow ---------- */
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:stretch;}
+.fnode{
+  border:1px solid var(--line);border-radius:11px;background:#fff;padding:14px;text-align:center;position:relative;
+}
+.fnode .t{font-weight:700;font-size:15px;}
+.fnode .s{font-size:12.5px;color:var(--muted);margin-top:4px;}
+.fnode::after{
+  content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);
+  color:#c9c2b6;font-size:17px;
+}
+.fnode:last-child::after{content:"↺";}
+.arrow-note{
+  margin-top:12px;font-size:13.5px;color:var(--muted);background:var(--soft);padding:11px 14px;border-radius:10px;
+}
+
+/* ---------- exam ---------- */
+.ks{display:grid;gap:12px;}
+.k{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 18px;
+  display:grid;grid-template-columns:26px 1fr;gap:12px;align-items:start;
+}
+.k .idx{
+  font-family:var(--mono);font-size:12px;background:var(--ink);color:#fff;border-radius:7px;
+  height:24px;display:flex;align-items:center;justify-content:center;margin-top:3px;
+}
+.k h4{margin:0 0 4px;font-size:15.5px;}
+.k p{margin:0;font-size:14px;color:#43434c;}
+.k .key{
+  margin-top:8px;font-family:var(--mono);font-size:12.5px;background:#2f2f37;color:#ffe6a7;
+  padding:7px 11px;border-radius:7px;display:inline-block;
+}
+.star{color:#e0a020;font-size:12px;letter-spacing:1px;}
+.k .g{font-size:14px;color:#43434c;margin:0;}
+.k .g b{color:var(--ink);}
+code{
+  font-family:var(--mono);font-size:.9em;background:#f1ede5;color:#8a5a08;
+  padding:1.5px 6px;border-radius:5px;white-space:nowrap;
+}
+.ex{
+  background:#fbf9f5;border:1px solid var(--line);border-left:3px solid #cfc6b7;
+  border-radius:9px;padding:12px 15px;margin-top:10px;
+}
+.ex .eh{
+  font-size:11.5px;letter-spacing:.08em;color:var(--muted);font-weight:700;margin-bottom:6px;
+}
+.ex .eq{font-size:14px;margin:0 0 7px;}
+.ex .es{font-size:13.5px;color:#4d4d57;margin:0;line-height:1.85;}
+.ex .es .step{display:block;}
+.ex .ans{
+  display:inline-block;margin-top:7px;font-size:13.5px;font-weight:700;color:#0b7f70;
+  background:var(--twos-soft);padding:4px 11px;border-radius:7px;
+}
+.ex .warn{
+  display:block;margin-top:7px;font-size:13px;color:#8a5a08;background:var(--orig-soft);
+  border-radius:7px;padding:6px 10px;
+}
+.ex code{background:#fff;border:1px solid #ece6dc;}
+.mini-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px;}
+.mini-table th,.mini-table td{border:1px solid var(--line);padding:6px 9px;text-align:center;}
+.mini-table th{background:#f1ede5;font-weight:600;font-size:12px;}
+.mini-table td.m{font-family:var(--mono);font-size:12.5px;}
+
+/* ---------- quiz ---------- */
+.quiz{display:grid;gap:14px;}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;}
+.q .qt{font-weight:600;font-size:15.5px;margin:0 0 12px;}
+.q .qt i{font-style:normal;font-family:var(--mono);color:var(--twos);font-size:13px;margin-right:8px;}
+.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.opt{
+  border:1px solid var(--line);border-radius:9px;padding:9px 13px;font-size:14px;cursor:pointer;
+  background:#fff;transition:.12s;
+}
+.opt:hover{border-color:var(--twos);background:var(--twos-soft);}
+.opt.right{background:var(--twos-soft);border-color:var(--twos);color:#0b7f70;font-weight:600;}
+.opt.wrong{background:var(--bias-soft);border-color:var(--bias);color:#bf3557;}
+.expl{
+  display:none;margin-top:12px;font-size:13.5px;color:#43434c;background:var(--soft);
+  border-radius:9px;padding:11px 14px;border-left:3px solid var(--twos);
+}
+.expl.show{display:block;}
+
+footer{margin-top:60px;text-align:center;color:var(--muted);font-size:13px;}
+@media(max-width:760px){
+  .cards,.read-grid,.flow,.opts{grid-template-columns:1fr;}
+  .row{grid-template-columns:78px 1fr;row-gap:8px;}
+  .val{grid-column:2;text-align:left;}
+  h1{font-size:29px;}
+  .fnode::after{content:"↓";right:50%;top:auto;bottom:-18px;transform:translateX(50%);}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="kicker">SOFTWARE DESIGNER · 计算机组成与体系结构</div>
+    <h1>原码、反码、补码、移码<br><span class="hl">四兄弟的爱恨情仇</span></h1>
+    <p class="sub">为什么 0 会有两个？为什么 -128 比 -127 还多一位？为什么计算机里减法根本不存在？—— 8 位小剧场，开演。</p>
+    <div class="joke">
+      <b>先纠正一个千古乌龙：</b>是「<b>原</b>码」不是「源码」。源码是程序员写的，原码是机器想的。
+      你要是跟考官说"源码"，他会给你现场演示什么叫"反码"——把你的分数按位取反。
+    </div>
+  </div>
+
+  <!-- 1 人物介绍 -->
+  <section>
+    <h2><span class="num">01</span>先认人：四个码都是什么脾气</h2>
+    <p class="lead">下面全部以 <b>n 位定点整数</b>为例，最高位是符号位：0 正 1 负。</p>
+    <div class="cards">
+      <div class="card o">
+        <span class="tag o">Sign-Magnitude</span>
+        <h3>原码 <em>最老实，也最坑</em></h3>
+        <p>符号位 + 真值的绝对值。人看着最舒服，机器用着最难受。</p>
+        <div class="formula">+9 → <span>0</span>0001001 &nbsp;&nbsp; -9 → <span>1</span>0001001</div>
+        <div class="quip">🎭 双胞胎事件：+0 = 00000000，-0 = 10000000。判零电路当场裂开：两个长得不一样的数，你说它们相等？</div>
+      </div>
+      <div class="card r">
+        <span class="tag r">One's Complement</span>
+        <h3>反码 <em>原码的镜像世界</em></h3>
+        <p>正数 = 原码；负数 = 符号位不动，其余按位取反。</p>
+        <div class="formula">-9 → <span>1</span>1110110 &nbsp;（0001001 取反得 1110110）</div>
+        <div class="quip">🪞 还是俩 0：-0 = 11111111。而且加法做完可能要"循环进位"，硬件工程师表示不想加班。</div>
+      </div>
+      <div class="card b">
+        <span class="tag b">Two's Complement</span>
+        <h3>补码 <em>终极赢家，一统江湖</em></h3>
+        <p>正数 = 原码；负数 = 反码 + 1 = 「模 2ⁿ 减去 |x|」。符号位直接参与运算，减法变加法。</p>
+        <div class="formula">-9 → <span>1</span>1110111 &nbsp;（11110110 + 1）</div>
+        <div class="quip">🏆 消灭了 -0，把腾出来的位置送给了 -128。现代计算机的整数，全是它。</div>
+      </div>
+      <div class="card y">
+        <span class="tag y">Offset / Excess-N</span>
+        <h3>移码 <em>补码戴了个反面具</em></h3>
+        <p>把补码的<b>符号位取反</b>就是移码；等价于真值 + 2ⁿ⁻¹。</p>
+        <div class="formula">-9 → <span>0</span>1110111 &nbsp;（-9 + 128 = 119）</div>
+        <div class="quip">🎯 整数整体搬到非负区间后，<b>用无符号比较器就能直接比大小</b>——所以浮点数的阶码爱死它了（IEEE754 单精度偏移 127）。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 实验室 -->
+  <section>
+    <h2><span class="num">02</span>实验室：亲手拨一拨这些位</h2>
+    <p class="lead">输入一个数看四种编码；或者<b>直接点任意一个方块翻转它</b>，看看同一串比特被四种编码"解读"成什么值 —— 这是软考最爱的坑。</p>
+    <div class="lab">
+      <div class="lab-bar">
+        <div class="field">
+          <label>十进制真值</label>
+          <input type="number" id="numIn" value="-9">
+        </div>
+        <div class="field">
+          <label>字长 n</label>
+          <div class="seg" id="bitsSeg">
+            <button data-n="4">4</button>
+            <button data-n="8" class="on">8</button>
+            <button data-n="16">16</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <button class="btn" id="randBtn">🎲 随机</button>
+        </div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <button class="btn" id="zeroBtn">清 0</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="name"><span class="dot o"></span>原码</div>
+        <div class="bits" id="bitsOrig"></div>
+        <div class="val" id="valOrig"></div>
+      </div>
+      <div class="row">
+        <div class="name"><span class="dot r"></span>反码</div>
+        <div class="bits" id="bitsOnes"></div>
+        <div class="val" id="valOnes"></div>
+      </div>
+      <div class="row">
+        <div class="name"><span class="dot b"></span>补码</div>
+        <div class="bits" id="bitsTwos"></div>
+        <div class="val" id="valTwos"></div>
+      </div>
+      <div class="row">
+        <div class="name"><span class="dot y"></span>移码</div>
+        <div class="bits" id="bitsBias"></div>
+        <div class="val" id="valBias"></div>
+      </div>
+
+      <div class="hint" id="hint"></div>
+
+      <div class="readback">
+        <h4>🔍 如果这是一串「不知道什么码」的比特，它会被读成：</h4>
+        <p class="desc">下面四个值由上方<b>补码行</b>当前的位模式解出。点方块改一改，你会看到同一个 10000000，原码读成 -0，补码读成 -128，移码读成 0。</p>
+        <div class="read-grid">
+          <div class="read-cell o"><div class="k">按原码读</div><div class="v" id="rdOrig">–</div></div>
+          <div class="read-cell r"><div class="k">按反码读</div><div class="v" id="rdOnes">–</div></div>
+          <div class="read-cell b"><div class="k">按补码读</div><div class="v" id="rdTwos">–</div></div>
+          <div class="read-cell y"><div class="k">按移码读</div><div class="v" id="rdBias">–</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 取值范围 -->
+  <section>
+    <h2><span class="num">03</span>取值范围：谁比谁多一个数</h2>
+    <p class="lead">核心记忆口诀：<b>原码反码少两个（±0 占了两份），补码移码多一个（那个"多出来的最小负数"）。</b>小数点位置不同，公式要换一套，别背串。</p>
+    <div class="range-box">
+      <div class="lab-bar" style="margin-bottom:6px;">
+        <div class="field">
+          <label>定点数的类型</label>
+          <div class="seg" id="kindSeg">
+            <button data-k="int" class="on">定点整数</button>
+            <button data-k="frac">定点小数</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>字长 n</label>
+          <div class="seg" id="rangeSeg">
+            <button data-n="4">4 位</button>
+            <button data-n="8" class="on">8 位</button>
+            <button data-n="16">16 位</button>
+          </div>
+        </div>
+      </div>
+      <div id="tracks"></div>
+      <div id="rangeTable"></div>
+    </div>
+  </section>
+
+  <!-- 4 转换 -->
+  <section>
+    <h2><span class="num">04</span>转换逻辑：一条链条串起来</h2>
+    <p class="lead">正数四种码<b>长得一模一样</b>（只有符号位是 0）；负数才需要变戏法。</p>
+    <div class="flow">
+      <div class="fnode"><div class="t">真值 x</div><div class="s">人写的十进制</div></div>
+      <div class="fnode"><div class="t">原码</div><div class="s">符号位 + |x|</div></div>
+      <div class="fnode"><div class="t">反码</div><div class="s">负数：数值位取反</div></div>
+      <div class="fnode"><div class="t">补码 / 移码</div><div class="s">反码 +1 / 符号位取反</div></div>
+    </div>
+    <div class="arrow-note">
+      <b>正数（x ≥ 0）：</b>原码 = 反码 = 补码 = 0xxxxxxx，移码 = 1xxxxxxx（符号位取反）。<br>
+      <b>负数（x &lt; 0）：</b>原码 → 符号位不变、数值位按位取反 → 反码 → 末位 +1 → 补码 → 符号位取反 → 移码。<br>
+      <b>逆运算：</b>补码 → 原码，<span style="color:var(--twos);font-weight:600;">对补码再做一次「取反+1」即可</span>（自己就是自己的补，妙不妙）；移码 → 补码，符号位取反即可。<br>
+      <b>⚡ 快速技巧（软考提速）：</b>已知 [X]补 求 [−X]补 —— 从右往左找到第一个 1，<b>这个 1 及其右边原样保留，左边（含符号位）全部取反</b>。
+    </div>
+  </section>
+
+  <!-- 5 考点 -->
+  <section>
+    <h2><span class="num">05</span>软件设计师考点清单</h2>
+    <p class="lead">上午题几乎年年有，通常 1~2 分，属于「会了白送、不会干瞪眼」的类型。每条都配了精讲和例题，例题建议自己先算一遍再看答案。</p>
+    <div class="ks" id="ksList"></div>
+  </section>
+
+  <!-- 6 测验 -->
+  <section>
+    <h2><span class="num">06</span>随堂小测：看看学到了几成</h2>
+    <p class="lead">点一下选项，错了也不扣分（这次）。</p>
+    <div class="quiz" id="quiz"></div>
+  </section>
+
+  <footer>—— 记不住就记住这句：<b>补码多出来的那个 −128，是 −0 让位让出来的。</b> ——</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var N = 8;
+  var manual = null; // 手动模式下的补码位数组
+
+  function pad(s, n){ while(s.length < n) s = "0" + s; return s.slice(-n); }
+  function magBits(v, n){ return pad(Math.abs(v).toString(2), n - 1); }
+
+  function origBits(x, n){
+    if(x >= 0) return "0" + (magBits(x, n) || pad("", n-1));
+    return "1" + magBits(x, n);
+  }
+  function onesBits(x, n){
+    if(x >= 0) return origBits(x, n);
+    var m = magBits(x, n).split("").map(function(c){ return c === "0" ? "1" : "0"; }).join("");
+    return "1" + m;
+  }
+  function twosBits(x, n){
+    var mod = Math.pow(2, n);
+    return pad((((x % mod) + mod) % mod).toString(2), n);
+  }
+  function biasBits(x, n){
+    var t = twosBits(x, n);
+    return (t.charAt(0) === "0" ? "1" : "0") + t.slice(1);
+  }
+
+  // 由位模式反解真值
+  function readOrig(b){
+    var s = b.charAt(0), m = parseInt(b.slice(1), 2) || 0;
+    return s === "1" ? -m : m;
+  }
+  function readOnes(b){
+    var s = b.charAt(0), m = parseInt(b.slice(1), 2) || 0;
+    if(s === "0") return m;
+    var mask = Math.pow(2, b.length - 1) - 1;
+    return -(mask - m);
+  }
+  function readTwos(b){
+    var v = parseInt(b, 2);
+    if(b.charAt(0) === "1") v -= Math.pow(2, b.length);
+    return v;
+  }
+  function readBias(b){
+    return parseInt(b, 2) - Math.pow(2, b.length - 1);
+  }
+
+  function flex(bits, container, cls){
+    container.innerHTML = "";
+    for(var i = 0; i < bits.length; i++){
+      var d = document.createElement("div");
+      d.className = "bit " + cls + (i === 0 ? " sign" : "") + (bits.charAt(i) === "1" ? " s1" : " s0");
+      d.textContent = bits.charAt(i);
+      container.appendChild(d);
+    }
+  }
+
+  function renderBitsRow(bitStr, boxId, valId, cls, x, minV, maxV, note){
+    flex(bitStr, document.getElementById(boxId), cls);
+    var el = document.getElementById(valId);
+    if(x < minV || x > maxV){
+      el.innerHTML = '<span class="bad">⚠ 表示不了</span>';
+    } else {
+      el.textContent = "= " + x;
+    }
+  }
+
+  function render(){
+    var bitsBoxes = ["bitsOrig","bitsOnes","bitsTwos","bitsBias"];
+    var pattern;
+    if(manual){
+      pattern = manual.join("");
+    } else {
+      var raw = parseInt(document.getElementById("numIn").value, 10);
+      if(isNaN(raw)) raw = 0;
+      var half = Math.pow(2, N - 1);
+      // 补码范围外的值，钳到边界并提示
+      if(raw > half - 1){ raw = half - 1; }
+      if(raw < -half){ raw = -half; }
+      pattern = twosBits(raw, N);
+    }
+
+    var x2 = readTwos(pattern);          // 补码解读 = 真值
+    var lim = Math.pow(2, N - 1) - 1;    // 原码/反码的绝对值上限
+
+    renderBitsRow(origBits(x2, N), "bitsOrig", "valOrig", "o", x2, -lim, lim);
+    renderBitsRow(onesBits(x2, N), "bitsOnes", "valOnes", "r", x2, -lim, lim);
+    renderBitsRow(twosBits(x2, N), "bitsTwos", "valTwos", "b", x2, -Math.pow(2,N-1), lim);
+    renderBitsRow(biasBits(x2, N), "bitsBias", "valBias", "y", x2, -Math.pow(2,N-1), lim);
+
+    // -0 特别标注一下，不然 JS 会把它显示成 0，反而丢了知识点
+    function fmt(v){ return Object.is(v, -0) ? "−0（负零）" : String(v); }
+    document.getElementById("rdOrig").textContent = fmt(readOrig(pattern));
+    document.getElementById("rdOnes").textContent = fmt(readOnes(pattern));
+    document.getElementById("rdTwos").textContent = fmt(readTwos(pattern));
+    document.getElementById("rdBias").textContent = fmt(readBias(pattern));
+
+    // 提示语
+    var h = document.getElementById("hint");
+    var half0 = Math.pow(2, N - 1);
+    if(manual){
+      h.innerHTML = "🖐️ <b>手动模式</b>：当前位模式 <b>" + pattern + "</b>。四种解读结果见下方。点任意方块继续改，或点「🎲 随机」回到输入模式。";
+    } else if(x2 === -half0){
+      h.innerHTML = "🎁 <b>彩蛋位</b>：这是 " + N + " 位补码能表示的最小数 <b>" + x2 + "</b>。它没有对应的原码/反码（那两家最小只到 " + (-lim) + "），因为它其实是「−0 让位让出来的」。";
+    } else if(x2 === 0){
+      h.innerHTML = "🥚 <b>0 的四种写法</b>：原码 +0 = " + origBits(0,N) + "、−0 = 1" + pad("", N-1) + "；反码 +0 = " + onesBits(0,N) + "、−0 = " + "1" + Array(N).join("1") + "；补码与移码各自只有一种 0，所以它们不打架。";
+    } else if(x2 < 0){
+      h.innerHTML = "➖ <b>负数链路</b>：原码 <b>" + origBits(x2,N) + "</b> → 数值位取反 → 反码 <b>" + onesBits(x2,N) + "</b> → 末位+1 → 补码 <b>" + twosBits(x2,N) + "</b> → 符号位取反 → 移码 <b>" + biasBits(x2,N) + "</b>（等价于 " + x2 + " + " + half0 + " = " + (x2 + half0) + "）。";
+    } else {
+      h.innerHTML = "➕ <b>正数很省事</b>：原码 = 反码 = 补码 = <b>" + origBits(x2,N) + "</b>；移码只把符号位取反 → <b>" + biasBits(x2,N) + "</b>（真值 " + x2 + " + 偏移 " + half0 + " = " + (x2 + half0) + "）。";
+    }
+  }
+
+  // 点击位：进入手动模式（以补码行为准）
+  ["bitsOrig","bitsOnes","bitsTwos","bitsBias"].forEach(function(id){
+    var box = document.getElementById(id);
+    box.addEventListener("click", function(e){
+      var t = e.target;
+      if(!t.classList || !t.classList.contains("bit")) return;
+      var parent = t.parentNode;
+      var idx = Array.prototype.indexOf.call(parent.children, t);
+      var src = document.getElementById("bitsTwos");
+      var arr = [];
+      for(var i = 0; i < src.children.length; i++) arr.push(src.children[i].textContent);
+      arr[idx] = arr[idx] === "0" ? "1" : "0";
+      manual = arr;
+      render();
+    });
+  });
+
+  document.getElementById("numIn").addEventListener("input", function(){ manual = null; render(); });
+
+  document.getElementById("bitsSeg").addEventListener("click", function(e){
+    if(e.target.tagName !== "BUTTON") return;
+    Array.prototype.forEach.call(this.children, function(b){ b.classList.remove("on"); });
+    e.target.classList.add("on");
+    N = parseInt(e.target.getAttribute("data-n"), 10);
+    manual = null;
+    var half = Math.pow(2, N - 1);
+    var cur = parseInt(document.getElementById("numIn").value, 10) || 0;
+    if(cur > half - 1) document.getElementById("numIn").value = half - 1;
+    if(cur < -half) document.getElementById("numIn").value = -half;
+    render();
+  });
+
+  document.getElementById("randBtn").addEventListener("click", function(){
+    manual = null;
+    var half = Math.pow(2, N - 1);
+    var v = Math.floor(Math.random() * (2 * half)) - half;
+    document.getElementById("numIn").value = v;
+    render();
+  });
+
+  document.getElementById("zeroBtn").addEventListener("click", function(){
+    manual = null;
+    document.getElementById("numIn").value = 0;
+    render();
+  });
+
+  /* ---------- 取值范围：条带 + 必背表 ---------- */
+  function curN(){
+    return parseInt(document.querySelector("#rangeSeg button.on").getAttribute("data-n"), 10);
+  }
+  function curKind(){
+    return document.querySelector("#kindSeg button.on").getAttribute("data-k");
+  }
+  // 小数模式下把数值格式化成 分子/分母，比一长串小数好看
+  function fracFmt(v, den){
+    var k = Math.round(v * den);
+    if(k === 0) return "0";
+    if(Math.abs(k) === den) return (k < 0 ? "−" : "+") + "1";
+    return (k < 0 ? "−" : "") + Math.abs(k) + "/" + den;
+  }
+
+  function renderRange(){
+    var n = curN();
+    var kind = curKind();
+    var min, max, den = Math.pow(2, n - 1), fmtV;
+
+    if(kind === "int"){
+      min = -Math.pow(2, n - 1);
+      max = Math.pow(2, n - 1) - 1;
+      fmtV = function(v){ return (v < 0 ? "−" : "+") + Math.abs(v); };
+    } else {
+      min = -1;
+      max = 1 - Math.pow(2, -(n - 1));
+      fmtV = function(v){ return fracFmt(v, den); };
+    }
+    var span = max - min;
+    var defs = [
+      { k:"原码", c:"o", lo:-Math.abs(max), hi:max },
+      { k:"反码", c:"r", lo:-Math.abs(max), hi:max },
+      { k:"补码", c:"b", lo:min, hi:max },
+      { k:"移码", c:"y", lo:min, hi:max }
+    ];
+
+    var html = "";
+    defs.forEach(function(d){
+      var left = (d.lo - min) / span * 100;
+      var width = (d.hi - d.lo) / span * 100;
+      var cnt = kind === "int" ? (d.hi - d.lo + 1) : Math.round((d.hi - d.lo) * den) + 1;
+      var extra = (d.k === "移码") ? "　码值 0 ~ " + (Math.pow(2, n) - 1) : "";
+      html += '<div class="track-group">';
+      html += '<div class="track-label"><span class="dot ' + d.c + '" style="display:inline-block;margin-right:6px;"></span>'
+           + d.k + '<small>' + fmtV(d.lo) + " ~ " + fmtV(d.hi) + "　共 " + cnt + " 个数" + extra + '</small></div>';
+      html += '<div class="track"><div class="fill ' + d.c + '" style="left:' + left.toFixed(3) + '%;width:' + width.toFixed(3) + '%">'
+           + (width > 24 ? fmtV(d.lo) + " → " + fmtV(d.hi) : "") + '</div>'
+           + '<div class="zero-mark" style="left:' + ((0 - min) / span * 100).toFixed(3) + '%"></div></div>';
+      html += '</div>';
+    });
+    html += '<div class="axis-scale" id="axisScale"></div>';
+    document.getElementById("tracks").innerHTML = html;
+
+    var ticks, labels;
+    if(kind === "int"){
+      ticks = (n <= 4) ? [min, min + 1, -1, 0, 1, max - 1, max] : [min, Math.round(min / 2), 0, Math.round(max / 2), max];
+      labels = null;
+    } else {
+      ticks = [min, -0.5, 0, 0.5, max];
+      labels = ["−1", "−1/2", "0", "+1/2", fmtV(max)];
+    }
+    var seen = {}, ax = "";
+    ticks.forEach(function(t, i){
+      if(seen[t]) return; seen[t] = 1;
+      var l = (t - min) / span * 100;
+      ax += '<span style="left:' + l.toFixed(3) + '%">' + (labels ? labels[i] : t) + '</span>';
+    });
+    document.getElementById("axisScale").innerHTML = ax;
+
+    renderRangeTable(n, kind, den);
+  }
+
+  function renderRangeTable(n, kind, den){
+    var rows, cap;
+    if(kind === "int"){
+      cap = "▲ 定点整数（小数点固定在最低位之后）｜n = " + n + " 位，其中 1 位符号位";
+      rows = [
+        ["原码", "−(2ⁿ⁻¹ − 1)", "2ⁿ⁻¹ − 1", "2ⁿ − 1", "2（±0）", "−" + (den - 1) + " ~ +" + (den - 1)],
+        ["反码", "−(2ⁿ⁻¹ − 1)", "2ⁿ⁻¹ − 1", "2ⁿ − 1", "2（±0）", "−" + (den - 1) + " ~ +" + (den - 1)],
+        ["补码", "−2ⁿ⁻¹", "2ⁿ⁻¹ − 1", "2ⁿ", "1", "−" + den + " ~ +" + (den - 1)],
+        ["移码", "−2ⁿ⁻¹", "2ⁿ⁻¹ − 1", "2ⁿ", "1", "−" + den + " ~ +" + (den - 1)]
+      ];
+    } else {
+      cap = "▲ 定点小数（小数点固定在符号位之后，纯小数）｜n = " + n + " 位，其中 1 位符号位、" + (n - 1) + " 位数值位";
+      rows = [
+        ["原码", "−(1 − 2⁻⁽ⁿ⁻¹⁾)", "1 − 2⁻⁽ⁿ⁻¹⁾", "2ⁿ − 1", "2（±0）", "−" + (den - 1) + "/" + den + " ~ +" + (den - 1) + "/" + den],
+        ["反码", "−(1 − 2⁻⁽ⁿ⁻¹⁾)", "1 − 2⁻⁽ⁿ⁻¹⁾", "2ⁿ − 1", "2（±0）", "−" + (den - 1) + "/" + den + " ~ +" + (den - 1) + "/" + den],
+        ["补码", "−1", "1 − 2⁻⁽ⁿ⁻¹⁾", "2ⁿ", "1", "−1 ~ +" + (den - 1) + "/" + den],
+        ["移码", "−1", "1 − 2⁻⁽ⁿ⁻¹⁾", "2ⁿ", "1", "−1 ~ +" + (den - 1) + "/" + den]
+      ];
+    }
+    var h = '<table class="tb" style="margin-top:24px;"><caption>' + cap + '</caption>'
+          + '<tr><th>编码</th><th>最小值</th><th>最大值</th><th>能表示的数的个数</th><th>0 的个数</th><th>代入 n = ' + n + '</th></tr>';
+    rows.forEach(function(r){
+      h += '<tr><td><b>' + r[0] + '</b></td><td class="mono">' + r[1] + '</td><td class="mono">' + r[2]
+         + '</td><td class="mono">' + r[3] + '</td><td class="mono">' + r[4] + '</td><td class="mono" style="color:#0b7f70;">' + r[5] + '</td></tr>';
+    });
+    h += '</table>';
+    h += '<div class="arrow-note" style="margin-top:14px;">'
+      + (kind === "int"
+        ? '💡 <b>统一记法：</b>把数值位当无符号数看，最大就是「全 1」= 2ⁿ⁻¹−1；补码多一个最小负数 −2ⁿ⁻¹，因为它不用给 −0 留位置。'
+        : '💡 <b>统一记法：</b>把数值位当无符号小数看，最大就是「全 1」= 1 − 2⁻⁽ⁿ⁻¹⁾（永远差一个 ULP 到 1）；补码的负数侧能一路到 −1（位模式 1.000…0），因为 −0 那个位置让出来了。'
+          + '<br>⚠️ 小数常考搭档：<b>规格化</b>——原码规格化要求最高数值位为 1（|M| ≥ 1/2）；补码规格化要求<b>符号位与最高数值位相异</b>（正数 0.1xxx，负数 1.0xxx），因此补码规格化范围是 1/2 ≤ |M| &lt; 1 且负数侧含 −1。')
+      + '</div>';
+    document.getElementById("rangeTable").innerHTML = h;
+  }
+
+  document.getElementById("rangeSeg").addEventListener("click", function(e){
+    if(e.target.tagName !== "BUTTON") return;
+    Array.prototype.forEach.call(this.children, function(b){ b.classList.remove("on"); });
+    e.target.classList.add("on");
+    renderRange();
+  });
+
+  document.getElementById("kindSeg").addEventListener("click", function(e){
+    if(e.target.tagName !== "BUTTON") return;
+    Array.prototype.forEach.call(this.children, function(b){ b.classList.remove("on"); });
+    e.target.classList.add("on");
+    renderRange();
+  });
+
+  /* ---------- 测验 ---------- */
+  var quiz = [
+    { q:"8 位补码 1000 0000 表示的真值是？",
+      o:["−0","−128","−127","+128"], a:1,
+      e:"补码里 10000000 被「让」给了 −128。原码、反码里它是 −0；补码消灭了 −0，这个位置就腾出来多表示一个最小负数。所以 8 位补码最小值是 −128 而不是 −127。" },
+    { q:"下列编码中，0 的表示是唯一的？",
+      o:["原码","反码","补码和移码","原码和反码"], a:2,
+      e:"原码有 +0(00000000) 和 −0(10000000)；反码有 +0 和 −0(11111111)；补码、移码只有一个 0，因此 n 位能表示满 2ⁿ 个数。" },
+    { q:"移码在计算机中的主要用途是？",
+      o:["做整数的加减运算","作浮点数的阶码，便于比较大小","压缩存储空间","校验数据传输错误"], a:1,
+      e:"移码 = 补码符号位取反，把有符号数整体搬到非负区间，用无符号比较器就能直接比大小。IEEE754 浮点数的阶码就采用移码（单精度偏移 127，双精度 1023）。" },
+    { q:"8 位定点整数，原码能表示的范围是？",
+      o:["−128 ~ +127","−127 ~ +127","−127 ~ +128","−128 ~ +128"], a:1,
+      e:"原码、反码：−(2⁷−1) ~ 2⁷−1 即 −127 ~ +127，共 255 个数（±0 占了两份）；补码、移码：−128 ~ +127，共 256 个数。" },
+    { q:"8 位定点小数（小数点在符号位后），补码能表示的范围是？",
+      o:["−1 ~ +127/128","−127/128 ~ +127/128","−1 ~ +1","−128/128 ~ +127/128"], a:0,
+      e:"数值位 7 位，全 1 时 = 1 − 2⁻⁷ = 127/128；补码 0 唯一，位模式 1.0000000 让给了 −1，所以范围是 −1 ~ +127/128，共 256 个。若问原码/反码，则是 −127/128 ~ +127/128，共 255 个。" },
+    { q:"下列关于定点小数补码的说法，正确的是？",
+      o:["小数补码不能表示 −1","小数补码能表示 −1，位模式是 1.000…0","小数原码的 1.000…0 就是 −1","小数补码的最大值可以到 1"], a:1,
+      e:"补码消除了 −0，1.000…0 这个位置被用来表示 −1；原码里 1.000…0 是 −0，所以原码小数取不到 −1。另外最大值永远是 1 − 2⁻⁽ⁿ⁻¹⁾，差一个最低位才到 1，取不到 1 本身。" },
+    { q:"补码加减运算判断溢出，常用的方法是？",
+      o:["看结果是否等于 0","符号位进位 Cs 与最高数值位进位 Cp 相异（Cs⊕Cp=1）","看最高位是否为 1","看运算是否产生了进位"], a:1,
+      e:"Cs ⊕ Cp = 1 即溢出。等价方法：①两个同号数相加，结果符号与操作数相反 → 溢出；②双符号位结果为 01（正溢）或 10（负溢）。异号相加不会溢出。" },
+    { q:"已知 [X]补，快速求 [−X]补 的做法是？",
+      o:["全部按位取反","从右往左找到第一个 1，该位及其右边不变，左边（含符号位）全部取反","末尾加 1","整体左移一位"], a:1,
+      e:"例：[X]补 = 1 0 1 1 0 1 0 0，从右往左第一个 1 在第 3 位，它及其右边 100 不变，左边 10110 取反得 01001，故 [−X]补 = 01001100。比「取反加一」快一截。" },
+    { q:"8 位补码 1111 1111 表示的真值是？",
+      o:["−127","−1","−0","255"], a:1,
+      e:"按「取反加一」逆推：11111111 减 1 得 11111110，取反得 00000001 = 1，所以是 −1。也可以用公式：−2⁷ + 64+32+16+8+4+2+1 = −128+127 = −1。" },
+    { q:"关于移码，下列说法正确的是？",
+      o:["移码与补码数值位相同、符号位相反","移码和原码数值位相同","移码不能表示负数","移码比补码多表示一个数"], a:0,
+      e:"移码就是补码的符号位取反，数值位完全一致，因此取值范围也和补码相同（−2ⁿ⁻¹ ~ 2ⁿ⁻¹−1），只是「看起来」从小到大排列起来了。" }
+  ];
+
+  var qbox = document.getElementById("quiz");
+  quiz.forEach(function(item, i){
+    var d = document.createElement("div");
+    d.className = "q";
+    var h = document.createElement("div");
+    h.className = "qt";
+    h.innerHTML = '<i>Q' + (i + 1) + '</i>' + item.q;
+    d.appendChild(h);
+    var ow = document.createElement("div");
+    ow.className = "opts";
+    item.o.forEach(function(text, j){
+      var b = document.createElement("div");
+      b.className = "opt";
+      b.textContent = String.fromCharCode(65 + j) + ". " + text;
+      b.addEventListener("click", function(){
+        Array.prototype.forEach.call(ow.children, function(x){
+          x.classList.remove("right", "wrong");
+          x.style.pointerEvents = "";
+        });
+        Array.prototype.forEach.call(ow.children, function(x, k){
+          if(k === item.a) x.classList.add("right");
+        });
+        if(j !== item.a) b.classList.add("wrong");
+        var ex = d.querySelector(".expl");
+        ex.classList.add("show");
+      });
+      ow.appendChild(b);
+    });
+    d.appendChild(ow);
+    var ex = document.createElement("div");
+    ex.className = "expl";
+    ex.innerHTML = "✅ <b>" + String.fromCharCode(65 + item.a) + "</b>　" + item.e;
+    d.appendChild(ex);
+    qbox.appendChild(d);
+  });
+
+  /* ---------- 考点清单：精讲 + 例题 ---------- */
+  var KS = [
+    {
+      t: "给定位数，求取值范围（整数 + 小数）",
+      star: 3,
+      g: "第一步永远是分清<b>定点整数</b>还是<b>定点小数</b>——小数点位置不同，公式是两套。共同点：数值位全 1 就是最大值；差别在权重。<b>原码/反码</b>因为 ±0 占了两份编码，正负两侧对称；<b>补码/移码</b>的 0 唯一，负数侧就多挤出一个数。",
+      ex: [
+        { h:"例 1 · 定点整数", q:"机器字长 8 位，含 1 位符号位，求定点整数的补码范围与原码范围。",
+          s:'<span class="step">① 数值位 7 位，全 1 时最大 = 2⁷ − 1 = <code>127</code></span>'
+           +'<span class="step">② 补码：−2⁷ ~ 2⁷−1 = <code>−128 ~ +127</code>，共 2⁸ = 256 个</span>'
+           +'<span class="step">③ 原码：−(2⁷−1) ~ 2⁷−1 = <code>−127 ~ +127</code>，共 2⁸−1 = 255 个（±0 占了两个位置）</span>',
+          a:"答案：补码 −128 ~ +127；原码/反码 −127 ~ +127" },
+        { h:"例 2 · 定点小数（这块最容易漏）", q:"同样 8 位，但小数点固定在符号位之后（纯小数），求补码的表示范围。",
+          s:'<span class="step">① 数值位 7 位，权重从 2⁻¹ 到 2⁻⁷，全 1 时最大 = 1 − 2⁻⁷ = <code>127/128</code> ≈ 0.9922</span>'
+           +'<span class="step">② 补码的 0 唯一，负数侧多一个：位模式 <code>1.0000000</code> 被定义为 <code>−1</code></span>'
+           +'<span class="step">③ 所以范围是 <code>−1 ~ +127/128</code>，共 2⁸ = 256 个</span>'
+           +'<span class="step">④ 换成原码/反码：−0 那个位置还在，范围缩成 <code>−127/128 ~ +127/128</code>，共 255 个</span>',
+          a:"答案：−1 ≤ X ≤ +127/128（原码/反码则是 −127/128 ~ +127/128）",
+          w:"易错：小数补码能表示 −1，原码不能——原码的 1.0000000 是 −0。这跟整数那边「补码能到 −128、原码只到 −127」是同一个道理。" },
+        { h:"例 3 · 一句话套公式", q:"n = 16 位定点整数，补码范围？n = 16 位定点小数，补码范围？",
+          s:'<span class="step">整数：−2¹⁵ ~ 2¹⁵−1 = <code>−32768 ~ +32767</code>，共 65536 个</span>'
+           +'<span class="step">小数：−1 ~ 1 − 2⁻¹⁵ = <code>−1 ~ +32767/32768</code>，共 65536 个</span>'
+           +'<span class="step">口诀：整数用 2ⁿ⁻¹ 那把尺，小数用 1 那把尺，两把尺都在负数侧多让一格给补码。</span>',
+          a:"答案：−32768 ~ +32767 ／ −1 ~ +32767/32768" },
+        { h:"例 4 · 进阶：规格化尾数（浮点常客）", q:"浮点尾数 M 用补码表示且要求规格化，M 的取值范围？",
+          s:'<span class="step">① 补码规格化的判据：<b>符号位与最高数值位相异</b></span>'
+           +'<span class="step">② 正数形如 0.1xxx → ≥ 1/2；负数形如 1.0xxx → &lt; −1/2，其中 1.000…0 = −1 也满足相异</span>'
+           +'<span class="step">③ 所以 <code>−1 ≤ M &lt; −1/2</code> 或 <code>1/2 ≤ M &lt; 1</code></span>',
+          a:"答案：1/2 ≤ |M| < 1，且负数侧可取到 −1",
+          w:"对比：原码规格化只看最高数值位为 1，范围是 1/2 ≤ |M| < 1，负数侧取不到 −1。" }
+      ],
+      key: "整数：−2ⁿ⁻¹ ~ 2ⁿ⁻¹−1（补/移）｜−(2ⁿ⁻¹−1) ~ 2ⁿ⁻¹−1（原/反）　·　小数：−1 ~ 1−2⁻⁽ⁿ⁻¹⁾（补/移）｜±(1−2⁻⁽ⁿ⁻¹⁾)（原/反）"
+    },
+    {
+      t: "0 的唯一性 / 能表示多少个数",
+      star: 3,
+      g: "同一串位模式在不同编码里含义不同，最典型的战场就是 0。原码和反码都给 −0 留了位置，白白浪费一个编码；补码把 −0 的位置送给了最小负数，移码同理。所以「能表示多少个数」这一问，答案只可能是 <b>2ⁿ</b> 或 <b>2ⁿ−1</b> 两个之一。",
+      ex: [
+        { h:"例 1 · 写出四种码的 0（n = 8）", q:"分别写出原码、反码、补码、移码中 0 的位模式。",
+          s:'<span class="step">原码：+0 = <code>00000000</code>，−0 = <code>10000000</code>　← 两个</span>'
+           +'<span class="step">反码：+0 = <code>00000000</code>，−0 = <code>11111111</code>　← 两个</span>'
+           +'<span class="step">补码：0 = <code>00000000</code>　← 唯一，<code>10000000</code> 让给了 −128</span>'
+           +'<span class="step">移码：0 = <code>10000000</code>　← 唯一（码值 128）</span>',
+          a:"答案：原码、反码各 2 个；补码、移码各 1 个" },
+        { h:"例 2 · 数一数个数", q:"n 位原码能表示多少个数？n 位补码呢？",
+          s:'<span class="step">原码/反码：2ⁿ − 1 个（±0 占两份）</span>'
+           +'<span class="step">补码/移码：2ⁿ 个（0 唯一，多出的位置归最小负数）</span>'
+           +'<span class="step">n = 8 代入：255 个 vs 256 个</span>',
+          a:"答案：2ⁿ−1 与 2ⁿ" }
+      ],
+      key: "问「几个数」→ 补/移填 2ⁿ，原/反填 2ⁿ−1；问「0 是否唯一」→ 只有补码和移码唯一"
+    },
+    {
+      t: "溢出判断",
+      star: 3,
+      g: "溢出只可能发生在<b>同号数相加</b>（或异号数相减）时，异号相加永远不会溢出。三种判据任选，结果一致：①<b>符号法</b>——两个同号操作数相加，结果符号翻转即溢出；②<b>双符号位（变形补码）</b>——结果双符号位为 01 是正溢，10 是负溢；③<b>进位法</b>——符号位进位 Cs 与最高数值位进位 Cp 相异即溢出。",
+      ex: [
+        { h:"例 1 · 正溢", q:"4 位补码（范围 −8 ~ +7），计算 5 + 6，判断是否溢出。",
+          s:'<span class="step">  0101 (+5)</span><span class="step">+ 0110 (+6)</span><span class="step">= 1011 → 按补码读是 <code>−5</code></span>'
+           +'<span class="step">符号法：两个正数相加得到负数 → 溢出（真值 11 超出 +7）</span>'
+           +'<span class="step">双符号位：00 101 + 00 110 = 01 011 → 双符号位 <code>01</code> → 正溢</span>'
+           +'<span class="step">进位法：最高数值位 1+1 产生进位 Cp = 1；符号位 0+0+1 = 1 无进位 Cs = 0 → Cs ⊕ Cp = 1 → 溢出</span>',
+          a:"答案：溢出（三种方法结论一致）" },
+        { h:"例 2 · 负溢", q:"4 位补码，计算 (−5) + (−6)，判断是否溢出。",
+          s:'<span class="step">  1011 (−5)</span><span class="step">+ 1010 (−6)</span><span class="step">= 1 0101 → 丢掉最高进位后 <code>0101 = +5</code></span>'
+           +'<span class="step">符号法：两个负数相加得到正数 → 溢出（真值 −11 低于 −8）</span>'
+           +'<span class="step">双符号位：11 011 + 11 010 = 1 10 101 → 丢最高位后 <code>10</code> → 负溢</span>',
+          a:"答案：溢出" },
+        { h:"例 3 · 不溢出的对照组", q:"4 位补码，计算 3 + 4。",
+          s:'<span class="step">0011 + 0100 = <code>0111</code> = +7，符号位仍为 0（正 + 正 = 正）</span>'
+           +'<span class="step">Cp = 0、Cs = 0 → Cs ⊕ Cp = 0 → 不溢出</span>',
+          a:"答案：不溢出，结果 +7" }
+      ],
+      key: "Cs ⊕ Cp = 1 即溢出　·　双符号位 01 = 正溢、10 = 负溢　·　异号相加不溢出"
+    },
+    {
+      t: "移码的用途：浮点数的阶码",
+      star: 2,
+      g: "移码 = 补码符号位取反 = 真值 + 2ⁿ⁻¹，好处是把所有数搬到非负区间，比较大小时硬件直接当无符号数比，不用先判符号。浮点数阶码就吃这个红利。⚠️ 注意：定点移码的偏移量是 2ⁿ⁻¹，而 <b>IEEE754 阶码的偏移量是 2ⁿ⁻¹ − 1</b>，因为全 0 和全 1 要留着表示 0、非规格化数、∞ 和 NaN。",
+      ex: [
+        { h:"例 1 · 求定点移码", q:"8 位，求 −9 的移码。",
+          s:'<span class="step">方法①：−9 + 2⁷ = −9 + 128 = <code>119</code> = <code>01110111</code></span>'
+           +'<span class="step">方法②：补码 <code>11110111</code> 符号位取反 → <code>01110111</code>（✓ 更快）</span>',
+          a:"答案：01110111" },
+        { h:"例 2 · IEEE754 单精度阶码", q:"阶码 8 位，指数真值为 +3 和 −3 时，阶码各是多少？",
+          s:'<span class="step">偏移量 = 2⁸⁻¹ − 1 = 127</span>'
+           +'<span class="step">+3 → 3 + 127 = <code>130</code> = <code>10000010</code></span>'
+           +'<span class="step">−3 → −3 + 127 = <code>124</code> = <code>01111100</code></span>',
+          a:"答案：10000010 与 01111100" },
+        { h:"例 3 · 阶码能表示多大指数", q:"8 位阶码，可表示的最小、最大指数真值是多少？",
+          s:'<span class="step">阶码全 0（0）和全 1（255）被征作特殊用途，实际可用 1 ~ 254</span>'
+           +'<span class="step">指数 = 阶码 − 127 → <code>−126 ~ +127</code></span>',
+          a:"答案：−126 ~ +127" }
+      ],
+      key: "定点移码偏移 2ⁿ⁻¹ ｜ IEEE754 阶码偏移 2ⁿ⁻¹−1（单精度 127，双精度 1023）"
+    },
+    {
+      t: "补码的运算：减法变加法",
+      star: 2,
+      g: "补码让符号位和数值位一起进加法器，产生的最高位进位直接丢掉，于是 CPU 不需要减法器：<b>[X − Y]补 = [X]补 + [−Y]补</b>。这也是现代计算机整数一律用补码存的原因。",
+      ex: [
+        { h:"例 1 · 正数减正数", q:"8 位补码，计算 9 − 5。",
+          s:'<span class="step">[9]补 = <code>00001001</code>　[5]补 = <code>00000101</code>　[−5]补 = <code>11111011</code></span>'
+           +'<span class="step">  00001001</span><span class="step">+ 11111011</span><span class="step">= 1 00000100 → 丢掉最高进位 → <code>00000100</code></span>'
+           +'<span class="step">结果 = +4 ✓</span>',
+          a:"答案：00000100，即 +4" },
+        { h:"例 2 · 不够减，结果为负", q:"8 位补码，计算 5 − 9。",
+          s:'<span class="step">[5]补 = <code>00000101</code>　[−9]补 = <code>11110111</code></span>'
+           +'<span class="step">00000101 + 11110111 = <code>11111100</code>（无进位可丢）</span>'
+           +'<span class="step">验读：11111100 取反 +1 = 00000100 = 4 → 结果 <code>−4</code> ✓</span>',
+          a:"答案：11111100，即 −4" }
+      ],
+      key: "[X−Y]补 = [X]补 + [−Y]补，最高位进位丢掉不要"
+    },
+    {
+      t: "特殊位模式的含义（送命题）",
+      star: 3,
+      g: "考场上最省时间的是背下这几个位模式，横着看、竖着看都要能反应过来。核心一条：<code>10000000</code> 在四种编码里是四个不同的值。",
+      table: {
+        head:["位模式（n=8）","原码","反码","补码","移码"],
+        rows:[
+          ["00000000","+0","+0","0","−128"],
+          ["01111111","+127","+127","+127","−1"],
+          ["10000000","−0","−127","−128","0"],
+          ["11111111","−127","−0","−1","+127"]
+        ]
+      },
+      ex: [
+        { h:"例 1 · 经典送分", q:"8 位补码 10000000 表示的真值是？",
+          s:'<span class="step">补码里 10000000 不是 −0（补码没有 −0），它被分配给最小负数</span>'
+           +'<span class="step">最小负数 = −2⁷ = <code>−128</code></span>',
+          a:"答案：−128" },
+        { h:"例 2 · 换个码问问", q:"同样是 10000000，按反码读是多少？按移码读呢？",
+          s:'<span class="step">反码：数值位 0000000 取反得 1111111 = 127 → <code>−127</code></span>'
+           +'<span class="step">移码：码值 128 − 偏移 128 = <code>0</code></span>',
+          a:"答案：反码 −127；移码 0" }
+      ],
+      key: "10000000：原−0 ／ 反−127 ／ 补−128 ／ 移0"
+    },
+    {
+      t: "符号扩展",
+      star: 1,
+      g: "把短字长的数搬进长字长寄存器时，值不能变。<b>补码</b>扩展 = 复制符号位（正数补 0，负数补 1）；<b>原码</b>扩展 = 在符号位与数值位之间插 0。",
+      ex: [
+        { h:"例 1 · 补码扩展", q:"把 8 位补码 11111011（−5）扩展成 16 位。",
+          s:'<span class="step">符号位为 1 → 高位全补 1：<code>11111111 11111011</code></span>'
+           +'<span class="step">验算：−2¹⁵ + 32764 = <code>−5</code> ✓ 值没变</span>',
+          a:"答案：11111111 11111011" },
+        { h:"例 2 · 原码扩展", q:"把 8 位原码 10000101（−5）扩展成 16 位。",
+          s:'<span class="step">原码扩展是符号位与数值位之间插 0（数值位本身不动）</span>'
+           +'<span class="step"><code>1</code> + 0000000 0000 + <code>0000101</code> = <code>10000000 00000101</code></span>'
+           +'<span class="step">符号位 1 → 负，数值位 000000000000101 = 5 → <code>−5</code> ✓</span>',
+          a:"答案：10000000 00000101" }
+      ],
+      key: "补码扩展 = 复制符号位；原码扩展 = 中间插 0"
+    }
+  ];
+
+  function renderKs(){
+    var box = document.getElementById("ksList");
+    var h = "";
+    KS.forEach(function(k, i){
+      h += '<div class="k"><div class="idx">' + (i + 1) + '</div><div>';
+      h += '<h4>' + k.t + ' <span class="star">' + "★".repeat(k.star) + "☆".repeat(3 - k.star) + '</span></h4>';
+      h += '<p class="g">' + k.g + '</p>';
+      if(k.table){
+        h += '<table class="mini-table"><tr>';
+        k.table.head.forEach(function(x){ h += '<th>' + x + '</th>'; });
+        h += '</tr>';
+        k.table.rows.forEach(function(r){
+          h += '<tr><td class="m">' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td><td>' + r[3] + '</td><td>' + r[4] + '</td></tr>';
+        });
+        h += '</table>';
+      }
+      k.ex.forEach(function(e){
+        h += '<div class="ex"><div class="eh">' + e.h + '</div>'
+           + '<p class="eq">' + e.q + '</p>'
+           + '<p class="es">' + e.s + '</p>'
+           + '<span class="ans">' + e.a + '</span>'
+           + (e.w ? '<span class="warn">⚠️ ' + e.w + '</span>' : '')
+           + '</div>';
+      });
+      h += '<div><span class="key">' + k.key + '</span></div>';
+      h += '</div></div>';
+    });
+    box.innerHTML = h;
+  }
+
+  render();
+  renderRange();
+  renderKs();
+})();
+</script>
+</body>
+</html>

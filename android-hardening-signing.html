@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Android 加固与签名完全图解</title>
+<style>
+  :root{
+    --bg:#f6f8fb; --card:#ffffff; --text:#1e293b; --muted:#64748b;
+    --blue:#2563eb; --blue-light:#eff6ff; --purple:#7c3aed; --purple-light:#f5f3ff;
+    --green:#059669; --green-light:#ecfdf5; --red:#dc2626; --red-light:#fef2f2;
+    --amber:#d97706; --amber-light:#fffbeb; --border:#e2e8f0;
+    --mono:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
+  .page{max-width:1000px;margin:0 auto;padding:32px 20px 80px}
+  header.hero{background:linear-gradient(135deg,#1d4ed8,#7c3aed);border-radius:20px;padding:44px 40px;color:#fff;margin-bottom:28px}
+  header.hero h1{font-size:30px;letter-spacing:.5px;margin-bottom:10px}
+  header.hero p{opacity:.92;font-size:15px}
+  .toc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 24px;margin-bottom:32px}
+  .toc h2{font-size:15px;color:var(--muted);margin-bottom:10px}
+  .toc ol{padding-left:22px;columns:2;font-size:14px}
+  .toc a{color:var(--blue);text-decoration:none}
+  .toc a:hover{text-decoration:underline}
+  section{margin-bottom:44px}
+  h2.sec{font-size:24px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+  h2.sec .no{background:var(--blue);color:#fff;border-radius:8px;font-size:15px;padding:2px 10px}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:16px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px 28px;margin-bottom:18px;box-shadow:0 1px 3px rgba(15,23,42,.05)}
+  .card h3{font-size:17px;margin-bottom:10px}
+  .card p{margin-bottom:10px;font-size:15px}
+  .card p:last-child{margin-bottom:0}
+  .callout{border-radius:12px;padding:14px 18px;margin:14px 0;font-size:14.5px}
+  .callout b{font-weight:700}
+  .callout.blue{background:var(--blue-light);border-left:4px solid var(--blue)}
+  .callout.red{background:var(--red-light);border-left:4px solid var(--red)}
+  .callout.green{background:var(--green-light);border-left:4px solid var(--green)}
+  .callout.amber{background:var(--amber-light);border-left:4px solid var(--amber)}
+  .callout.purple{background:var(--purple-light);border-left:4px solid var(--purple)}
+  code{font-family:var(--mono);background:#f1f5f9;border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:13px;color:#be185d}
+  pre{font-family:var(--mono);background:#0f172a;color:#e2e8f0;border-radius:10px;padding:16px 18px;font-size:13px;overflow-x:auto;line-height:1.7;margin:12px 0}
+  pre .c{color:#64748b}
+  pre .g{color:#4ade80}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0}
+  th{background:#f1f5f9;text-align:left;padding:10px 12px;border:1px solid var(--border)}
+  td{padding:9px 12px;border:1px solid var(--border);vertical-align:top}
+  tr:nth-child(even) td{background:#fafbfc}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .mini{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+  .mini h4{font-size:15px;margin-bottom:8px}
+  .mini p{font-size:13.5px;color:var(--muted)}
+  .tag{display:inline-block;font-size:12px;border-radius:999px;padding:1px 10px;margin-right:6px}
+  .tag.g1{background:var(--green-light);color:var(--green)}
+  .tag.g2{background:var(--blue-light);color:var(--blue)}
+  .tag.g3{background:var(--purple-light);color:var(--purple)}
+  figure{margin:18px 0 6px}
+  figcaption{text-align:center;color:var(--muted);font-size:13px;margin-top:8px}
+  svg text{font-family:"PingFang SC","Microsoft YaHei",sans-serif}
+  .flow-arrow{color:var(--blue);font-weight:700}
+  .divider{height:1px;background:var(--border);margin:40px 0}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px}
+  @media (max-width:760px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.toc ol{columns:1}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="hero">
+  <h1>Android 加固与签名 · 完全图解</h1>
+  <p>加固是什么 → 加固分哪几类 → 签名是什么 → V1 / V2 签名原理 → 360 加固全景剖析</p>
+</header>
+
+<nav class="toc">
+  <h2>目录</h2>
+  <ol>
+    <li><a href="#s1">加固是什么？为什么需要</a></li>
+    <li><a href="#s2">加固前后 APK 结构对比</a></li>
+    <li><a href="#s3">加固的分类（一/二/三代）</a></li>
+    <li><a href="#s4">加固的处理流程</a></li>
+    <li><a href="#s5">运行时“脱壳”流程</a></li>
+    <li><a href="#s6">什么是签名？原理图解</a></li>
+    <li><a href="#s7">V1 签名剖析</a></li>
+    <li><a href="#s8">V2 签名剖析</a></li>
+    <li><a href="#s9">V1–V4 签名方案对比</a></li>
+    <li><a href="#s10">360 加固全景剖析</a></li>
+    <li><a href="#s11">加固 × 签名的关系（重点）</a></li>
+  </ol>
+</nav>
+
+<!-- ============ 1 ============ -->
+<section id="s1">
+  <h2 class="sec"><span class="no">01</span>加固是什么？为什么需要它？</h2>
+  <p class="sub">Reinforcement / Packing / 加壳 —— 给 APK 穿上一层“防弹衣”</p>
+  <div class="card">
+    <p><b>一句话定义：</b>加固就是把 APK 里可以被轻易反编译成源码的 <code>classes.dex</code> <b>加密隐藏起来</b>，替换成一个只有“解密 + 加载”功能的<b>壳程序</b>；App 每次启动时由壳在内存里解密出真实代码再运行。整个过程用户无感知，但破解者拿到的是一份“读不出代码”的 APK。</p>
+    <p>为什么必须做这件事？看下面这条“不加防护时的破解链条”：</p>
+    <figure>
+    <svg viewBox="0 0 960 130" style="width:100%;height:auto">
+      <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#dc2626"/></marker></defs>
+      <rect x="15" y="28" width="195" height="74" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="112" y="58" text-anchor="middle" font-size="14" fill="#1e293b" font-weight="700">你的 APK</text>
+      <text x="112" y="80" text-anchor="middle" font-size="11" fill="#64748b">dex = 明文字节码</text>
+      <line x1="215" y1="65" x2="252" y2="65" stroke="#dc2626" stroke-width="2" marker-end="url(#ar)"/>
+      <rect x="255" y="28" width="205" height="74" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+      <text x="357" y="58" text-anchor="middle" font-size="14" fill="#1e293b" font-weight="700">jadx / apktool</text>
+      <text x="357" y="80" text-anchor="middle" font-size="11" fill="#64748b">拖进去，一键反编译</text>
+      <line x1="465" y1="65" x2="502" y2="65" stroke="#dc2626" stroke-width="2" marker-end="url(#ar)"/>
+      <rect x="505" y="28" width="200" height="74" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+      <text x="605" y="58" text-anchor="middle" font-size="14" fill="#1e293b" font-weight="700">Java 源码 + 资源全裸</text>
+      <text x="605" y="80" text-anchor="middle" font-size="11" fill="#64748b">业务逻辑、加密算法可见</text>
+      <line x1="710" y1="65" x2="742" y2="65" stroke="#dc2626" stroke-width="2" marker-end="url(#ar)"/>
+      <rect x="745" y="28" width="200" height="74" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+      <text x="845" y="52" text-anchor="middle" font-size="13" fill="#dc2626" font-weight="700">被破解 / 盗版</text>
+      <text x="845" y="72" text-anchor="middle" font-size="11" fill="#b91c1c">植入病毒·去广告·窃取密钥</text>
+      <text x="845" y="90" text-anchor="middle" font-size="11" fill="#b91c1c">二次打包再分发</text>
+    </svg>
+    <figcaption>图 1 · 未加固 APK 的破解链条 —— dex 本质是“可还原为源码的字节码”，等于把源代码发给别人</figcaption>
+    </figure>
+    <div class="callout red"><b>关键认知：</b>Java/Kotlin 编译出的 <code>.dex</code> 与 Python 字节码类似，格式完全公开、可 100% 还原回近似源码。所以“发布 Release 版”并不等于保密，<b>必须靠加固把 dex 藏起来</b>。</div>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="s2">
+  <h2 class="sec"><span class="no">02</span>加固前后的 APK 结构对比</h2>
+  <p class="sub">一眼看懂“壳”到底做了什么</p>
+  <div class="card">
+    <figure>
+    <svg viewBox="0 0 960 470" style="width:100%;height:auto">
+      <!-- 左：原始APK -->
+      <rect x="15" y="18" width="435" height="430" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+      <text x="232" y="48" text-anchor="middle" font-size="15" font-weight="700" fill="#1e293b">原始 APK（未加固）</text>
+      <rect x="45" y="68" width="375" height="42" rx="8" fill="#fff" stroke="#94a3b8"/>
+      <text x="62" y="94" font-size="12.5" fill="#334155" font-family="Consolas,monospace">AndroidManifest.xml</text>
+      <rect x="45" y="118" width="375" height="42" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+      <text x="62" y="138" font-size="12.5" fill="#b91c1c" font-family="Consolas,monospace" font-weight="700">classes.dex</text>
+      <text x="62" y="153" font-size="11" fill="#dc2626">← 全部业务代码，明文可反编译</text>
+      <rect x="45" y="168" width="375" height="42" rx="8" fill="#fef2f2" stroke="#dc2626"/>
+      <text x="62" y="193" font-size="12.5" fill="#b91c1c" font-family="Consolas,monospace">classes2.dex ... （multidex）</text>
+      <rect x="45" y="218" width="375" height="42" rx="8" fill="#fff" stroke="#94a3b8"/>
+      <text x="62" y="243" font-size="12.5" fill="#334155" font-family="Consolas,monospace">res/ · assets/   （资源）</text>
+      <rect x="45" y="268" width="375" height="42" rx="8" fill="#fff" stroke="#94a3b8"/>
+      <text x="62" y="293" font-size="12.5" fill="#334155" font-family="Consolas,monospace">lib/arm64-v8a/libgame.so   （native 库）</text>
+      <rect x="45" y="318" width="375" height="42" rx="8" fill="#eff6ff" stroke="#2563eb"/>
+      <text x="62" y="343" font-size="12.5" fill="#1d4ed8" font-family="Consolas,monospace">META-INF/  （你的签名）</text>
+      <rect x="45" y="368" width="375" height="60" rx="8" fill="#fff" stroke="#94a3b8"/>
+      <text x="62" y="392" font-size="12.5" fill="#334155" font-family="Consolas,monospace">AndroidManifest 中</text>
+      <text x="62" y="412" font-size="12.5" fill="#334155" font-family="Consolas,monospace">application = com.your.app.MyApp</text>
+      <!-- 中间箭头 -->
+      <defs><marker id="ar2" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 z" fill="#7c3aed"/></marker></defs>
+      <path d="M455,230 C 478,230 482,230 500,230" stroke="#7c3aed" stroke-width="3" marker-end="url(#ar2)" fill="none"/>
+      <text x="477" y="212" text-anchor="middle" font-size="12" fill="#7c3aed" font-weight="700">加固</text>
+      <!-- 右：加固APK -->
+      <rect x="510" y="18" width="435" height="430" rx="14" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1.5"/>
+      <text x="727" y="48" text-anchor="middle" font-size="15" font-weight="700" fill="#5b21b6">加固后的 APK（以 360 为例）</text>
+      <rect x="540" y="68" width="375" height="52" rx="8" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+      <text x="557" y="88" font-size="12.5" fill="#92400e" font-family="Consolas,monospace">AndroidManifest.xml（被改写）</text>
+      <text x="557" y="106" font-size="11" fill="#b45309">application 被换成壳入口 com.stub.StubApp</text>
+      <rect x="540" y="128" width="375" height="52" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+      <text x="557" y="148" font-size="12.5" fill="#065f46" font-family="Consolas,monospace" font-weight="700">classes.dex（壳代码，很小）</text>
+      <text x="557" y="166" font-size="11" fill="#047857">只有解密、加载、替换 Application 的逻辑</text>
+      <rect x="540" y="188" width="375" height="52" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="557" y="208" font-size="12.5" fill="#5b21b6" font-family="Consolas,monospace" font-weight="700">assets/（加密后的原 dex）</text>
+      <text x="557" y="226" font-size="11" fill="#6d28d9">AES 等算法加密，jadx 打开是乱码</text>
+      <rect x="540" y="248" width="375" height="52" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="557" y="268" font-size="12.5" fill="#5b21b6" font-family="Consolas,monospace" font-weight="700">lib/arm64-v8a/libjiagu*.so</text>
+      <text x="557" y="286" font-size="11" fill="#6d28d9">壳引擎：解密动作在 native 层完成</text>
+      <rect x="540" y="308" width="375" height="42" rx="8" fill="#fff" stroke="#94a3b8"/>
+      <text x="557" y="333" font-size="12.5" fill="#334155" font-family="Consolas,monospace">res/ · 其他文件（基本不动）</text>
+      <rect x="540" y="358" width="375" height="42" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="557" y="383" font-size="12.5" fill="#1d4ed8" font-family="Consolas,monospace">META-INF/（重新生成的签名）</text>
+      <rect x="540" y="408" width="375" height="30" rx="8" fill="#fef2f2" stroke="#dc2626"/>
+      <text x="727" y="428" text-anchor="middle" font-size="11.5" fill="#b91c1c" font-weight="700">⚠ 原始签名已被破坏，必须重新签名</text>
+    </svg>
+    <figcaption>图 2 · 加固的本质：明文 dex → 加密数据；入口 → 壳；解密引擎 → native so</figcaption>
+    </figure>
+    <div class="callout blue"><b>“壳”（Shell / Stub）这个词的由来：</b>就像给鸡蛋套一层壳——外部只能看到壳，里面的“蛋黄”（真实代码）被保护起来，只有程序自己（在运行时）能打开。</div>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="s3">
+  <h2 class="sec"><span class="no">03</span>加固的分类：从一代到三代</h2>
+  <p class="sub">按“藏代码的方式和深度”划分，越往下对抗强度越高、性能损耗也越大</p>
+  <div class="grid2">
+    <div class="mini">
+      <h4><span class="tag g1">一代</span>整体 DEX 加密（数字壳）</h4>
+      <p>把整个 classes.dex 加密存放，启动时<b>整体解密</b>后加载。360 加固、腾讯乐固的基础方案。实现简单、兼容性好，但<b>内存里能整体 dump 出明文 dex</b>，脱壳工具（如 FRIDA-DEXDump）较易对付。</p>
+    </div>
+    <div class="mini">
+      <h4><span class="tag g2">二代</span>方法抽取 / 函数抽取</h4>
+      <p>不加密整个 dex，而是把<b>每个方法的指令体（方法体）抽走</b>，只留空壳结构；方法被调用时才在内存中逐个还原。dump 出的 dex 缺方法体，需“主动调用”才能补全，对抗性明显提升。</p>
+    </div>
+    <div class="mini">
+      <h4><span class="tag g3">三代</span>VMP / Java2C（dex2c）</h4>
+      <p><b>指令虚拟化</b>：把 Java 字节码翻译成自定义虚拟机指令（VMP），或直接把关键方法<b>转成 C 代码编译进 so</b>（dex2c / Native 化）。即使脱壳也拿不回原始逻辑，是目前最强路线，但对性能、稳定性影响最大。</p>
+    </div>
+    <div class="mini">
+      <h4>SO 加固 &amp; 资源加固</h4>
+      <p>对 <code>lib/*.so</code>（native 库）做混淆加壳：OLLVM 指令混淆、控制流平坦化、字符串加密、so 壳；对 <code>res/</code> 资源加密防止资源被替换/盗图。与 dex 加固互补。</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>辅助防护层（通常与加固捆绑提供）</h3>
+    <div class="grid4">
+      <div class="mini"><h4>反调试</h4><p>ptrace 自附加、检测调试器 / IDA / gdb，检测到就闪退。</p></div>
+      <div class="mini"><h4>反 Hook</h4><p>检测 Xposed / Frida / Substrate 注入痕迹。</p></div>
+      <div class="mini"><h4>环境检测</h4><p>模拟器、Root、多开、虚拟机框架识别。</p></div>
+      <div class="mini"><h4>完整性校验</h4><p>运行时校验自身签名与文件哈希，防二次打包。</p></div>
+    </div>
+    <div class="callout amber"><b>选型直觉：</b>银行 / 证券类 App 常用“二代抽取 + so 加固 + 完整性校验”；游戏常用“so（OLLVM）加固为主”；普通 App 用一代整体加固已能挡住 90% 的脚本小子。</div>
+  </div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="s4">
+  <h2 class="sec"><span class="no">04</span>加固的处理流程：你的 APK 经历了什么</h2>
+  <p class="sub">以上传到加固平台为起点，八步流水线</p>
+  <div class="card">
+    <figure>
+    <svg viewBox="0 0 960 300" style="width:100%;height:auto">
+      <defs><marker id="ar3" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 z" fill="#2563eb"/></marker></defs>
+      <!-- 第一行 -->
+      <rect x="15" y="25" width="200" height="62" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="115" y="52" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1e3a8a">① 解析 APK</text>
+      <text x="115" y="72" text-anchor="middle" font-size="11" fill="#475569">校验签名、读取 Manifest</text>
+      <line x1="220" y1="56" x2="252" y2="56" stroke="#2563eb" stroke-width="2" marker-end="url(#ar3)"/>
+      <rect x="255" y="25" width="200" height="62" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="355" y="52" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1e3a8a">② 提取 classes*.dex</text>
+      <text x="355" y="72" text-anchor="middle" font-size="11" fill="#475569">抽出全部明文字节码</text>
+      <line x1="460" y1="56" x2="492" y2="56" stroke="#2563eb" stroke-width="2" marker-end="url(#ar3)"/>
+      <rect x="495" y="25" width="200" height="62" rx="10" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="595" y="52" text-anchor="middle" font-size="13.5" font-weight="700" fill="#5b21b6">③ 加密</text>
+      <text x="595" y="72" text-anchor="middle" font-size="11" fill="#64748b">AES / 自定义算法 + 多重变换</text>
+      <line x1="700" y1="56" x2="732" y2="56" stroke="#2563eb" stroke-width="2" marker-end="url(#ar3)"/>
+      <rect x="735" y="25" width="210" height="62" rx="10" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="840" y="52" text-anchor="middle" font-size="13.5" font-weight="700" fill="#5b21b6">④ 密文放回包内</text>
+      <text x="840" y="72" text-anchor="middle" font-size="11" fill="#64748b">存入 assets / 伪装文件名</text>
+      <!-- 折返箭头 -->
+      <path d="M840,92 L840,150 L120,150 L120,118" stroke="#2563eb" stroke-width="2" fill="none" marker-end="url(#ar3)"/>
+      <!-- 第二行 -->
+      <rect x="15" y="185" width="200" height="62" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+      <text x="115" y="212" text-anchor="middle" font-size="13.5" font-weight="700" fill="#92400e">⑤ 注入壳</text>
+      <text x="115" y="232" text-anchor="middle" font-size="11" fill="#64748b">壳 dex + libjiagu*.so</text>
+      <line x1="220" y1="216" x2="252" y2="216" stroke="#2563eb" stroke-width="2" marker-end="url(#ar3)"/>
+      <rect x="255" y="185" width="200" height="62" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+      <text x="355" y="212" text-anchor="middle" font-size="13.5" font-weight="700" fill="#92400e">⑥ 改写 Manifest</text>
+      <text x="355" y="232" text-anchor="middle" font-size="11" fill="#64748b">入口指向壳的 Application</text>
+      <line x1="460" y1="216" x2="492" y2="216" stroke="#2563eb" stroke-width="2" marker-end="url(#ar3)"/>
+      <rect x="495" y="185" width="200" height="62" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+      <text x="595" y="212" text-anchor="middle" font-size="13.5" font-weight="700" fill="#065f46">⑦ 重打包 + 重签名</text>
+      <text x="595" y="232" text-anchor="middle" font-size="11" fill="#64748b">zipalign + 重新签名（必做）</text>
+      <line x1="700" y1="216" x2="732" y2="216" stroke="#2563eb" stroke-width="2" marker-end="url(#ar3)"/>
+      <rect x="735" y="185" width="210" height="62" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+      <text x="840" y="212" text-anchor="middle" font-size="13.5" font-weight="700" fill="#065f46">⑧ 输出加固 APK</text>
+      <text x="840" y="232" text-anchor="middle" font-size="11" fill="#047857">可上架、可分发</text>
+    </svg>
+    <figcaption>图 3 · 加固流水线：抽走明文 dex → 加密回填 → 换壳 → 换入口 → 重新签名</figcaption>
+    </figure>
+    <div class="callout purple"><b>注意第 ⑦ 步：</b>加固改动了 APK 内容，<b>原有签名必然失效</b>（签名本质上是对文件内容的哈希承诺）。所以“加固”和“重新签名”永远是一对搭档，详见第 11 节。</div>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="s5">
+  <h2 class="sec"><span class="no">05</span>运行时“脱壳”：App 启动后发生了什么</h2>
+  <p class="sub">为什么用户感觉不到任何异常？——壳利用了 Application 初始化最早的时机</p>
+  <div class="card">
+    <figure>
+    <svg viewBox="0 0 960 610" style="width:100%;height:auto">
+      <defs><marker id="ar4" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 z" fill="#334155"/></marker></defs>
+      <rect x="180" y="15" width="600" height="56" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="480" y="39" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a">① 用户点击图标，系统加载的是「壳」的 classes.dex</text>
+      <line x1="480" y1="75" x2="480" y2="95" stroke="#334155" stroke-width="2" marker-end="url(#ar4)"/>
+      <rect x="180" y="98" width="600" height="56" rx="12" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+      <text x="480" y="122" text-anchor="middle" font-size="14" font-weight="700" fill="#92400e">② 壳的 StubApplication.attachBaseContext() 被回调</text>
+      <text x="480" y="143" text-anchor="middle" font-size="11.5" fill="#b45309">App 生命周期最早的钩子，比 onCreate 还早</text>
+      <line x1="480" y1="158" x2="480" y2="178" stroke="#334155" stroke-width="2" marker-end="url(#ar4)"/>
+      <rect x="180" y="181" width="600" height="56" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="480" y="205" text-anchor="middle" font-size="14" font-weight="700" fill="#5b21b6">③ System.loadLibrary("jiagu") 加载 native 壳引擎</text>
+      <text x="480" y="226" text-anchor="middle" font-size="11.5" fill="#6d28d9">解密逻辑放 native 层，避免被 Java 层轻易分析</text>
+      <line x1="480" y1="241" x2="480" y2="261" stroke="#334155" stroke-width="2" marker-end="url(#ar4)"/>
+      <rect x="180" y="264" width="600" height="56" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="480" y="288" text-anchor="middle" font-size="14" font-weight="700" fill="#5b21b6">④ so 解密 assets 中的密文，还原出原始 dex</text>
+      <text x="480" y="309" text-anchor="middle" font-size="11.5" fill="#6d28d9">一代壳整体解密；二代壳只还原被调用的方法体</text>
+      <line x1="480" y1="324" x2="480" y2="344" stroke="#334155" stroke-width="2" marker-end="url(#ar4)"/>
+      <rect x="180" y="347" width="600" height="56" rx="12" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+      <text x="480" y="371" text-anchor="middle" font-size="14" font-weight="700" fill="#065f46">⑤ DexClassLoader / InMemoryDexClassLoader 加载真实代码</text>
+      <text x="480" y="392" text-anchor="middle" font-size="11.5" fill="#047857">明文 dex 只存在于内存，落不了盘</text>
+      <line x1="480" y1="407" x2="480" y2="427" stroke="#334155" stroke-width="2" marker-end="url(#ar4)"/>
+      <rect x="180" y="430" width="600" height="56" rx="12" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+      <text x="480" y="454" text-anchor="middle" font-size="14" font-weight="700" fill="#065f46">⑥ 反射把 Application 换回你真正的 MyApp</text>
+      <text x="480" y="475" text-anchor="middle" font-size="11.5" fill="#047857">替换 mApplication 等系统字段，伪造“无缝”体验</text>
+      <line x1="480" y1="490" x2="480" y2="510" stroke="#334155" stroke-width="2" marker-end="url(#ar4)"/>
+      <rect x="180" y="513" width="600" height="56" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+      <text x="480" y="537" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a">⑦ 之后的一切运行，与未加固时完全一致</text>
+      <text x="480" y="558" text-anchor="middle" font-size="11.5" fill="#475569">Activity、Service、广播照常工作，用户无感知</text>
+      <rect x="810" y="513" width="130" height="56" rx="12" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+      <text x="875" y="536" text-anchor="middle" font-size="12" font-weight="700" fill="#b91c1c">破解者的目标：</text>
+      <text x="875" y="555" text-anchor="middle" font-size="11" fill="#b91c1c">在⑤后 dump 内存</text>
+    </svg>
+    <figcaption>图 4 · 运行时脱壳链路：壳先启动 → 解密 → 内存加载 → 换回真身</figcaption>
+    </figure>
+    <div class="callout blue"><b>攻防就在第 ⑤ 步：</b>一代壳的明文 dex 终究会完整出现在内存里，所以脱壳工具普遍采用“内存搜索 dex 魔数（dex\n035）+ dump”的思路。这正是二代“方法抽取”、三代“VMP/dex2c”出现的原因——让内存里<b>永远凑不齐一份完整的明文 dex</b>。</div>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="s6">
+  <h2 class="sec"><span class="no">06</span>什么是签名？—— 先懂“数字签名”再谈 V1/V2</h2>
+  <p class="sub">签名回答两个问题：这个 APK 是谁发布的？内容被动过手脚吗？</p>
+  <div class="card">
+    <h3>两大基石：哈希 + 非对称加密</h3>
+    <p><b>哈希（摘要）：</b>把任意大的文件压成一个固定长度的“指纹”（如 SHA-256 输出 256 位）。改一个字节，指纹就面目全非 → 用于<b>验完整性</b>。<br>
+    <b>非对称加密：</b>私钥 + 公钥一对。私钥签名（加密摘要），公钥验证（解出摘要）→ 用于<b>验身份</b>。私钥永远在开发者手里，公钥随证书公开。</p>
+    <figure>
+    <svg viewBox="0 0 960 330" style="width:100%;height:auto">
+      <defs><marker id="ar5" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 z" fill="#2563eb"/></marker>
+      <marker id="ar5g" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 z" fill="#059669"/></marker></defs>
+      <rect x="15" y="10" width="930" height="145" rx="14" fill="#eff6ff" stroke="#bfdbfe"/>
+      <text x="480" y="36" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a">签名侧 · 开发者的电脑（持有私钥 key.jks）</text>
+      <rect x="40" y="55" width="170" height="70" rx="10" fill="#fff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="125" y="85" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">APK 全部内容</text>
+      <text x="125" y="106" text-anchor="middle" font-size="11" fill="#64748b">1 亿个字节也行</text>
+      <line x1="215" y1="90" x2="265" y2="90" stroke="#2563eb" stroke-width="2" marker-end="url(#ar5)"/>
+      <text x="240" y="78" text-anchor="middle" font-size="10.5" fill="#2563eb">SHA-256</text>
+      <rect x="270" y="55" width="170" height="70" rx="10" fill="#fff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="355" y="85" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">摘要 A（指纹）</text>
+      <text x="355" y="106" text-anchor="middle" font-size="11" fill="#64748b" font-family="Consolas">a3f9…c21b</text>
+      <line x1="445" y1="90" x2="495" y2="90" stroke="#2563eb" stroke-width="2" marker-end="url(#ar5)"/>
+      <text x="470" y="78" text-anchor="middle" font-size="10.5" fill="#2563eb">私钥加密</text>
+      <rect x="500" y="55" width="180" height="70" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+      <text x="590" y="85" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">数字签名</text>
+      <text x="590" y="106" text-anchor="middle" font-size="11" fill="#b45309">只有你的私钥能生成</text>
+      <line x1="685" y1="90" x2="735" y2="90" stroke="#2563eb" stroke-width="2" marker-end="url(#ar5)"/>
+      <rect x="740" y="55" width="180" height="70" rx="10" fill="#fff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="830" y="85" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">写入 APK</text>
+      <text x="830" y="106" text-anchor="middle" font-size="11" fill="#64748b">签名 + 公钥证书</text>
+      <rect x="15" y="172" width="930" height="145" rx="14" fill="#ecfdf5" stroke="#a7f3d0"/>
+      <text x="480" y="198" text-anchor="middle" font-size="14" font-weight="700" fill="#065f46">验证侧 · 手机 / 应用商店（只持有公钥）</text>
+      <rect x="40" y="217" width="170" height="70" rx="10" fill="#fff" stroke="#059669" stroke-width="1.5"/>
+      <text x="125" y="247" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">收到的 APK</text>
+      <text x="125" y="268" text-anchor="middle" font-size="11" fill="#64748b">计算摘要 B</text>
+      <line x1="215" y1="252" x2="265" y2="252" stroke="#059669" stroke-width="2" marker-end="url(#ar5g)"/>
+      <rect x="270" y="217" width="170" height="70" rx="10" fill="#fff" stroke="#059669" stroke-width="1.5"/>
+      <text x="355" y="247" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">摘要 B</text>
+      <text x="355" y="268" text-anchor="middle" font-size="11" fill="#64748b" font-family="Consolas">重新算一遍</text>
+      <rect x="500" y="217" width="180" height="70" rx="10" fill="#fff" stroke="#059669" stroke-width="1.5"/>
+      <text x="590" y="247" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">用公钥解密签名</text>
+      <text x="590" y="268" text-anchor="middle" font-size="11" fill="#64748b">得到摘要 A</text>
+      <line x1="445" y1="252" x2="495" y2="252" stroke="#059669" stroke-width="2" marker-end="url(#ar5g)"/>
+      <line x1="685" y1="252" x2="735" y2="252" stroke="#059669" stroke-width="2" marker-end="url(#ar5g)"/>
+      <rect x="740" y="217" width="180" height="70" rx="10" fill="#fff" stroke="#059669" stroke-width="2"/>
+      <text x="830" y="243" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">A == B ？</text>
+      <text x="830" y="264" text-anchor="middle" font-size="11" fill="#047857">相等：完整 + 是你发的</text>
+      <text x="830" y="280" text-anchor="middle" font-size="11" fill="#dc2626">不等：内容被篡改，拒绝安装</text>
+    </svg>
+    <figcaption>图 5 · 数字签名原理：哈希验完整性，私钥/公钥验身份 —— V1/V2 都建立在这套逻辑之上</figcaption>
+    </figure>
+    <div class="callout green"><b>签名的三大作用：</b>①<b>防篡改</b>——改一个字节验证就失败；②<b>防冒充</b>——没有你的私钥就伪造不出你的签名；③<b>防覆盖安装</b>——Android 规定签名不一致的包禁止覆盖升级，防止别人用“升级”名义替换你的 App。</div>
+    <p>开发者的私钥保存在 <code>key.jks</code>（keystore）文件里，一旦丢失，App 将无法以原身份更新，只能换包名重新上架 —— 所以私钥要像命一样保管。</p>
+  </div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="s7">
+  <h2 class="sec"><span class="no">07</span>V1 签名（APK Signature Scheme v1 / JAR 签名）</h2>
+  <p class="sub">来自 Java 世界的老方案：在 META-INF 里放三份“清单”</p>
+  <div class="card">
+    <figure>
+    <svg viewBox="0 0 960 420" style="width:100%;height:auto">
+      <defs><marker id="ar6" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 z" fill="#2563eb"/></marker></defs>
+      <rect x="15" y="15" width="380" height="390" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+      <text x="205" y="45" text-anchor="middle" font-size="15" font-weight="700" fill="#1e293b">APK（本质是 ZIP 包）</text>
+      <rect x="45" y="65" width="320" height="40" rx="8" fill="#fff" stroke="#94a3b8"/>
+      <text x="62" y="90" font-size="12.5" fill="#334155" font-family="Consolas,monospace">classes.dex</text>
+      <rect x="45" y="112" width="320" height="40" rx="8" fill="#fff" stroke="#94a3b8"/>
+      <text x="62" y="137" font-size="12.5" fill="#334155" font-family="Consolas,monospace">res/... · assets/... · lib/...</text>
+      <rect x="45" y="159" width="320" height="200" rx="8" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+      <text x="62" y="183" font-size="13" fill="#92400e" font-family="Consolas,monospace" font-weight="700">META-INF/</text>
+      <rect x="65" y="195" width="280" height="42" rx="6" fill="#fff" stroke="#d97706"/>
+      <text x="78" y="213" font-size="12" fill="#92400e" font-family="Consolas,monospace" font-weight="700">MANIFEST.MF</text>
+      <text x="78" y="230" font-size="10.5" fill="#b45309">每个文件一条 SHA-256 摘要</text>
+      <rect x="65" y="243" width="280" height="42" rx="6" fill="#fff" stroke="#d97706"/>
+      <text x="78" y="261" font-size="12" fill="#92400e" font-family="Consolas,monospace" font-weight="700">CERT.SF</text>
+      <text x="78" y="278" font-size="10.5" fill="#b45309">对 MANIFEST.MF 再做一层摘要</text>
+      <rect x="65" y="291" width="280" height="42" rx="6" fill="#fff" stroke="#d97706"/>
+      <text x="78" y="309" font-size="12" fill="#92400e" font-family="Consolas,monospace" font-weight="700">CERT.RSA（.DSA / .EC）</text>
+      <text x="78" y="326" font-size="10.5" fill="#b45309">PKCS#7 签名 + 开发者证书</text>
+      <rect x="45" y="368" width="320" height="26" rx="6" fill="#fff" stroke="#94a3b8"/>
+      <text x="205" y="386" text-anchor="middle" font-size="11" fill="#64748b" font-family="Consolas,monospace">AndroidManifest.xml</text>
+      <!-- 右侧说明 -->
+      <line x1="400" y1="216" x2="445" y2="216" stroke="#2563eb" stroke-width="2" marker-end="url(#ar6)"/>
+      <rect x="450" y="185" width="495" height="62" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="468" y="210" font-size="13" font-weight="700" fill="#1e3a8a">逐文件校验</text>
+      <text x="468" y="232" font-size="11.5" fill="#475569">安装时重算每个文件的摘要，与 MANIFEST.MF 比对 → 任何一个被改即失败</text>
+      <line x1="400" y1="264" x2="445" y2="264" stroke="#2563eb" stroke-width="2" marker-end="url(#ar6)"/>
+      <rect x="450" y="233" width="495" height="62" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="468" y="258" font-size="13" font-weight="700" fill="#1e3a8a">防清单本身被换</text>
+      <text x="468" y="280" font-size="11.5" fill="#475569">CERT.RSA 里的私钥签名盖住了 CERT.SF 与 MANIFEST，清单伪造不了</text>
+      <line x1="400" y1="312" x2="445" y2="312" stroke="#dc2626" stroke-width="2" marker-end="url(#ar6)"/>
+      <rect x="450" y="283" width="495" height="118" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+      <text x="468" y="308" font-size="13" font-weight="700" fill="#b91c1c">⚠ V1 的致命盲区</text>
+      <text x="468" y="330" font-size="11.5" fill="#b91c1c">• 只校验 ZIP 里的「文件条目」，不校验 ZIP 结构本身</text>
+      <text x="468" y="350" font-size="11.5" fill="#b91c1c">• Central Directory、文件顺序等可被篡改</text>
+      <text x="468" y="370" font-size="11.5" fill="#b91c1c">• 可向包内塞入「未列进清单」的文件 → 著名的</text>
+      <text x="468" y="388" font-size="11.5" fill="#b91c1c">　 Janus 漏洞 (CVE-2017-13156)：文件头加字节仍可安装运行</text>
+    </svg>
+    <figcaption>图 6 · V1 签名 = META-INF 三件套：文件摘要清单 → 清单摘要 → 私钥签名</figcaption>
+    </figure>
+    <pre><span class="c"># V1 时代的命令（JDK 自带，只能签 V1）</span>
+jarsigner -keystore key.jks app.apk myalias
+<span class="c"># 校验</span>
+jarsigner -verify -verbose app.apk</pre>
+    <div class="callout amber"><b>一句话记住 V1：</b>“给 ZIP 里的<b>每个文件</b>开收据，但不管 ZIP 这个包裹本身有没有被拆过。”</div>
+  </div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section id="s8">
+  <h2 class="sec"><span class="no">08</span>V2 签名（APK Signature Scheme v2）</h2>
+  <p class="sub">Android 7.0 (API 24) 引入：对整个 APK 一口气签名</p>
+  <div class="card">
+    <figure>
+    <svg viewBox="0 0 960 400" style="width:100%;height:auto">
+      <rect x="15" y="30" width="930" height="70" rx="0" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <rect x="15" y="30" width="330" height="70" fill="#dbeafe"/>
+      <text x="180" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">ZIP 条目数据</text>
+      <text x="180" y="80" text-anchor="middle" font-size="11" fill="#475569">classes.dex · res · assets · lib …</text>
+      <rect x="350" y="30" width="230" height="70" fill="#fef3c7"/>
+      <text x="465" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">APK Signing Block</text>
+      <text x="465" y="80" text-anchor="middle" font-size="11" fill="#b45309">v2 签名块（后插入的）</text>
+      <rect x="585" y="30" width="250" height="70" fill="#dbeafe"/>
+      <text x="710" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">Central Directory</text>
+      <text x="710" y="80" text-anchor="middle" font-size="11" fill="#475569">ZIP 中央目录（文件索引）</text>
+      <rect x="840" y="30" width="105" height="70" fill="#dbeafe"/>
+      <text x="892" y="60" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1e3a8a">EOCD</text>
+      <text x="892" y="80" text-anchor="middle" font-size="11" fill="#475569">结束标记</text>
+      <!-- 哈希范围括线 -->
+      <path d="M15,110 L15,126 L945,126 L945,110" stroke="#2563eb" stroke-width="2" fill="none"/>
+      <line x1="350" y1="104" x2="350" y2="130" stroke="#92400e" stroke-width="2" stroke-dasharray="4,3"/>
+      <text x="480" y="148" text-anchor="middle" font-size="12.5" fill="#1d4ed8" font-weight="700">蓝色区域全部参与哈希 —— 改 APK 的任何一个字节，验证都会失败</text>
+      <text x="480" y="168" text-anchor="middle" font-size="11.5" fill="#475569">（EOCD 中仅一个记录签名块偏移的字段豁免）大文件按 1MB 分块计算再合并，支持流式校验</text>
+      <!-- 签名块内部展开 -->
+      <rect x="200" y="195" width="560" height="175" rx="12" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+      <text x="480" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#92400e">APK Signing Block 内部（ID = 0x7109871a）</text>
+      <rect x="230" y="238" width="170" height="58" rx="8" fill="#fff" stroke="#d97706"/>
+      <text x="315" y="260" text-anchor="middle" font-size="12.5" font-weight="700" fill="#92400e">signed data</text>
+      <text x="315" y="279" text-anchor="middle" font-size="10.5" fill="#b45309">各分区的摘要 + 长度</text>
+      <rect x="415" y="238" width="160" height="58" rx="8" fill="#fff" stroke="#d97706"/>
+      <text x="495" y="260" text-anchor="middle" font-size="12.5" font-weight="700" fill="#92400e">signatures</text>
+      <text x="495" y="279" text-anchor="middle" font-size="10.5" fill="#b45309">摘要 + 签名算法</text>
+      <rect x="590" y="238" width="140" height="58" rx="8" fill="#fff" stroke="#d97706"/>
+      <text x="660" y="260" text-anchor="middle" font-size="12.5" font-weight="700" fill="#92400e">public key</text>
+      <text x="660" y="279" text-anchor="middle" font-size="10.5" fill="#b45309">证书（含公钥）</text>
+      <text x="480" y="325" text-anchor="middle" font-size="11.5" fill="#92400e">校验时：按同样分块规则重算哈希 → 用 public key 验 signatures → 任一不符即拒绝</text>
+      <text x="480" y="350" text-anchor="middle" font-size="11.5" fill="#92400e">多个签名可共存（v2 块可并列 v3 块等，互不干扰）</text>
+    </svg>
+    <figcaption>图 7 · V2 签名的 APK 布局：签名块插在文件内容与中央目录之间，覆盖全文件</figcaption>
+    </figure>
+    <div class="grid2">
+      <div class="mini"><h4>V2 相比 V1 的质变</h4><p>① <b>覆盖整个 APK</b>——ZIP 结构也被保护，堵死“塞私货”类漏洞（Janus 无效）；② <b>校验更快</b>——顺序读一遍文件即可，无需逐条解压；③ 安装期、运行期均校验。</p></div>
+      <div class="mini"><h4>兼容性策略</h4><p>V2 需 Android ≥ 7.0 才认；低版本设备会直接<b>无视</b> v2 块、退回校验 V1。所以面向老设备的包通常 <b>V1 + V2 双签</b>，两者都在、各取所需。</p></div>
+    </div>
+    <pre><span class="c"># 现代签名命令（build-tools 的 apksigner，默认 V1+V2+V3 智能齐签）</span>
+zipalign -v -p 4 app-unsigned.apk app-aligned.apk   <span class="c"># 先对齐！</span>
+apksigner sign --ks key.jks --out app-signed.apk app-aligned.apk
+<span class="c"># 查看一个 APK 用了哪些签名方案</span>
+apksigner verify --print-certs -v app-signed.apk
+<span class="g"># Verifies: v1: true, v2: true, v3: true ...</span></pre>
+    <div class="callout blue"><b>顺序很关键：</b>使用 V2 时必须<b>先 zipalign 再签名</b>（对齐会移动字节、破坏 v2 签名）；老的 jarsigner 时代则是先签再对齐。用 <code>apksigner</code> 就按“align → sign”走。</div>
+    <div class="callout amber"><b>一句话记住 V2：</b>“V1 给每个文件开收据，V2 直接给<b>整个包裹拍照存档</b>——封条一动就报废。”</div>
+  </div>
+</section>
+
+<!-- ============ 9 ============ -->
+<section id="s9">
+  <h2 class="sec"><span class="no">09</span>V1 – V4 签名方案对比</h2>
+  <p class="sub">一张表看完 Android 签名的演进</p>
+  <div class="card">
+    <table>
+      <tr><th>方案</th><th>引入版本</th><th>保护范围</th><th>核心特性 / 解决的问题</th></tr>
+      <tr><td><b>V1</b>（JAR 签名）</td><td>Android 1.0</td><td>META-INF 清单列出的<b>每个文件</b></td><td>逐文件 SHA 摘要 + 私钥签名；ZIP 结构不在保护范围内，存在塞入未签名文件等攻击面</td></tr>
+      <tr><td><b>V2</b></td><td>Android 7.0<br>(API 24)</td><td><b>整个 APK 文件</b>（全部字节）</td><td>Signing Block 插在 ZIP 区块之间；1MB 分块哈希流式校验；更快、更严，堵住结构级漏洞</td></tr>
+      <tr><td><b>V3</b></td><td>Android 9<br>(API 28)</td><td>同 V2 + 密钥历史</td><td>新增 <b>密钥轮换</b>：新旧密钥链（proof-of-rotation），换签名密钥后老版本仍可升级安装</td></tr>
+      <tr><td><b>V4</b></td><td>Android 11<br>(API 30)</td><td>基于 fs-verity</td><td>配合<b>增量安装</b>，内核级按需校验文件树哈希；需设备支持、常与 V2/V3 共存</td></tr>
+    </table>
+    <div class="callout red"><b>硬性趋势：</b>Google 持续收紧——targetSdk 30+ 的 APK 上 Google Play 必须 V2 及以上；国内市场也普遍要求 V2。现在用 <code>apksigner</code> 默认行为即可（自动 V1+V2+V3）。</div>
+  </div>
+</section>
+
+<!-- ============ 10 ============ -->
+<section id="s10">
+  <h2 class="sec"><span class="no">10</span>360 加固全景剖析</h2>
+  <p class="sub">把前面所有概念串起来：一个真实的商业加固产品长什么样</p>
+  <div class="card">
+    <h3>360 加固是什么</h3>
+    <p>奇虎 360 推出的免费商用加固服务（360加固保 / reinforce），属于<b>一代“整体 DEX 加密”壳</b>的代表，兼具二代抽取能力，是国内市占率最高的方案之一。开发者把 APK 上传到其平台或用本地命令行工具处理，得到加固后的包，重新签名后即可分发。</p>
+    <h3 style="margin-top:16px">特征指纹 —— 怎么一眼认出“360 加固的包”</h3>
+    <pre>反编译/解压一个 360 加固的 APK，你会看到：
+├─ AndroidManifest.xml
+│    android:name=<span class="g">"com.stub.StubApp"</span>          <span class="c"># 入口被换成壳的 Application</span>
+├─ classes.dex                        <span class="c"># 体积很小 = 壳代码（stub）</span>
+├─ assets/
+│    <span class="g">加密的数据文件（原始 dex 密文，无法用 jadx 阅读）</span>
+├─ lib/{armeabi-v7a,arm64-v8a,x86}/
+│    <span class="g">libjiagu.so / libjiagu_art.so / libjiagu_x86.so</span>  <span class="c"># native 壳引擎</span>
+└─ META-INF/                          <span class="c"># 重新签名后的证书</span></pre>
+    <div class="callout blue"><b>识别套路通用化：</b>任何商业壳都有“入口类替换 + 特征 so + 加密数据文件”三件套。看到 <code>libjiagu*.so</code> = 360；看到 <code>libsecexe.so</code>（梆梆）、<code>libexecmain.so</code>（爱加密）、腾讯乐固/网易易盾各自的 so，同理可辨。</div>
+    <h3 style="margin-top:16px">360 加固的完整生命周期</h3>
+    <figure>
+    <svg viewBox="0 0 960 150" style="width:100%;height:auto">
+      <defs><marker id="ar7" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 z" fill="#7c3aed"/></marker></defs>
+      <rect x="15" y="35" width="180" height="70" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="105" y="62" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">开发者</text>
+      <text x="105" y="85" text-anchor="middle" font-size="11" fill="#475569">上传 APK（+签名配置）</text>
+      <line x1="200" y1="70" x2="235" y2="70" stroke="#7c3aed" stroke-width="2" marker-end="url(#ar7)"/>
+      <rect x="240" y="35" width="190" height="70" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="335" y="62" text-anchor="middle" font-size="13" font-weight="700" fill="#5b21b6">360 加固引擎</text>
+      <text x="335" y="85" text-anchor="middle" font-size="11" fill="#6d28d9">加密dex·注入so·改入口</text>
+      <line x1="435" y1="70" x2="470" y2="70" stroke="#7c3aed" stroke-width="2" marker-end="url(#ar7)"/>
+      <rect x="475" y="35" width="200" height="70" rx="12" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+      <text x="575" y="62" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">自动重新签名</text>
+      <text x="575" y="85" text-anchor="middle" font-size="11" fill="#b45309">用你提供的 keystore 或托管签名</text>
+      <line x1="680" y1="70" x2="715" y2="70" stroke="#7c3aed" stroke-width="2" marker-end="url(#ar7)"/>
+      <rect x="720" y="35" width="225" height="70" rx="12" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+      <text x="832" y="62" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">下载加固包 → 分发</text>
+      <text x="832" y="85" text-anchor="middle" font-size="11" fill="#047857">应用市场审核时也验签</text>
+    </svg>
+    <figcaption>图 8 · 360 加固流水线：加密 + 注入 + 换入口 + 重签名一站式完成</figcaption>
+    </figure>
+    <h3 style="margin-top:16px">主流加固方案速览</h3>
+    <table>
+      <tr><th>方案</th><th>厂商</th><th>主要路线</th><th>备注</th></tr>
+      <tr><td><b>360 加固（加固保）</b></td><td>奇虎 360</td><td>一代整体加密 + 方法抽取，native 引擎（libjiagu）</td><td>免费额度、市占高，本文主角</td></tr>
+      <tr><td>腾讯乐固 / Legu</td><td>腾讯</td><td>整体加密 + so 加固</td><td>与应用宝生态结合</td></tr>
+      <tr><td>梆梆安全</td><td>梆梆</td><td>一至三代全谱系 + VMP</td><td>金融行业多用，商用收费</td></tr>
+      <tr><td>爱加密</td><td>爱加密</td><td>整体加密 + 抽取 + so</td><td>老牌厂商</td></tr>
+      <tr><td>网易易盾</td><td>网易</td><td>加固 + 风控一体化</td><td>游戏类常见</td></tr>
+      <tr><td>娜迦 / 通付盾 等</td><td>—</td><td>各类自研壳</td><td>市面方案众多，原理同源</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 11 ============ -->
+<section id="s11">
+  <h2 class="sec"><span class="no">11</span>加固 × 签名：必须一起理解的两个概念</h2>
+  <p class="sub">这是最容易踩坑、面试最爱问的结合点</p>
+  <div class="card">
+    <figure>
+    <svg viewBox="0 0 960 170" style="width:100%;height:auto">
+      <defs><marker id="ar8" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 z" fill="#334155"/></marker></defs>
+      <rect x="20" y="45" width="230" height="75" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="135" y="75" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1e3a8a">原 APK（签名 A）</text>
+      <text x="135" y="98" text-anchor="middle" font-size="11" fill="#475569">内容哈希 ↔ 签名 A 匹配 ✔</text>
+      <line x1="255" y1="82" x2="315" y2="82" stroke="#334155" stroke-width="2" marker-end="url(#ar8)"/>
+      <text x="285" y="70" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="700">加固</text>
+      <rect x="320" y="45" width="250" height="75" rx="12" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+      <text x="445" y="75" text-anchor="middle" font-size="13.5" font-weight="700" fill="#b91c1c">加固中的 APK</text>
+      <text x="445" y="98" text-anchor="middle" font-size="11" fill="#b91c1c">内容被改 → 签名 A 校验失败 ✘</text>
+      <line x1="575" y1="82" x2="635" y2="82" stroke="#334155" stroke-width="2" marker-end="url(#ar8)"/>
+      <text x="605" y="70" text-anchor="middle" font-size="11" fill="#059669" font-weight="700">重签</text>
+      <rect x="640" y="45" width="300" height="75" rx="12" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+      <text x="790" y="75" text-anchor="middle" font-size="13.5" font-weight="700" fill="#065f46">加固后的 APK（签名 B）</text>
+      <text x="790" y="98" text-anchor="middle" font-size="11" fill="#047857">新内容 ↔ 新签名匹配 ✔ 才能安装</text>
+    </svg>
+    <figcaption>图 9 · 加固必然破坏原签名 → 加固后必须重新签名，缺一不可</figcaption>
+    </figure>
+    <div class="callout red"><b>三个高频踩坑点：</b><br>
+    ① <b>签名指纹变了</b>——加固时用了不同 keystore，老用户将无法覆盖升级（Android 强制要求升级包与已装包签名一致）。始终用<b>同一把 keystore</b> 给加固包签名。<br>
+    ② <b>忘记重签</b>——加固导出的包如果未签名/只签了 V1，在 Android 11+ 或部分市场直接装不上。用 <code>apksigner</code> 走完整流程。<br>
+    ③ <b>加固 ≠ 绝对安全</b>——一代壳可被 dump，加固提高的是破解成本，核心密钥逻辑仍建议结合 so 加固 / VMP / 服务端校验。</div>
+    <div class="callout green"><b>开发者自校验（签名检查）：</b>很多 App 还会在运行时（Java 或 native 层）读取自身签名的 MD5/SHA 并与硬编码值比对，不一致就退出 —— 这是防“二次打包”的常见配套手段，属于加固之外代码层的一层保险。</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section>
+  <h2 class="sec"><span class="no">✓</span>一页总结</h2>
+  <div class="card">
+    <table>
+      <tr><th style="width:130px">概念</th><th>一句话</th></tr>
+      <tr><td><b>加固</b></td><td>加密 APK 里的 dex，换成“壳 + 密文 + native 解密引擎”，运行时内存中解密加载，防反编译破解</td></tr>
+      <tr><td><b>加固分类</b></td><td>一代整体加密 → 二代方法抽取 → 三代 VMP/dex2c；配套 so 加固、资源加固、反调试等</td></tr>
+      <tr><td><b>签名</b></td><td>哈希（完整性）+ 非对称私钥/公钥（身份），防篡改、防冒充、防覆盖安装</td></tr>
+      <tr><td><b>V1</b></td><td>META-INF 三件套，逐文件校验；不保护 ZIP 结构，有攻击盲区</td></tr>
+      <tr><td><b>V2</b></td><td>Android 7.0+，Signing Block 对整个 APK 签名，更快更严；现代标配（配合 V3/V4）</td></tr>
+      <tr><td><b>360 加固</b></td><td>商业加固代表：dex 加密 + libjiagu*.so 引擎 + com.stub.StubApp 入口 + 平台重签名</td></tr>
+      <tr><td><b>二者关系</b></td><td>加固改动内容 → 原签名失效 → 必须用原 keystore 重新签名才能安装升级</td></tr>
+    </table>
+  </div>
+</section>
+
+<footer>Android 安全基础图解 · 加固与签名 · 供学习与团队分享使用</footer>
+</div>
+</body>
+</html>

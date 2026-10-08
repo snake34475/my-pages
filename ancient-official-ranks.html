@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="ooUjLKAsi0ueKrueF6X8FY">
+<head data-page-node-id="tzdr2ENz4W5Vna5o0h182V">
+<meta charset="utf-8" data-page-node-id="eP0tYQFUDoEsd6vDbbIOTP">
+<meta name="viewport" content="width=device-width, initial-scale=1" data-page-node-id="UCMIoEVWH8EsYaQKTNPRTf">
+<title>中国古代官职体系全图 · 从三公九卿到九门提督</title>
+<style>
+  :root{
+    --bg:#14161a; --bg2:#1b1e24; --bg3:#22262e;
+    --tx:#e9eaed; --tx2:#a8aeb8; --tx3:#767d88;
+    --line:#333944; --line2:#454c58;
+    --red:#e2564f; --amber:#e9a13a; --teal:#37b98b; --blue:#5b9ce0; --purple:#918adf; --pink:#dd6f9c;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--tx);
+    font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",system-ui,-apple-system,sans-serif;
+    font-size:15px; line-height:1.75; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:0 24px 96px}
+  header{padding:56px 0 28px; border-bottom:1px solid var(--line)}
+  h1{font-size:30px; font-weight:600; margin:0 0 10px; letter-spacing:.5px}
+  .sub{color:var(--tx2); font-size:14px}
+  .meta{margin-top:14px; color:var(--tx3); font-size:13px}
+  h2{font-size:21px; font-weight:600; margin:56px 0 6px; padding-top:16px; border-top:1px solid var(--line)}
+  h2 .num{color:var(--tx3); font-weight:400; font-size:15px; margin-right:10px; font-variant-numeric:tabular-nums}
+  h3{font-size:16px; font-weight:600; margin:30px 0 8px; color:var(--tx)}
+  h4{font-size:14px; font-weight:600; margin:20px 0 6px; color:var(--tx2)}
+  p{margin:10px 0; color:var(--tx2)}
+  p.lead{color:var(--tx); font-size:15px}
+  b,strong{color:var(--tx); font-weight:600}
+  code{background:var(--bg3); padding:1px 5px; border-radius:4px; font-size:13px; color:var(--amber);
+    font-family:Consolas,"Courier New",monospace}
+  nav{margin:26px 0 0; display:flex; flex-wrap:wrap; gap:8px}
+  nav a{font-size:13px; color:var(--tx2); text-decoration:none; border:1px solid var(--line);
+    border-radius:999px; padding:4px 12px; transition:.15s}
+  nav a:hover{color:var(--tx); border-color:var(--line2); background:var(--bg2)}
+
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin:20px 0}
+  .card{background:var(--bg2); border:1px solid var(--line); border-radius:12px; padding:16px 18px}
+  .card .tag{font-size:12px; letter-spacing:1px; color:var(--tx3); margin-bottom:6px}
+  .card .ttl{font-size:16px; font-weight:600; margin-bottom:6px}
+  .card .ex{font-size:13px; color:var(--tx2); line-height:1.6}
+  .card.c1{border-left:3px solid var(--red)}
+  .card.c2{border-left:3px solid var(--amber)}
+  .card.c3{border-left:3px solid var(--teal)}
+  .card.c4{border-left:3px solid var(--blue)}
+  .card.c5{border-left:3px solid var(--purple)}
+
+  ul.tree,ul.tree ul{list-style:none; margin:0; padding:0}
+  ul.tree ul{padding-left:26px}
+  ul.tree li{position:relative; padding:3px 0 3px 26px}
+  ul.tree li::before{content:""; position:absolute; left:0; top:0; bottom:0; border-left:1px solid var(--line)}
+  ul.tree li:last-child::before{height:20px; bottom:auto}
+  ul.tree li::after{content:""; position:absolute; left:0; top:20px; width:20px; border-top:1px solid var(--line)}
+  ul.tree>li{padding-left:0}
+  ul.tree>li::before,ul.tree>li::after{display:none}
+  .n{display:inline-block; border:1px solid var(--line2); background:var(--bg2); border-radius:6px;
+    padding:2px 10px; font-size:13.5px; margin:2px 0; color:var(--tx)}
+  .n.r{border-color:#6e2b28; background:#2a1a19; color:#f0b3ae}
+  .n.a{border-color:#6b5220; background:#2a2419; color:#eec78a}
+  .n.t{border-color:#1d5f49; background:#17251f; color:#8fd8bd}
+  .n.b{border-color:#29527c; background:#182230; color:#a8c9ea}
+  .n.p{border-color:#4a4585; background:#1f1e2e; color:#bdb8f2}
+  .n.g{border-color:var(--line2); background:var(--bg3); color:var(--tx2)}
+  .dim{color:var(--tx3); font-size:12.5px; margin-left:8px}
+  ul.tree li.hit>.n{box-shadow:0 0 0 2px var(--amber); }
+  ul.tree li.dimmed>.n{opacity:.25}
+  ul.tree li.dimmed>.dim{opacity:.25}
+
+  table{width:100%; border-collapse:collapse; margin:18px 0; font-size:13.5px}
+  th,td{text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{color:var(--tx3); font-weight:600; font-size:12.5px; letter-spacing:.5px; background:var(--bg2);
+    position:sticky; top:0}
+  tbody tr:hover{background:var(--bg2)}
+  td.g{white-space:nowrap; color:var(--tx3); font-variant-numeric:tabular-nums; width:74px}
+  td.p{color:var(--amber); white-space:nowrap}
+  .t1{color:#f0b3ae} .t2{color:#eec78a} .t3{color:var(--tx2)}
+
+  .note{background:var(--bg2); border:1px solid var(--line); border-left:3px solid var(--teal);
+    border-radius:8px; padding:14px 18px; margin:18px 0; font-size:14px}
+  .note.warn{border-left-color:var(--amber)}
+  .note .h{font-weight:600; color:var(--tx); margin-bottom:4px; font-size:14px}
+  .note p{margin:6px 0 0}
+
+  .search{display:flex; gap:10px; align-items:center; margin:18px 0 4px; flex-wrap:wrap}
+  .search input{flex:1; min-width:220px; background:var(--bg2); border:1px solid var(--line2);
+    color:var(--tx); border-radius:8px; padding:9px 13px; font-size:14px; outline:none; font-family:inherit}
+  .search input:focus{border-color:var(--blue)}
+  .search span{font-size:12.5px; color:var(--tx3)}
+
+  details{background:var(--bg2); border:1px solid var(--line); border-radius:10px; padding:2px 16px; margin:10px 0}
+  summary{cursor:pointer; font-size:14.5px; font-weight:600; padding:12px 0; list-style:none; display:flex;
+    justify-content:space-between; align-items:center}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+"; color:var(--tx3); font-weight:400; font-size:18px}
+  details[open] summary::after{content:"–"}
+  details>div{padding:0 0 14px; font-size:14px; color:var(--tx2)}
+
+  .chain{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:16px 0}
+  .chain .step{background:var(--bg2); border:1px solid var(--line2); border-radius:8px; padding:6px 12px;
+    font-size:13.5px; color:var(--tx2)}
+  .chain .arr{color:var(--tx3); font-size:13px}
+  footer{margin-top:70px; padding-top:20px; border-top:1px solid var(--line); color:var(--tx3); font-size:12.5px}
+  @media(max-width:720px){
+    h1{font-size:23px} h2{font-size:18px}
+    .wrap{padding:0 16px 70px}
+    table{font-size:12.5px} th,td{padding:6px 7px}
+  }
+</style>
+</head>
+<body data-page-node-id="2aJxoMEvxhju6gHWBWsiQe">
+<div class="wrap" data-page-node-id="d8DVIeyCpPeoLxLFhxtad6">
+
+<header data-page-node-id="DECoOqKCM02fUgJKbdq0Iu">
+  <h1 data-page-node-id="lpAyh8nEEaaUZV5AD21Pxq">中国古代官职体系全图</h1>
+  <div class="sub" data-page-node-id="NA1CArnGu45ErKwrlHoKFT">从秦汉三公九卿，到隋唐三省六部，再到明清九门提督——一套看懂「谁大谁小、谁管什么」的骨架</div>
+  <div class="meta" data-page-node-id="tQoRnchPCB0PTPIcGA8HnN">整理日期 2026-09-11 · 主要依据《历代职官表》《唐六典》《明史·职官志》《清史稿·职官志》《清会典》</div>
+  <nav data-page-node-id="h4SwlBXgqFKfXcVI6wUDvG">
+    <a href="#fw" data-page-node-id="SEhaGtrDOPSbwt19uhw9KH">①五层身份</a>
+    <a href="#line" data-page-node-id="n8p3pPy0h1gpP35OdvpV3D">②朝代主线</a>
+    <a href="#sslb" data-page-node-id="urVLATDIjqcrCFc2ByHDhp">③三省六部</a>
+    <a href="#rank" data-page-node-id="C6EIBCwtB30qjrq79SEu3z">④九品十八级</a>
+    <a href="#civil" data-page-node-id="aprlVbLeIxsQsDROUcS66w">⑤文官路径</a>
+    <a href="#mil" data-page-node-id="rUhclx8pZiyzVBDxacuzJH">⑥武职体系</a>
+    <a href="#honor" data-page-node-id="vFvJlMNq04G0NEWJUHSHAw">⑦勋官与封爵</a>
+    <a href="#quick" data-page-node-id="Thqs0vFGZ2c9g7pvhHGdSD">⑧速查表</a>
+    <a href="#myth" data-page-node-id="P1cXCE2BEGyYjZ5bb4ttRx">⑨常见误区</a>
+  </nav>
+</header>
+
+<h2 id="fw" data-page-node-id="UUnqy32t3rSVBZ2hYMDGHH"><span class="num" data-page-node-id="fgaxuUWEPrG5j0RnvFMl3T">①</span>先记住五层身份，一切就通了</h2>
+<p class="lead" data-page-node-id="cDdrHHI26Ix94z9gc5DGyz">你会觉得乱，是因为把不同<strong data-page-node-id="Qg3WPzu5StRVbjkUmeKEoc">性质</strong>的东西混在一层看了。「王爷」是血统身份，「上柱国」是军功荣誉，「九门提督」是实权岗位——它们根本不在同一个维度上。古人一个人身上通常<strong data-page-node-id="tiVVhYPiJQvueBmDJEujqD">同时挂着这五层</strong>，所以史书里会出现「某某，上柱国、兵部尚书、同中书门下平章事」这种一长串头衔。</p>
+
+<div class="cards" data-page-node-id="RZIUAAYdDEnFaiKkX6TyRC">
+  <div class="card c1" data-page-node-id="T35DQQVQVjMaBDxaoONA1X">
+    <div class="tag" data-page-node-id="n3QFJfvLn4mNwrb2whYz7I">爵位 · 身份</div>
+    <div class="ttl" data-page-node-id="gLsGQ3OZ3FQciEi8Qm9r50">王 / 公侯伯子男</div>
+    <div class="ex" data-page-node-id="DoezzysQEw9pDJZmCiIlvS">凭什么出身或功勋得到的<strong data-page-node-id="GrVO0yhac8Ug4OLk4NCdLR">身份等级</strong>，不是工作岗位。可以世袭。<br data-page-node-id="zcOfSvl1frWC0Blw27DSW1">例：亲王、郡王、贝勒、一等公</div>
+  </div>
+  <div class="card c2" data-page-node-id="aVPVn3jiuVPCdp6b8mHs0D">
+    <div class="tag" data-page-node-id="LfgkQ1fBy5ot6qsKoyTF8g">勋官 · 荣誉</div>
+    <div class="ttl" data-page-node-id="SvAI9yhl5JKi0Y17Mdhpy8">上柱国 / 柱国 / 骁骑尉</div>
+    <div class="ex" data-page-node-id="oUo2f07CpCBEPAHXyjLPNc">靠<strong data-page-node-id="Xcezrmzbp15FDmVqvbq7Zi">军功</strong>累加得到的荣誉等级，唐代十二转。<strong data-page-node-id="mGbYF2gpfT1bCh2FiypBii">没有职权</strong>，只表示你立过多少功。<br data-page-node-id="jnusnKWiqfwFCEAwcG5ETk">例：上柱国（视正二品）</div>
+  </div>
+  <div class="card c3" data-page-node-id="WadVimipQyEWxRlF6R5MKZ">
+    <div class="tag" data-page-node-id="G9Nrf1JAEx3X1H6DQptHPH">职事官 · 岗位</div>
+    <div class="ttl" data-page-node-id="0kGbLBSHNmHD23No6B4Hwa">尚书 / 知县 / 提督</div>
+    <div class="ex" data-page-node-id="D0orhGEWsZlpnWH8GX0yfW">真正<strong data-page-node-id="msfgtZriiCXDh9yYDv1IYl">干活、有权力</strong>的职位，决定你管什么、管多大。<br data-page-node-id="ZVGuEguvX2OInveSRACJB3">例：吏部尚书、九门提督、知县</div>
+  </div>
+  <div class="card c4" data-page-node-id="P2DFLYGUQ9e2CuqPD6iCeE">
+    <div class="tag" data-page-node-id="eGnSCyhBMTyreQ55k0gRr3">散官 · 待遇</div>
+    <div class="ttl" data-page-node-id="BgwivcZ86yLvFGqjtWUe8e">光禄大夫 / 建威将军</div>
+    <div class="ex" data-page-node-id="8ffDvfSHWVUym7hkAWcgFb">决定你拿<strong data-page-node-id="E1jLXxQiUf7dUCqj2ymZGf">哪一档工资、穿什么衣服</strong>的品级称号。唐代「本品」、清代「武散官」都是这个。<br data-page-node-id="WrCz2v22W8gRRVfa0IgJGV">例：正一品建威将军</div>
+  </div>
+  <div class="card c5" data-page-node-id="m3kSZsPgR4LNapaiFtsZ9C">
+    <div class="tag" data-page-node-id="8un7mmqCF36XO1UHYPp39K">加衔 · 兼差</div>
+    <div class="ttl" data-page-node-id="4HiE1qfJLIIIvQxMB1AK16">加兵部尚书衔 / 行走</div>
+    <div class="ex" data-page-node-id="AlmXOdSsZFlgeduRjF320Q">临时或兼领的名头，用来<strong data-page-node-id="1COA7ZzONkPk9Aw7iOmxtA">抬高权限</strong>。<br data-page-node-id="q5i2ZTdr3ZPjcTYjMd4CvC">例：总督加兵部尚书衔→从一品；军机大臣上行走</div>
+  </div>
+</div>
+
+<div class="note" data-page-node-id="CPVNgJnncIBKQdy2rWOakx">
+  <div class="h" data-page-node-id="Uan7Wf110RD5rWrxyCEVwN">一句话拆解史书里的长头衔</div>
+  <p data-page-node-id="1sYqe1Br5BsnRrU4NWetn5">「<code data-page-node-id="R8pMrxiNcZds6Q2DAEGQmc">上柱国</code>（荣誉）+ <code data-page-node-id="MFpYanoHfYOtJgFtsf1DU6">兵部尚书</code>（岗位，从一品）+ <code data-page-node-id="VPex3z29qsve6OVxqXBD2G">同中书门下平章事</code>（加衔，等于宰相）」——翻译过来就是：这人立过顶级军功，官居从一品大臣，而且被授权参与宰相级别的决策。三个部分各管一段，互不替代。</p>
+</div>
+
+<h2 id="line" data-page-node-id="FLC4u6wOVMuVJ5Qv8PWGqO"><span class="num" data-page-node-id="WsxwEGb0bawxHtLki7rCaO">②</span>朝代主线：中枢权力怎么变的</h2>
+<p class="lead" data-page-node-id="q1A1Mt5te4GFjr2SueuekT">所有官职变化，最终都由一条主线牵引：<strong data-page-node-id="iZgERQezcPND3zdHOYpSXj">皇帝和宰相争权</strong>。宰相的权越大，皇帝越要设新的机构来分割它，老机构就慢慢变成空壳——这是理解两千多年官制演变的钥匙。</p>
+
+<ul class="tree" data-page-node-id="Ig20ADnYZp2rdTtOt9aZCx">
+  <li data-page-node-id="uSHeqRAEbVA8kh9WuDwVkO"><span class="n r" data-page-node-id="zGJLi0b0HtsX1X2qjkANpX">皇帝</span>
+    <ul data-page-node-id="yd1FAdtXgo5D8BDNfXmhEG">
+      <li data-page-node-id="rJ91bUBkRWDFJoqWk4gJRl"><span class="n g" data-page-node-id="RAC4j5BMs0hmGYG8Rixgfk">秦 · 汉</span><span class="dim" data-page-node-id="5sYRdVYNCfJCFoyCTQsIIC">三公九卿 —— 丞相一人之下</span>
+        <ul data-page-node-id="xjqCwDO14MkdraGr1UCdQ1">
+          <li data-page-node-id="5klExREVIkfLrPxi1DLMX5"><span class="n b" data-page-node-id="i5JZysphoL1cIKQhIggGUI">三公</span><span class="dim" data-page-node-id="CEbl4C8vVKrUoFUt1DcPRa">丞相（行政）、太尉（军事）、御史大夫（监察）</span></li>
+          <li data-page-node-id="UDNnx0kH1lqQqpDNmCcNY2"><span class="n b" data-page-node-id="2BrQMGEPOBnei97ker7KJB">九卿</span><span class="dim" data-page-node-id="JXfR3HUP7bDo1AJGAl6Yve">太常、光禄勋、卫尉、太仆、廷尉、大鸿胪、宗正、大司农、少府</span></li>
+        </ul>
+      </li>
+      <li data-page-node-id="4umKKysk0IaA0XL3olSPBq"><span class="n g" data-page-node-id="pFBuFsNdG7NBjeweRg0osb">魏晋南北朝</span><span class="dim" data-page-node-id="LQsOPiSAstZ3IqkCEIAKUN">三省萌芽，尚书省、中书省、门下省逐步成形</span></li>
+      <li data-page-node-id="r2NZKRDJJZT23uEMBHHGdD"><span class="n g" data-page-node-id="gaCGZPxxeBWpCJjFsEtubR">隋 · 唐</span><span class="dim" data-page-node-id="l8eHp5Ys45GWlELTRKcB6k">三省六部制定型，是古代官制最规整的样板</span>
+        <ul data-page-node-id="2CDXEDQBEh1EIioDviq60Q">
+          <li data-page-node-id="IelbS9CwBktkHlH5RLx6t8"><span class="n t" data-page-node-id="AqoCS4JMC9GjiH4Iw9AMrW">三省</span><span class="dim" data-page-node-id="8JvCPt60UGM5DAw7KmcayN">中书（起草）、门下（审核）、尚书（执行）</span></li>
+          <li data-page-node-id="MtwEu4xNWYWH1XMYgsrV1I"><span class="n t" data-page-node-id="Vx6NjdjCntRJRDNKYUq6g2">六部</span><span class="dim" data-page-node-id="KEgtTZR6VIVwm4SdFBFEiG">吏、户、礼、兵、刑、工</span></li>
+          <li data-page-node-id="pojoPr3rHcImJWoHUmKwHf"><span class="n t" data-page-node-id="IibapAWE663B8ip5SRb9CG">一台九寺五监</span><span class="dim" data-page-node-id="6pzmRCI0n8cD4ifzuW4bMN">御史台 + 太常/光禄/卫尉/宗正/太仆/大理/鸿胪/司农/太府九寺</span></li>
+        </ul>
+      </li>
+      <li data-page-node-id="eLZ5QpPPlSHR6f6iuhxG2K"><span class="n g" data-page-node-id="OJQHZsClNcDywnN4a2FEjD">宋</span><span class="dim" data-page-node-id="XQG6aaW43uXXq6NBucJicS">二府三司 —— 枢密院抢兵权，三司抢财权</span>
+        <ul data-page-node-id="9OxxgDlOgaHGcdNcXH0Zkk">
+          <li data-page-node-id="apFJjGuWt1rEIATwt5RtWJ"><span class="n b" data-page-node-id="CKY7J7wNze0lWFySFzOEc6">二府</span><span class="dim" data-page-node-id="MKydavw4mOdVVeZR0XEZeu">中书门下（政）、枢密院（军）</span></li>
+          <li data-page-node-id="9MXuQXD1u4W6m3WtAQy6HT"><span class="n b" data-page-node-id="gAq4cmGropLPmrsOxHPE0l">三司</span><span class="dim" data-page-node-id="q6GlvZiC3mSDHhPRp8T0YJ">盐铁、度支、户部（财政）</span></li>
+          <li data-page-node-id="rpfo8rIFtA32hZzHoH145D"><span class="n b" data-page-node-id="fZehndGDDBN1me4bZD42uR">特点</span><span class="dim" data-page-node-id="oSohqYFRS0KOrb9cSH2eue">官、职、差遣分离 —— 头衔和实际工作脱钩，是宋代官制的最大特色</span></li>
+        </ul>
+      </li>
+      <li data-page-node-id="qn74DrvQHrAPncR02L0upH"><span class="n g" data-page-node-id="xSUSzieobANnrYXehYZYQ0">明</span><span class="dim" data-page-node-id="tdIpVcCkpeVgiqEVtUjdjO">洪武十三年（1380）废丞相，六部直属皇帝</span>
+        <ul data-page-node-id="BGopbM7zoCB27X4mTvE2bw">
+          <li data-page-node-id="CGs9BogCGrgHtyvIGzrbMe"><span class="n a" data-page-node-id="4IMah5QcdvrPPcVAW28sXH">内阁</span><span class="dim" data-page-node-id="ApbYzCSA4DufomW5DNQTxC">大学士本是五品小官，靠加衔升到一品，首辅实为宰相</span></li>
+          <li data-page-node-id="BXLHzFxA2gccQNSR05FOu8"><span class="n a" data-page-node-id="5URuACFAWwrkKLPd6LItdb">六部</span><span class="dim" data-page-node-id="AxCYAGgerBKm6Oott7Yc7q">吏部尚书（正二品）成为文官之首</span></li>
+          <li data-page-node-id="Ql4bwXbWGPu5nrjqsrdALl"><span class="n a" data-page-node-id="whESYuGYYoCQGqBNk5q9sp">都察院</span><span class="dim" data-page-node-id="cTI4RDhkWHKyRcD46QL617">左右都御史（正二品）+ 六科给事中</span></li>
+          <li data-page-node-id="E0yYJ0xCKet7JJEaJOW1ex"><span class="n a" data-page-node-id="y1AYmqJbVG6kthVLrkxm2y">厂卫</span><span class="dim" data-page-node-id="PZUlqAd8ZAoIR63NBTeOqK">锦衣卫（指挥使正三品）、东厂西厂（太监掌）</span></li>
+        </ul>
+      </li>
+      <li data-page-node-id="wzRG8pH5ZrQ0MWTRiryXe4"><span class="n g" data-page-node-id="U6vVUdzLSglYjnmGAadUXt">清</span><span class="dim" data-page-node-id="IyucfMGGEqC9hmefrJgCLW">内阁成摆设，雍正设军机处，皇权达到顶点</span>
+        <ul data-page-node-id="S6Y8Sx9OhND1acP9FiQov5">
+          <li data-page-node-id="GFV5QttSGl1CB429JZOMFK"><span class="n p" data-page-node-id="kdUBy6fRYXdRdbymddggdm">军机处</span><span class="dim" data-page-node-id="UIDfpWG3PofUDibYEiH0HI">军机大臣无固定品级，由大学士、尚书兼任，跪受笔录</span></li>
+          <li data-page-node-id="jDxYcAjmL0n8gKcpBjlUea"><span class="n p" data-page-node-id="rvTdz4Ntjxm43cEfnmJU1F">二套系统</span><span class="dim" data-page-node-id="ZS6qgJc8eECaE1a24nZDNT">满汉复职（同一职位满汉各一人，满人掌实权）</span></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<div class="note warn" data-page-node-id="ZfTEzA5FrHuiU3BBcDd7z8">
+  <div class="h" data-page-node-id="XFrOqRquuRtDH166cFPZHw">记这一条就够</div>
+  <p data-page-node-id="9PieXXFAvy2Ltqy3cC9Pdr">丞相 → 三省长官（群相）→ 宋代二府三司 → 明代内阁 → 清代军机处。权力一路被切碎，每一刀背后都是皇权在收权。</p>
+</div>
+
+<h2 id="sslb" data-page-node-id="EirChTwV6X9ODu2T5g1rPR"><span class="num" data-page-node-id="mSgpVDRCZ9rwJSp59WqKfx">③</span>三省六部：你家最熟的那套</h2>
+<p class="lead" data-page-node-id="jV6P855yMxTuRzdY8HqHx6">「吏户礼兵刑工」这六个字几乎贯穿了隋唐到清末。分工记住一句话：<strong data-page-node-id="m8WPW0TJqfsuXlyh1ENGPG">管人的、管钱的、管礼教的、管打仗的、管抓人的、管修路的</strong>。</p>
+
+<h3 data-page-node-id="MwP4acTYDA1kfN0D6ofNN1">三省（决策 → 审核 → 执行）</h3>
+<ul class="tree" data-page-node-id="oRyH3fK0Nx1ATEnRImGIL9">
+  <li data-page-node-id="AQcz5uuGDf8FonmmYCC2L6"><span class="n t" data-page-node-id="Fb6FigT7ZBvK6AboYedY3B">中书省</span><span class="dim" data-page-node-id="gBKWMHciLXZiHnOujqKtKG">长官：中书令。负责<strong data-page-node-id="4DnLyhIpW3vD4MwBJLnmzr">起草诏令</strong></span></li>
+  <li data-page-node-id="K8wgGkrY0VmckiAob9suBA"><span class="n t" data-page-node-id="HJkG7cG7kLzb5BwFdt4H3Y">门下省</span><span class="dim" data-page-node-id="qfDODUjVM5HbjC0atWLfA0">长官：侍中。负责<strong data-page-node-id="ymMGoOFqF9jcamVOdg8dBd">审核、封驳</strong>（觉得诏书不对可以退回去）</span></li>
+  <li data-page-node-id="EEhGMZbbO0HCLf1izwYyCl"><span class="n t" data-page-node-id="oGOnK6ilkYgnB49XvGM9xD">尚书省</span><span class="dim" data-page-node-id="aoL2hFdBG6dPwifimZsg8v">长官：尚书令（唐初李世民曾任，后虚置，实际由左右仆射主持）。负责<strong data-page-node-id="IrDNfTkzlgJSwkpClFF241">执行</strong>，六部就挂在这里</span></li>
+</ul>
+
+<h3 data-page-node-id="4HMxCEQqESg8W6uW9MDk9g">六部</h3>
+<table data-page-node-id="6E2UlzyqnKQXp5lRPO2DRF">
+  <thead data-page-node-id="HMHIIjfgNqvaq6vO73DvaL"><tr data-page-node-id="TR2CZWBOUBmkjieIcbfejC"><th data-page-node-id="C1FxSKBoYQ3ZbKFGnnAAUn">部</th><th data-page-node-id="2Jeqkvk0KxgJQvylTy5KU2">管什么</th><th data-page-node-id="J69JPOSBI0pTfAOJY2BAu7">长官 / 副手</th><th data-page-node-id="Uq23YJt3rLxfuus5y8aUNj">典型事务</th></tr></thead>
+  <tbody data-page-node-id="vkz9gmkh21XhMfXNEJIc3E">
+    <tr data-page-node-id="Df9xXMjztV3O0QeDBSYXtc"><td class="p" data-page-node-id="m3odbUr315K3hXE3Gl9Zuq">吏部</td><td data-page-node-id="2fp5lPPGPObgL0Jt8J4vqX">文官的任免、考核、升迁</td><td data-page-node-id="kZ6NBj8H6n2Igp3Cax5GqM">尚书 / 侍郎</td><td data-page-node-id="QwBmCxe8vaKwZO1ZQfWDWd">铨选、考课、封勋</td></tr>
+    <tr data-page-node-id="ctbsbbnc7lCppBqOB8SrcW"><td class="p" data-page-node-id="KldzF9L5zeFRi9m4lGAZCA">户部</td><td data-page-node-id="SFAGeHNaZ4dBoZLJyUY5TF">户籍、田赋、财政、漕运</td><td data-page-node-id="i9T3ldtxFmxqr96NHp49f9">尚书 / 侍郎</td><td data-page-node-id="dhdAtzpco8FCO4ikxllrZd">钱粮、盐政、国库</td></tr>
+    <tr data-page-node-id="I20zsRcoQItBnKGoNxk4hn"><td class="p" data-page-node-id="bZheV5CCtxw4fmv9kWzyXH">礼部</td><td data-page-node-id="pTYWKVCe0PCJfHMxRUMk7k">礼仪、祭祀、科举、外事</td><td data-page-node-id="scYvk2CVA5H90D22JVbSBL">尚书 / 侍郎</td><td data-page-node-id="j1payU9RJEEBfNfYDE8bI5">考试、册封、接待使节</td></tr>
+    <tr data-page-node-id="jFgudTXL29Nlc2fAryugsL"><td class="p" data-page-node-id="aDZkynxI0Hz2VKeFAD9kaA">兵部</td><td data-page-node-id="JT1iqfDhsJXp7fjv3fyHCW">军事行政、武官铨选、军籍</td><td data-page-node-id="28B3hrquOpdNTQJX0hKJYN">尚书 / 侍郎</td><td data-page-node-id="SmoNA9AaK3XP4sT1ilvnHg">调兵文书、驿传、兵器</td></tr>
+    <tr data-page-node-id="p57VxcBqzqTnYSNfx8MuLE"><td class="p" data-page-node-id="dxg60Mo6cTaNnxzWfVAE71">刑部</td><td data-page-node-id="FZG5B7yCTDAD30hKK9ZHPg">司法、刑狱、复核案件</td><td data-page-node-id="wXQ5MVce9YGEVM6ODcee0v">尚书 / 侍郎</td><td data-page-node-id="f1eT512LfHGDHbsf5DjsMg">与都察院、大理寺合称<strong data-page-node-id="EoAeytKdNoT0as47cq3i1F">三法司</strong></td></tr>
+    <tr data-page-node-id="jn3v1PQAcXZ5yADqfQa7hI"><td class="p" data-page-node-id="KqfZWd9jjyzGCCHU9uAdHZ">工部</td><td data-page-node-id="WEF5h3CDw5TDsAbyl2exKb">工程、水利、屯田、营造</td><td data-page-node-id="xdPL8GK4TdXSLwFQBlGN7i">尚书 / 侍郎</td><td data-page-node-id="BaVqYiHg9fTmZ0Cm9t4H7h">河工、城池、陵寝</td></tr>
+  </tbody>
+</table>
+
+<details data-page-node-id="nnIECmk5lQBGs7TZRF6F1G">
+  <summary data-page-node-id="KsJOadjVrTpDHQKbdap4c5">部里的司官：从尚书到主事的完整阶梯</summary>
+  <div data-page-node-id="DrcGFZ3AZzVbMOOkFXecEd">
+    尚书（部首长）→ 左右侍郎（副首长）→ 郎中（司长，正五品）→ 员外郎（副司长，从五品）→ 主事（处级，正六品）。
+    这五级是所有「部」共用的结构，明清两代基本没变。你以后看到「某某部郎中」，就知道是部里的中层司长。
+  </div>
+</details>
+
+<h2 id="rank" data-page-node-id="0oXtNB31DtUbVUyxndKopM"><span class="num" data-page-node-id="Dix8c6R0HhpXKkVAsoPXjT">④</span>品级：九品十八级，标尺中的标尺</h2>
+<p class="lead" data-page-node-id="ZVRv2jqxTBnrldy0hmWaMb">九品从曹魏开始，隋唐定型，一直用到清末。每品分<strong data-page-node-id="5rXr442GBmfdlj1nu9CS9L">正、从</strong>两等，共十八级；九品以下叫「未入流」。文武官用同一把尺子量，所以你能直接比出「一个总兵 ≈ 一个巡抚」这种关系。</p>
+
+<div class="note warn" data-page-node-id="SFVCgDnqiZkHPOFFDiT6vk">
+  <div class="h" data-page-node-id="Xn2TKCGt6KJhC6DbPyAG7r">重要提醒：同一个职位，不同朝代品级不一样</div>
+  <p data-page-node-id="mHv2DeDruzCGLgd8fTxWAx">六部尚书：<strong data-page-node-id="0MdlcnbrKtW76xweGhrSu9">明代是正二品，清代是从一品</strong>。知府：<strong data-page-node-id="mc9NAn34UN2NVTDS8Hos4l">明代正四品，清代从四品</strong>。知县：两代都是正七品（唯一稳定的）。所以看官大官小，必须绑上朝代一起看。</p>
+</div>
+
+<h3 data-page-node-id="HPOwqAAbwoka8NSAQenDXn">清代品级对照表（文官 / 武官 / 地方）</h3>
+<table data-page-node-id="AN5UljTa6hpiy69pC3LXzq">
+  <thead data-page-node-id="Ex2S3ePQTtVACR3PMTsvnT"><tr data-page-node-id="aqXiBR566nm3HUl3dSZWOt"><th data-page-node-id="mEqWiqUXI1FGcIt09OOTIN">品级</th><th data-page-node-id="NWmEPfw7X4E0vTk2OpLEUc">文职京官</th><th data-page-node-id="YkawcLC4EZ0kdQ2YNz3b2A">文职外官（地方）</th><th data-page-node-id="uE4twx1tPcc4y83tmKooF0">武职</th></tr></thead>
+  <tbody data-page-node-id="xwWHLNUovIiWmxmhpFxt4E">
+    <tr data-page-node-id="RRAGPpsn26DyHXWXGgVwLi"><td class="g t1" data-page-node-id="PsK35GRo01oHHkr5Y53141">正一品</td><td data-page-node-id="hyMgCbDYFCjVKy8SVbHPEB">太师、太傅、太保、殿阁大学士</td><td data-page-node-id="qT3ctEDueFIj3tIToRYZ8L">大学士兼直省总督</td><td data-page-node-id="7xyjNCmfLyFrOoabclIGH9">领侍卫内大臣、掌銮仪卫事大臣（只授旗人）</td></tr>
+    <tr data-page-node-id="dXjRgdbUSLBj2PAqC1ecXQ"><td class="g t1" data-page-node-id="IODr8V50uyM9t9fuuZucqA">从一品</td><td data-page-node-id="uyVe9pFl15KTtq4lSVj8GH">少师、少傅、少保、太子三太、协办大学士、各部院尚书、都察院左右都御史</td><td data-page-node-id="YHKhIgJqpXo5gFcXjQFAi6">总督（加兵部尚书衔）、驻藏大臣</td><td data-page-node-id="1epsyp3tvDqeJqRtJkH08n"><strong data-page-node-id="g7Kp9Mt4qHHrwSqqMpHzMr">九门提督</strong>、内大臣；外：驻防将军、都统、提督</td></tr>
+    <tr data-page-node-id="hSnuI2v0cUPSLxWZbtFrLl"><td class="g t1" data-page-node-id="x788teZy2sbjZHYv0Q4uzZ">正二品</td><td data-page-node-id="qQZcpJNpsNQfszyaTbuZOD">太子少师、太子少傅、太子少保、内务府总管</td><td data-page-node-id="27K9IS9fUiI31pOS0m1aVJ">总督、河道总督、漕运总督</td><td data-page-node-id="fKVkytH7w3YvE7tb0UgIys">八旗护军统领、前锋统领、副都统；外：<strong data-page-node-id="qLMxmalTsZK1cVSWS9kQ9j">总兵</strong></td></tr>
+    <tr data-page-node-id="SkzyNjZPbZiucQtTZUCjWk"><td class="g t2" data-page-node-id="aNkjZ8RpryTxGZaVnwNGZr">从二品</td><td data-page-node-id="qwotFXfn2Z0DxWgDLxqHvy">内阁学士、翰林院掌院学士、各部院左右侍郎</td><td data-page-node-id="q4DeErkHNbMaCxcuDVglYr">巡抚、布政使</td><td data-page-node-id="wWJjZo5Njc9tW3TvPcWCx4">散秩大臣；外：副将</td></tr>
+    <tr data-page-node-id="oLfmbNYGlWIWBMhe9FH7AO"><td class="g t2" data-page-node-id="HMS6SQ0JDmTDW1dSCkGkaT">正三品</td><td data-page-node-id="iZ4X7ZxWfWzHwDG45Vlk7b">都察院左右副都御史、通政使、大理寺卿、詹事府詹事、太常寺卿</td><td data-page-node-id="dKn1GkoHeqJoENQsEObEiF">顺天府尹、奉天府尹、按察使</td><td data-page-node-id="4T53F3pD8Qv5H8cpeEhFDh">一等侍卫、骁骑参领；外：参将、城守尉</td></tr>
+    <tr data-page-node-id="4U2I77WT6Dn6QJX91DNBr1"><td class="g t2" data-page-node-id="7SBRqOre8Z1FLUu50igzgR">从三品</td><td data-page-node-id="IXt3IUYv2QDK0IUZUU0yPO">光禄寺卿、太仆寺卿</td><td data-page-node-id="B2ku3alWjcOBeSXRnRpfqM">都转盐运使司运使</td><td data-page-node-id="RDh1iaygsmnuk5rMTslMe9">王府一等护卫；外：游击、协领</td></tr>
+    <tr data-page-node-id="t6g1ChzDaGJpLIdUqCSbg4"><td class="g" data-page-node-id="CJa7J7c3avDMrPme7tLshD">正四品</td><td data-page-node-id="4ryCN32qOe51ndI6ZEElFF">通政使司副使、大理寺少卿、鸿胪寺卿、太常寺少卿、六科给事中</td><td data-page-node-id="vgpwHyH52eARskYEhBCsDI">道员、顺天府丞</td><td data-page-node-id="0CM3V7kfveJy3DKxDS641P">二等侍卫、佐领；外：都司</td></tr>
+    <tr data-page-node-id="fmFFGfCflt9ZLJnMXEuo7g"><td class="g" data-page-node-id="nyvrHx5esPXkQToFM8eAGm">从四品</td><td data-page-node-id="xElJoJKWMynUYY1HKD86hI">内阁侍读学士、翰林院侍读学士、国子监祭酒</td><td data-page-node-id="lhVIiY4JbtBbxTh1YWnwAc"><strong data-page-node-id="7I0rbJ6K3kcoCNkyf16AP9">知府</strong>（省以下第一级大员）</td><td data-page-node-id="DgUn29OgfGKEtyXLc7Rieo">城门领；外：防守尉</td></tr>
+    <tr data-page-node-id="RqioNRTT5h7PY3V4ZptVP0"><td class="g" data-page-node-id="kl9tgHnlccgP3eiFh2N7eC">正五品</td><td data-page-node-id="wu3EF3kHHCjhNCZt8DRdd7">各部院郎中、太医院院使、钦天监监正</td><td data-page-node-id="rBK7wYySEsQPpu6fPUWhcJ">直隶州知州、府同知、顺天府治中</td><td data-page-node-id="lorgEMLxNgm7un0ty62s2Q">三等侍卫；外：守备、千户</td></tr>
+    <tr data-page-node-id="CI8uyo8hcgFTrlHjO3sAoB"><td class="g" data-page-node-id="hzA7IryV075rL2fAYE1CT4">从五品</td><td data-page-node-id="6asNBqqkY4H1L2WcnjyNrE">鸿胪寺少卿、各部院员外郎、翰林院侍读侍讲</td><td data-page-node-id="LWZJiISIl6El3EoGSt7Nt2">知州（散州）、盐运司副使</td><td data-page-node-id="pD7M8gfKDD5UTFJKESpmrm">委署参领；外：守御所千总</td></tr>
+    <tr data-page-node-id="0IMyTdwegJKR7SzLtG6iIy"><td class="g" data-page-node-id="RahhOSDCTOFC3FxpdGmEC0">正六品</td><td data-page-node-id="XXkVVa6nI8m5seLjEFcuKA">各部院主事、钦天监监副</td><td data-page-node-id="IiZexIgy5NkGST5x8oE0BO">京县知县、府通判</td><td data-page-node-id="32mcQVktQbmhaLryGtAzdg">蓝翎侍卫、骁骑校（<strong data-page-node-id="nytKPJq7F2pm6RgcUazTvG">「校」字的清代形态</strong>）；外：营千总</td></tr>
+    <tr data-page-node-id="B8vIkAJ2mhm6rAcPHQep3Q"><td class="g" data-page-node-id="3cInOTHpb9KpEfQefK6bvx">从六品</td><td data-page-node-id="iGe7OIlijMVuR4kAQu2NBA">翰林院修撰、光禄寺署正</td><td data-page-node-id="XZty5L2xde03qLiWpoNRZW">州同、布政使司经历</td><td data-page-node-id="eBMxnFnAdq5P7YI7ddSIpJ">亲军校；外：卫千总</td></tr>
+    <tr data-page-node-id="L2QsDgOECDRha5JiQiEjq7"><td class="g t3" data-page-node-id="4WjPx81ncIArPGKPfy5phn">正七品</td><td data-page-node-id="ubJDHlUEswNWK6gLsnexhO">翰林院编修</td><td data-page-node-id="RJwdJeNvmwHOFmnVJrmGXG"><strong data-page-node-id="GKLB7fbrRv5NeeY6nq7lvz">知县</strong>（一县之长，最经典的七品芝麻官）</td><td data-page-node-id="loPCtOmEa8BXiFuSDmTYQo">城门吏；外：把总</td></tr>
+    <tr data-page-node-id="LsQcLcKbh0SX4ggpg0RmDd"><td class="g t3" data-page-node-id="TTKraN7owpA5xEt2QGuPmn">从七品</td><td data-page-node-id="5FV5zPRBofX8wS5YEv0epE">翰林院检讨、内阁中书</td><td data-page-node-id="ohb2DCbjeyXpGCujJYa1dU">州判</td><td data-page-node-id="yzgqEmAharvjxBqXxN0thS">太仆寺马厂委署协领</td></tr>
+    <tr data-page-node-id="UC3KSxdIunFNGjzWphOvci"><td class="g t3" data-page-node-id="qVZjQ1N2NgvWoVImRirLao">正八品</td><td data-page-node-id="4l3mmf2qy6ZLEJBqBHiJSI">五经博士</td><td data-page-node-id="tJetL85C6ZTpnXyfKsQ3nh">县丞、教谕</td><td data-page-node-id="I5uHozEkcF79J1lfpdt73i">八品笔帖式</td></tr>
+    <tr data-page-node-id="RRn9cyNl4vsB3ehhR53byS"><td class="g t3" data-page-node-id="dyhRjgYuWSbVjcNcoEX0D9">从八品</td><td data-page-node-id="wAD8oH9mfAt4E77sjFsVhm">翰林院典簿</td><td data-page-node-id="ZbEEBYvOzyIz2UJuDBY7qG">训导</td><td data-page-node-id="Ae2FbV23yZ2FzFj7g3uEMF">委署骁骑校</td></tr>
+    <tr data-page-node-id="YM7DEqqjP0qf85GIiSymIH"><td class="g t3" data-page-node-id="dxVyY9xxLIFg1WdaX3upCL">正九品</td><td data-page-node-id="hiKwhVoZqYANIqZFtxYSJz">府知事</td><td data-page-node-id="4ggrmpdBOnbrx0aBctwZP9">主簿</td><td data-page-node-id="eJnLAQ2HbhQwmntzGP1jmf">外委把总</td></tr>
+    <tr data-page-node-id="IiE118V2rNwBsWCF1D34pZ"><td class="g t3" data-page-node-id="6ESv5zSar4Y7sGG5RxVEtI">从九品</td><td data-page-node-id="xlqisRqdETgpzkgKYx10uH">刑部司狱</td><td data-page-node-id="7i7QfnFcfA08YsyQh0MOLc">巡检</td><td data-page-node-id="WLvVrZR624wFd89VLzsi43">额外外委</td></tr>
+    <tr data-page-node-id="ETUDW0iViqpueGbidL3uBn"><td class="g t3" data-page-node-id="zQijuGeFhDCLAM4fo0e6mN">未入流</td><td data-page-node-id="0ns1IvmYaYsFiD68DYgoOm">—</td><td data-page-node-id="xSWMmUpJvkWh7l7xRF1iuO">典史、驿丞（享受从九品待遇）</td><td data-page-node-id="omxSwG4z6q7U34GpUmAADe">—</td></tr>
+  </tbody>
+</table>
+
+<h3 data-page-node-id="eYwsDwqKHAempIca7gSHLw">明代对照（关键几档）</h3>
+<table data-page-node-id="8ZavDIHWe53WyV7q1Qd9M6">
+  <thead data-page-node-id="JUedefg3FF1hI5wFMRzKyp"><tr data-page-node-id="qquNrer9EbTG93uYKTq2UU"><th data-page-node-id="zznYAYNlAulrPsINBXJLHp">品级</th><th data-page-node-id="6lvDZHTibDOgUENvyZ1BG4">代表官职</th></tr></thead>
+  <tbody data-page-node-id="MmNaj6nUm8KmaOAWuUkYzT">
+    <tr data-page-node-id="DkwXk2FvjHUUOa2AVFn7y5"><td class="g t1" data-page-node-id="sG9iQXEbnZdx5jCFmCFzuE">正一品</td><td data-page-node-id="I4VCj3yAREzQh70YRiq8TT">太师、太傅、太保（多为赠官，实权有限）</td></tr>
+    <tr data-page-node-id="X8pRoD2AbCrpjI9WEBDNj2"><td class="g t1" data-page-node-id="CyPaW8oHlRsDWfvUfgWXhV">从一品</td><td data-page-node-id="j9MCFRFHREUftavuJTvsyw">少师、少傅、少保</td></tr>
+    <tr data-page-node-id="1D4AR6ClOzEIFSQc9LIM1p"><td class="g t1" data-page-node-id="F8d8vMroDjUcXjHuVV3xt0">正二品</td><td data-page-node-id="G9ieCat0p6raFDhOrP6xkn"><strong data-page-node-id="Ho5y211HoyfwIF92J2GmEp">六部尚书</strong>、都察院左右都御史（文官实际的顶点）</td></tr>
+    <tr data-page-node-id="dPeErV6AgB2vuvFDQsfNpb"><td class="g t2" data-page-node-id="BOE6iXZLOtDVKA5JoPuWEy">从二品</td><td data-page-node-id="oVcfPFQjGPjTgq42nITaiI">布政使（一省行政首长）</td></tr>
+    <tr data-page-node-id="FVsrX5vcfBdD0lEmzRZA0u"><td class="g t2" data-page-node-id="weWRkJfhsxXlvLH5tnvkfi">正三品</td><td data-page-node-id="CkoJe4sBRLEuD5uVE9up5c">六部侍郎、大理寺卿、按察使、<strong data-page-node-id="dECdyttXcBwq7VPatcaKOD">锦衣卫指挥使</strong></td></tr>
+    <tr data-page-node-id="FGSeEfwj8sdoUnKaM4U87k"><td class="g t2" data-page-node-id="TW4WdI51FqUkxJPY5jW4bp">从三品</td><td data-page-node-id="HHv9U0yk0f28LhEQ8moyva">光禄寺卿、太仆寺卿、盐运使</td></tr>
+    <tr data-page-node-id="jm06eUJO9rvwtl5wG3yRUS"><td class="g" data-page-node-id="uQJuoqMp07vjgHFH5c5Ifq">正四品</td><td data-page-node-id="batwAFOJsyHpDfINDvYgw0"><strong data-page-node-id="hqSVhaLpYOE8af99VMcc7Y">知府</strong>、大理寺少卿、佥都御史</td></tr>
+    <tr data-page-node-id="W81ZMytXyS6cfwYk8yiDtk"><td class="g" data-page-node-id="tN4UplivtvTsQz1pzjR6aD">从四品</td><td data-page-node-id="lmxVqx50D6sGBNZPXF9dvK">国子监祭酒、布政使司参议</td></tr>
+    <tr data-page-node-id="cloLEcK359FRW22sv8lxda"><td class="g" data-page-node-id="GIIjxBIQzoLadb13RuniuW">正五品</td><td data-page-node-id="BYOqzoBCVhfaDy6wGFoxHT">各部郎中、府同知</td></tr>
+    <tr data-page-node-id="4F1NpYtnViRjEKwonDK5Db"><td class="g t3" data-page-node-id="oVlCFoyaQ3C3Rq2ll9JW89">正七品</td><td data-page-node-id="0oFpNPDH41sKBFYh6IpeEQ"><strong data-page-node-id="t268Abglyt09BCgVneRCqY">知县</strong></td></tr>
+    <tr data-page-node-id="YD5YotFC9bPmq1EAv0YJfT"><td class="g t3" data-page-node-id="P1D1la23TPbaEn9lsOawON">未入流</td><td data-page-node-id="G7CYhBNrZqPjABpYNtydPe">典史</td></tr>
+  </tbody>
+</table>
+
+<details data-page-node-id="qmmKSe0JCh9rSmRcMVmdHw">
+  <summary data-page-node-id="UfXDRqVk8RgjgB8PyWlLhR">品级之外还有「超品」——宗室和顶级功臣的专属</summary>
+  <div data-page-node-id="9gKPTHRDKk50MODT574IkQ">
+    清代规定：宗室的不入八分辅国公以下、以及异姓功臣封到<strong data-page-node-id="7ViVXAfed4cJ6ecCGdpvHn">伯</strong>以上的（公、侯、伯），地位「超品」——比正一品还高，不放进十八级里排。所以你看到「一等公」不要拿正一品去比，它本来就更高一档。
+  </div>
+</details>
+
+<h2 id="civil" data-page-node-id="lKN5m2zCOnihtPwvnWS8Zs"><span class="num" data-page-node-id="YVPYrcmNqLrdEBzGbUSweW">⑤</span>文官一辈子怎么走</h2>
+<p class="lead" data-page-node-id="U730RuHCj9AR4EuYX6ygGa">明清文官的典型升迁路径，从考中进士到封疆大吏，一条线看得清清楚楚。这也是理解「品级」最直观的方式——每升一级，都是从一个品级跳到上一个品级。</p>
+
+<div class="chain" data-page-node-id="5NLAh0wXoSXqvHgwAF5LBy">
+  <span class="step" data-page-node-id="8pNZJEXloXUPF0YiT0iLUj">进士及第</span><span class="arr" data-page-node-id="XCUpFkkUfIjqfDsObXJAsX">→</span>
+  <span class="step" data-page-node-id="mCnwHEF0qrHZZ9ZZORx7Mr">庶吉士 / 翰林院编修<br data-page-node-id="gS5OOoMCidWDDCeqDIGB6V"><span class="dim" data-page-node-id="KB9uVFdDXCAywC0ovQCMAH">正七品</span></span><span class="arr" data-page-node-id="VM5ug7r8iKQj52CPI6C2MM">→</span>
+  <span class="step" data-page-node-id="ja3UUg1Ue0T9EREIKjrZ1Z">知县<br data-page-node-id="Sh0oCjphxsyK7HaZISmPwm"><span class="dim" data-page-node-id="CSHtKhe2D4aCU6tq2GG4mv">正七品，外放第一站</span></span><span class="arr" data-page-node-id="gmNmmWgGHbNIN0xdHqVIoW">→</span>
+  <span class="step" data-page-node-id="XzONr8N1ba2VOWBXN6G59c">知府<br data-page-node-id="ARziK1R2s6GtHFMngdmbGG"><span class="dim" data-page-node-id="yIc3QgVQVMxDhDBvUlDqkN">明正四品 / 清从四品</span></span><span class="arr" data-page-node-id="JjFMfr9gEJeGCObFDlpEQX">→</span>
+  <span class="step" data-page-node-id="gSs4zjIglWFLH3nPYvgrRQ">道员<br data-page-node-id="tKo1oxEnNC9KzpNQ4w5WTT"><span class="dim" data-page-node-id="mPqXcwF6Sl28syZM0Rn5Pt">正四品</span></span><span class="arr" data-page-node-id="2aZjLf28oXPafuhPvEO3bl">→</span>
+  <span class="step" data-page-node-id="m8TGRJHDCBCGTimC7Qntb8">按察使<br data-page-node-id="U9ukAJjTUd7lDz3kxqCwJP"><span class="dim" data-page-node-id="M7hmBmK8112r2dSt3O9pwx">正三品，一省司法</span></span><span class="arr" data-page-node-id="ShGu6bIOqV0sop6uUcAtC1">→</span>
+  <span class="step" data-page-node-id="wWrEDWxeTJZjyJ83Seu0Qp">布政使<br data-page-node-id="r1GhoDZiPOr0wt7rsGWej0"><span class="dim" data-page-node-id="yev4gfvYYhwZq4RqCyeynD">从二品，一省行政+财政</span></span><span class="arr" data-page-node-id="0mEqYLm297i5VTiYe5da8x">→</span>
+  <span class="step" data-page-node-id="BDD0XbcBE8dP1wThXDoVkd">巡抚<br data-page-node-id="s60K6C9XnHfoStVH4a0vxP"><span class="dim" data-page-node-id="qWyqXZLa3QxNjU85OvGHoM">从二品，一省之长</span></span><span class="arr" data-page-node-id="BaJ7LNOOqamguEHvIAmP9w">→</span>
+  <span class="step" data-page-node-id="uucStV88OLIzzVlT1DEvs0">总督<br data-page-node-id="kLJsVautIhp2TXehgfLslC"><span class="dim" data-page-node-id="3TBmCzBIeDfYEo3f2bUA5E">正二品 / 加尚书衔从一品，跨省</span></span><span class="arr" data-page-node-id="mXC5ZeQIum8EX4pFjRrYt2">→</span>
+  <span class="step" data-page-node-id="C8wdR1t1DcHmh4ZBlTtqqv">入阁 / 军机<br data-page-node-id="C1jnCJpqwded8aYJyYaudC"><span class="dim" data-page-node-id="JyqOPKj58DNr1VTQEYNBpR">大学士正一品</span></span>
+</div>
+
+<div class="note" data-page-node-id="7a0uLnNgDnwbdirqQX0L5C">
+  <div class="h" data-page-node-id="KrLNWIG5c9nJKe6nFjQW5E">「翰林」是条特殊的快车道</div>
+  <p data-page-node-id="mDOH55NMuqiB95mOtARYGs">明代非进士不入翰林，非翰林不入内阁。翰林院编修只是正七品，跟知县同级，但因为是「储备宰相」的位子，实际前途完全不同。这就是为什么单看品级会看不懂——<strong data-page-node-id="anZz74sPwK58nV27EurzVK">品级只说明待遇和排序，不说明前程和实权</strong>。</p>
+</div>
+
+<h2 id="mil" data-page-node-id="6LU7hOHzM8K5dlvnDa9fvV"><span class="num" data-page-node-id="1FysOOi7rF7GOHEUcDlxwQ">⑥</span>武职体系：最容易混乱的一块</h2>
+<p class="lead" data-page-node-id="4egymC6mTlp8ptY8BhrBwP">你提到的<strong data-page-node-id="njwmn31bejQMBxVtK7hInH">「骁骑校尉」</strong>和<strong data-page-node-id="XGHhW2AICOGOe5eLGwjYNG">「九门提督」</strong>，正好代表武职的两端——一个是反复变形的古老官名，一个是清代特有的京师要职。</p>
+
+<h3 data-page-node-id="4SSTqYNe3ZGM5IeayGSrqx">「校尉」两千年变形记（这是理解官名混乱的最佳样本）</h3>
+<table data-page-node-id="2GxPw2M0zRjTY1FCEko3FV">
+  <thead data-page-node-id="BFGVBhfwGrea5F0uglZNwS"><tr data-page-node-id="SHDy8ZiVsZrUdELrdvisho"><th data-page-node-id="cmFAG7QB0mCnd2sp9dlSJo">朝代</th><th data-page-node-id="YADpWAI3Ga6dJ0bwGEWQc3">「校尉」是什么</th><th data-page-node-id="xDc02leocgyrZZuJBKQ2at">地位</th></tr></thead>
+  <tbody data-page-node-id="AlicQGhcqXyduBwnFdS8wj">
+    <tr data-page-node-id="5ZoTZDdSPW8d2PawvwVdNm"><td class="g" data-page-node-id="NoY3MlxeyC7WJI5L0kZ0JV">汉</td><td data-page-node-id="sP7QuqFwT2a1kWbZwZYZPR">禁军中级实权武官。汉武帝设八校尉，东汉并为<strong data-page-node-id="DPP3tjUATSLdoH5NESwYii">北军五校</strong>：屯骑、越骑、步兵、长水、射声。<strong data-page-node-id="8YldR4xlwjVPsT8HpcYiIf">骁骑校尉</strong>一类名号多授皇帝亲信，三国故事里极常见</td><td class="p" data-page-node-id="AG8Slto6ZxcQ6PmYi1bl7c">比二千石（约等于郡守级别，很高）</td></tr>
+    <tr data-page-node-id="AvpAqwFamUp4HCmzzfA9du"><td class="g" data-page-node-id="VTCdOH04FUTbAJOMqgibbA">魏晋南北朝</td><td data-page-node-id="F3DdLvFK3g5iCThO5o2O3G">各类校尉名号泛滥，逐渐成为加官</td><td data-page-node-id="H5AHPbMkAeK5QaES3SM7rp">中高</td></tr>
+    <tr data-page-node-id="4YvwY3YSZ8uhevNdjFqZi4"><td class="g" data-page-node-id="KOYiGFNMAg9SrCVlZEidME">唐</td><td data-page-node-id="A0Sm0qSeeVE4oWkC6zQuWy">「校尉」降为低级武官名；「骁骑」二字另立为<strong data-page-node-id="qijtWZIWoERgyCUeBFxJaz">勋官「骁骑尉」</strong>（四转，视正六品），彻底荣誉化</td><td data-page-node-id="QzsxBExgszRmuvWTxU7cuU">荣誉，无实权</td></tr>
+    <tr data-page-node-id="cPLTIDcCfGVpIT9OYxw6rs"><td class="g" data-page-node-id="vE5km8stDX8DQzTidWU1dU">明</td><td data-page-node-id="Y12CWwl9VUpLuV7IqoUvdr">武勋序列中仍有「骁骑尉」（正五品），同样是勋号不是职务</td><td data-page-node-id="gr7FBbYuZzgj1cknZ7vxvF">荣誉</td></tr>
+    <tr data-page-node-id="xTLJf4TAXX43LZZQH0nYxj"><td class="g" data-page-node-id="Kqe256QhDjdvEtjibYucWD">清</td><td data-page-node-id="CRNNW8dmPwyGoK2Vjnqjg7">八旗设<strong data-page-node-id="y3MecWobGcQTlmkQg5ssTq">骁骑校</strong>（正六品）、骁骑参领（正三品）——变成了具体编制岗位</td><td data-page-node-id="rqAMNCa7V3pJo6adNJHDFO">中低级实职</td></tr>
+  </tbody>
+</table>
+
+<h3 data-page-node-id="E3axwXhAvuoOJqRPMXFyeS">清代武职两条线：八旗与绿营</h3>
+<ul class="tree" data-page-node-id="CfFTATzLctAogoCbBq7aNH">
+  <li data-page-node-id="tMc7Y8r9SQPl5Ouvsu23tw"><span class="n r" data-page-node-id="0rDs7awR4YPEZGnDfEPUZx">皇帝</span>
+    <ul data-page-node-id="FjvGTYltHAzkdo5EqgynQj">
+      <li data-page-node-id="l2WvdIIHkXSjPtOtiWzccM"><span class="n a" data-page-node-id="FaIdIYf5D6RvALG77oWDV8">八旗系统</span><span class="dim" data-page-node-id="HEzQRytklTxGDcVrClJGhL">满蒙汉军旗人，京营与驻防</span>
+        <ul data-page-node-id="oZyAApG6ogiSyeO9NCWHRc">
+          <li data-page-node-id="ZEMsj74vCW7zpSU21Elu99"><span class="n g" data-page-node-id="4QtDZXZwhqpzLmGOcA91hf">都统</span><span class="dim" data-page-node-id="OINYsbvIC4cNOrupcHEJfk">从一品，一旗之长</span></li>
+          <li data-page-node-id="dQHMDHIUKixo0xDM9S5W56"><span class="n g" data-page-node-id="4dKLKCPdkNbYerV4ipfZHg">副都统</span><span class="dim" data-page-node-id="FIOb1R8pyTF8Kn1bP9SDsq">正二品</span></li>
+          <li data-page-node-id="Zxksm1WgphoWobzOpOU3LA"><span class="n g" data-page-node-id="adkvv8BpG6Ay3f8PDCHfRQ">参领</span><span class="dim" data-page-node-id="yl1nFvbSrfsY4XYabBGAA8">正三品（内含骁骑参领）</span></li>
+          <li data-page-node-id="mt9WORfSRudNiYUiMfe29c"><span class="n g" data-page-node-id="ob27fsHT5EJFSD7OaVTcEr">佐领</span><span class="dim" data-page-node-id="hUb8RmEtCEVrTp0DiXEqyw">正四品，管三百人的基本单位</span></li>
+        </ul>
+      </li>
+      <li data-page-node-id="tXKJUQG13XDx2HcgR3RF18"><span class="n p" data-page-node-id="7EAAxMHw5v2avwbGvDyYQk">京畿禁卫</span><span class="dim" data-page-node-id="6lUwJMClINa0M7HcBODd6p">守卫皇宫与京师</span>
+        <ul data-page-node-id="QoRh3rB3GS8axsWsIIKp95">
+          <li data-page-node-id="ekwbhOTl69wXH0GlNkZzg3"><span class="n g" data-page-node-id="6xSgqswwBqRd8DNoFOpA1F">领侍卫内大臣</span><span class="dim" data-page-node-id="BoY1S06OcihxG8boloH4kF">正一品，管皇宫侍卫，只授旗人</span></li>
+          <li data-page-node-id="Ku7prolBBWyYS10Uic6HnG"><span class="n g" data-page-node-id="5x65hoF3BBQ6BDWUuVEWh5">九门提督</span><span class="dim" data-page-node-id="YLCzVShTDjxx0m5DViC7hb">全称「提督九门步军巡捕五营统领」，从一品；掌京师内城九门门禁、巡捕、治安</span></li>
+        </ul>
+      </li>
+      <li data-page-node-id="ydrilswD73qoFdjT26FYo5"><span class="n t" data-page-node-id="D3pj1AQ4NmeOGyJ1DEhIIq">绿营系统</span><span class="dim" data-page-node-id="zYfsP5GNFW7MZuOC7DLXcr">汉兵，一省最高为提督，受总督巡抚节制</span>
+        <ul data-page-node-id="Ye98y5Cm4SCsVm6rgrioGh">
+          <li data-page-node-id="HPDcSbP6OiUEMLl8liOmFW"><span class="n g" data-page-node-id="BtITRMzpCQ6SDdhcQw2k64">提督</span><span class="dim" data-page-node-id="f576LQEdfAuhnrgO44C6KE">从一品，一省绿营最高武官（汉人能到的武职顶点）</span></li>
+          <li data-page-node-id="GiqKDeZWkZEMgBOgFUTraE"><span class="n g" data-page-node-id="v2s5UhT53FsZ9JQXQZMle6">总兵</span><span class="dim" data-page-node-id="nab9k1TViOprb3h2EL9NLC">正二品，镇守一镇，受巡抚节制</span></li>
+          <li data-page-node-id="G6u0oGtRc00ffpcbC42KIf"><span class="n g" data-page-node-id="Wqum1aLzJCXspxlLD1gXsJ">副将</span><span class="dim" data-page-node-id="wvkCKdwosxAnxqDmS15yqK">从二品</span></li>
+          <li data-page-node-id="UYladArHbP963EiizFsjud"><span class="n g" data-page-node-id="aURC4dzb08fpvcjgpWLd8s">参将</span><span class="dim" data-page-node-id="j7qvDA4Df2PpmId09t4rp2">正三品</span></li>
+          <li data-page-node-id="eZsgymLZeLGitfITPfzDdm"><span class="n g" data-page-node-id="GmNeoaPsex6Am4uiqSjkQG">游击</span><span class="dim" data-page-node-id="kVomxlR5PC1gXSE4KVRVTe">从三品</span></li>
+          <li data-page-node-id="xIXDQg4z28ybzZ0ntjPYBE"><span class="n g" data-page-node-id="htdi77u9ynuaed5Al1r80a">都司</span><span class="dim" data-page-node-id="2uq1bKvO65aoU6T6HaONtq">正四品</span></li>
+          <li data-page-node-id="5iwaAziRkRLZMEFZaA96WH"><span class="n g" data-page-node-id="0Z3RfJeHxPXAiBLYFAB20a">守备</span><span class="dim" data-page-node-id="GEgOEiS0ZJazY2mDWVJQEd">正五品</span></li>
+          <li data-page-node-id="ZbL5RJ5Al0r9PiaKoiFmnc"><span class="n g" data-page-node-id="WhYHDRT7AH7kKsydF00ZjR">千总</span><span class="dim" data-page-node-id="a2KNOl2bnvTEYtfdwNz9Bq">正六品</span></li>
+          <li data-page-node-id="RWAwjhzvZeRl460oe63ck9"><span class="n g" data-page-node-id="7lcM5SSsQU8NEnQIdciHpp">把总</span><span class="dim" data-page-node-id="SPWM2QfxvT24JCsAyJ5lRi">正七品</span></li>
+          <li data-page-node-id="pofOblgZFExFndO6SNzjw5"><span class="n g" data-page-node-id="9ai5C8m76BWGzxjDxVjZ2L">外委</span><span class="dim" data-page-node-id="IBOjuPGnMAuTYbo0f7w2yQ">正九品 / 从九品</span></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<details data-page-node-id="uy1HCEQ9xwM2rTSb2k1Wdm">
+  <summary data-page-node-id="Xx1A9VvUEM9PTFNa8ZZic3">九门提督凭什么这么重要？（京城的钥匙在谁手里）</summary>
+  <div data-page-node-id="XzgYOKv4TZx8Ef5PxHO93m">
+    「九门」指北京内城的正阳门、崇文门、宣武门、朝阳门、东直门、阜成门、西直门、安定门、德胜门，是京师的全部陆上通道。
+    步军统领衙门管的不只是开门关门，还包括城内巡捕、治安、消防、人口稽查，手下数万人，是<strong data-page-node-id="ERkTYeJ9waJKZjhaeQ3Nbs">京城唯一成建制的武装</strong>。
+    所以这个位子只能交给皇帝最信的满族亲信——和珅、荣禄都做过。它的性质不是「首都卫戍司令」，而是「皇帝放在京城的保险栓」：谁掌握九门，谁就能决定政变成不成。
+    顺便一提，它初设时是正二品，后来升为从一品。
+  </div>
+</details>
+
+<h3 data-page-node-id="4klhXi4IV42qd0Pc18DfiV">历代武职一页速览</h3>
+<table data-page-node-id="G6bY2UWlKZe17VDYoI8vFs">
+  <thead data-page-node-id="35GWXd9hIheEMKgXZTSlAv"><tr data-page-node-id="qzHRxxn2AhnYEBd6ykDgL3"><th data-page-node-id="9uHkGT3GITqR9af6fWgtIC">朝代</th><th data-page-node-id="atqtlE3ceB7HQPe6iCZ2KG">最高军事机构 / 长官</th><th data-page-node-id="Z4d8RLmzitT5SREPLjZtHq">中层骨干</th><th data-page-node-id="gIDsY9F4EXJKgsGIof25WE">基层</th></tr></thead>
+  <tbody data-page-node-id="t41mwZSjeEXhwJhFw0lMHs">
+    <tr data-page-node-id="OL8c1He3ZGvUyaA2A3ja3h"><td class="g" data-page-node-id="gjDFNBRpBBTZAsP7CBpHY2">汉</td><td data-page-node-id="Ta8A6qoZGEjNaoqfb0tvEb">太尉 → 大将军（外戚常任）</td><td data-page-node-id="DbAOUnQg8RBGZkfgYpk4yd">校尉（比二千石）、中郎将</td><td data-page-node-id="6xxiLVBakAC9h9goeYTRKT">司马、军侯</td></tr>
+    <tr data-page-node-id="8TqCBLlACv5Boqr66pNDBZ"><td class="g" data-page-node-id="aO18G1L8lBdfoUojAC48oC">唐</td><td data-page-node-id="itOZFBtH7K6RBjv9PBnQov">十六卫大将军（正三品）、折冲都尉（府兵）</td><td data-page-node-id="yx5TghPGiRNv7C8mRsz4TI">果毅都尉、郎将</td><td data-page-node-id="tQpRlQpLX8yjAMaY2TXgjV">校尉、旅帅、队正</td></tr>
+    <tr data-page-node-id="U98lfmDpfBRXbTD6c68yWQ"><td class="g" data-page-node-id="G6xhvxqJTKEchieBUn2mNL">宋</td><td data-page-node-id="ddvXZJgnNxl3GWKwTElGEC">枢密院（枢密使）；三衙（殿前司、侍卫马军司、侍卫步军司）</td><td data-page-node-id="AxldeYB3VhWYwtl41yldr9">都指挥使、虞候</td><td data-page-node-id="UYhpuDyGCaJFRzPvTMjGm1">指挥使、都头</td></tr>
+    <tr data-page-node-id="9mhysPGNOnd7PUz5M3yCvR"><td class="g" data-page-node-id="wEqmSMOoN4RvkytIUffygJ">明</td><td data-page-node-id="ZzWtMOk3FCu8ZFMpr0cPVE">五军都督府（后成虚衔）；兵部掌调兵</td><td data-page-node-id="eWfpdFTjGOJpkzpnVcq898">卫指挥使（正三品）、千户（正五品）</td><td data-page-node-id="7F4vB7IJcbd1VRo11uDhEp">百户（正六品）、总旗、小旗</td></tr>
+    <tr data-page-node-id="vcLdABJUyj4bseqV3DsJdI"><td class="g" data-page-node-id="oaZvcvEiwsV1OKdkoxS3fF">清</td><td data-page-node-id="fMRcTHXUAmkthIumsC7hYR">军机处（决策）；八旗都统、绿营提督</td><td data-page-node-id="wtDEB0Ae1VP1V8ks44DwI1">总兵、副将、参将、游击</td><td data-page-node-id="7hdxd2QWPFwJxObIqPjRim">都司、守备、千总、把总</td></tr>
+  </tbody>
+</table>
+
+<h2 id="honor" data-page-node-id="C30pUkAfpnXnuTq7sjOlW1"><span class="num" data-page-node-id="5H5TUQAgDyefWo5ak9OUMn">⑦</span>荣誉体系：勋官、封爵，和「王爷」到底是什么</h2>
+<p class="lead" data-page-node-id="60cCL9e5GrRKEQ6x0s1eoG">这一块是你最困惑的部分，因为它跟「当什么官」完全无关。它们只回答两个问题：<strong data-page-node-id="wEBa82vGkHQAgzx0AuHCpU">你出身多高（爵位）、你立过多少功（勋官）</strong>。</p>
+
+<h3 data-page-node-id="ANwhmd4LSKbxuaOMCIUwr9">唐 · 勋官十二转</h3>
+<p data-page-node-id="sbVCrlTk3EVHHB9txYjnvt">源自北朝周齐交战时的军功酬赏，唐高宗时定为十二转。「转」既是计量功绩的单位，也是等级。<strong data-page-node-id="8tai9vE51lyx0Io2aoEfeV">它没有职权、不办事</strong>，只是一份国家认证的功劳簿——花木兰「策勋十二转」，说的就是这个制度的最高一等。</p>
+<table data-page-node-id="h1ZuAlwC3HWcyWbT99YZFA">
+  <thead data-page-node-id="nHJwZh3e72NaW4IQ3ukXCe"><tr data-page-node-id="vOpBbOdEBqufsxaG1zIw8l"><th data-page-node-id="sFT3imQEUpjvtrx0W4Ojaj">转数</th><th data-page-node-id="DVRSX9ZUraleGeO7nAPkeI">勋号</th><th data-page-node-id="yGuvEw94mavXLRGGjJIuT4">视品（对应待遇）</th><th data-page-node-id="DBOcf6hAkfSEvHxTVLYsLo">出处举例</th></tr></thead>
+  <tbody data-page-node-id="GAque9AzDCm6Q54kBa0P52">
+    <tr data-page-node-id="6nzTeK5uHsWS1H2LogF3gf"><td class="g" data-page-node-id="P9nAyVSiOqdNlAlkc8SUED">十二转</td><td class="p" data-page-node-id="3jbohQTseE6TCrttyAWwWM">上柱国</td><td data-page-node-id="9zIA5PFtigPCAegS0blowj">视正二品</td><td data-page-node-id="vMQ2AabM5KLt0SNimKDjNu">秦琼、李勣（徐世勣）以战功累至</td></tr>
+    <tr data-page-node-id="F8A7MePrQcENkdcAoyAtmc"><td class="g" data-page-node-id="ZSugNsp0mHsg5oPWVSjLhg">十一转</td><td class="p" data-page-node-id="0k2HMehBwYORZ9yKU8rgAq">柱国</td><td data-page-node-id="aeh2Q2Eibvh73ZXKfJrn1u">视从二品</td><td data-page-node-id="wsx8yPEx8xq18mgWoLWIFg"></td></tr>
+    <tr data-page-node-id="RME5pjfFCUvGE2vvBkmu1t"><td class="g" data-page-node-id="kP9NkeQh5Lgz9FBQpLQIgd">十转</td><td class="p" data-page-node-id="6dgLgInt27hL87Q2isCKrv">上护军</td><td data-page-node-id="9gmC9wQcVjaRtPN7apTGVE">视正三品</td><td data-page-node-id="m0Z9DKnALmE2yAONh2yvSZ">原名「上大将军」，贞观十一年改</td></tr>
+    <tr data-page-node-id="xOH7IyYG5Xi2S4x4sa5Tss"><td class="g" data-page-node-id="UTEGKjrPUXFDF2rPBn0Mra">九转</td><td class="p" data-page-node-id="ewvZ81U15NLID22PmMoDEB">护军</td><td data-page-node-id="BbJvz0u0RL6v0GaWt2yRNP">视从三品</td><td data-page-node-id="b4UmpQZGHY15jXgvCVEFqW">原名「大将军」</td></tr>
+    <tr data-page-node-id="ZrsI1YU2TdUScLlmFdQIlh"><td class="g" data-page-node-id="0B602OvCirS5V8ImD7yH8a">八转</td><td class="p" data-page-node-id="iU2C6Illm2HOTdWip1Ie4b">上轻车都尉</td><td data-page-node-id="ucSiLuA4G5GPFwZL8kzmjh">视正四品</td><td data-page-node-id="3EnN7EywQ6NTqLU10fWkan"></td></tr>
+    <tr data-page-node-id="zYV5344beJtgkGunAx4W0n"><td class="g" data-page-node-id="WoZvduexSk4t5y1Zdz32yC">七转</td><td class="p" data-page-node-id="dZdVBrZ78JJyHsfbHl3ewr">轻车都尉</td><td data-page-node-id="L133IH6fh9IBkRAYLF3BiJ">视从四品</td><td data-page-node-id="qBqENdzw7PF8IzGdJVfaBc"></td></tr>
+    <tr data-page-node-id="nNwg4HKtGEAdXozK1XAgf8"><td class="g" data-page-node-id="me4KYzT7LkVmb19svqVO11">六转</td><td class="p" data-page-node-id="TDjCDN1OBjt2NwhrteuC0Y">上骑都尉</td><td data-page-node-id="PwY6ie73Mjel0CKVSAH5XP">视正五品</td><td data-page-node-id="HC6PcGzkAcR8JTeCX6UMBh"></td></tr>
+    <tr data-page-node-id="zORKWsJpCQ29ZNPqpGaiE5"><td class="g" data-page-node-id="HfGU43hgxC9dsiMeN0VmdY">五转</td><td class="p" data-page-node-id="y1OkFGCicl4TPEErdC6cqo">骑都尉</td><td data-page-node-id="6axbLlUEujMWJ2UDu0dIGh">视从五品</td><td data-page-node-id="hFDYCGFBTXOFSd1Hjoj9On"></td></tr>
+    <tr data-page-node-id="X3okmL7JCXPE0muju3fdDL"><td class="g" data-page-node-id="0pLTF4n8suupYshaYfKzbc">四转</td><td class="p" data-page-node-id="pvKUIXfm4Ydqm8vZxfKUSd">骁骑尉</td><td data-page-node-id="CfvUrOknOCHAHqGd3NLHEp">视正六品</td><td data-page-node-id="peuj1QHcFiuJ5dtBXrBywc">「骁骑」二字从此变成荣誉名号</td></tr>
+    <tr data-page-node-id="lpSqPc1RiKkSMlLqf7HVZo"><td class="g" data-page-node-id="OsAteZIiTJCJTiLfU2U2qY">三转</td><td class="p" data-page-node-id="wZN2uqoHAN4REHHjD2oBCM">飞骑尉</td><td data-page-node-id="bUHfUd2AbFbMPQ0SfFXIC8">视从六品</td><td data-page-node-id="Eit4JvukA8ZNurrbzlvNrK"></td></tr>
+    <tr data-page-node-id="useoOoSxn8iBPjCtBJaUSH"><td class="g" data-page-node-id="OZoTe4YuddpEdUXHhngRgt">二转</td><td class="p" data-page-node-id="OKzCw4OoRybLv3VN6gOD8H">云骑尉</td><td data-page-node-id="arDAXISoFNig4yvqTDCz7c">视正七品</td><td data-page-node-id="pLNH6K9KCNeAwxFEhFvKhI"></td></tr>
+    <tr data-page-node-id="G6GGrD0hq7lcPPFiqq2rzC"><td class="g" data-page-node-id="hbKu3faRO6NB9cUp5DTmqP">一转</td><td class="p" data-page-node-id="YFaq3P3mvZKqG7uK1n6u8e">武骑尉</td><td data-page-node-id="KEYQKRlnH7JuTZmjEYqIFw">视从七品</td><td data-page-node-id="OR1zwq0WHtU24P4SFGyBWt">最低一等，一转即可得</td></tr>
+  </tbody>
+</table>
+
+<div class="note warn" data-page-node-id="0n3Wn7K2LOOg8VyqAVb7A1">
+  <div class="h" data-page-node-id="CXkO89B4aHeaAmm75bCu6M">上柱国的来龙去脉</div>
+  <p data-page-node-id="YwncrAkMRDIMZBJl7Mq139">它最早是<strong data-page-node-id="4QammxBVU0yhBfvqMHRAJu">战国楚国的最高武官</strong>（「柱国」），是真正掌兵的职位。到北魏、北周被改成勋号，唐代定为十二转之首（视正二品），从此与兵权脱钩。明代仍以此类勋号赠开国元勋（如李善长），但勋官体系里最高定为「柱国」；清代勋官大体废止，只剩封赠时偶见。<strong data-page-node-id="qstIVkvVrgMFmRKfUL6I18">「上柱国」是一部浓缩的官名降格史：实权官 → 荣誉衔 → 历史名词。</strong></p>
+</div>
+
+<h3 data-page-node-id="U5N4sUqD4rEfD18zCH5xb3">爵位体系：从五等爵到清代十二等</h3>
+<table data-page-node-id="sccEEh5P0UI5gahCUkrBMj">
+  <thead data-page-node-id="4Clb1w9QJqsXr5oVvLPPp4"><tr data-page-node-id="3SHOzA9VQwKEzDPc5ci7lB"><th data-page-node-id="YRFa37RyCRqAHZ9pQHcIFI">朝代</th><th data-page-node-id="0qHuPz2ZUMBwejZanACLNP">宗室 / 王爵</th><th data-page-node-id="fAzU35CZYLfh1HOZzXvZKd">异姓功臣爵</th><th data-page-node-id="DLgjsoZRl26ZjQ2J1JX7JQ">说明</th></tr></thead>
+  <tbody data-page-node-id="ZfLnha0dYQuDdYtvmp3Cd1">
+    <tr data-page-node-id="hidtoUYWiivCWmKrwuYZVc"><td class="g" data-page-node-id="Nmv7wI4q9bOYt2u9lpIgBQ">先秦</td><td data-page-node-id="0Z7Cz5y2kwAWK8oPSOnIGV">王（天子）</td><td data-page-node-id="ivDb7Bjxp9BekYNyE9UCHr">公、侯、伯、子、男</td><td data-page-node-id="RSsAWmghywDrUiBYgF5CHu">经典五等爵，后世一切爵制的源头</td></tr>
+    <tr data-page-node-id="nCLMqO9kdBxGFucBFzHA8B"><td class="g" data-page-node-id="F7pLNV4WRWrioL6SVjpEBA">秦汉</td><td data-page-node-id="nuRXckmhBMBE95PyYkrXbR">王（皇子封王，异姓王少见且危险）</td><td data-page-node-id="76gGM1zfL2N0zmlvPoCBID">二十等军功爵：彻侯（列侯）、关内侯……</td><td data-page-node-id="iZMyir0KljaJfYAAEKKZ5d">汉初异姓王多被诛，此后「非刘氏不王」</td></tr>
+    <tr data-page-node-id="IcH9uRDixjtWgRLa7mClVy"><td class="g" data-page-node-id="WTD4pKqZGkIVsiIIopp79E">唐</td><td data-page-node-id="HQ2NOUxTAcq6992rCxsfx4">亲王、郡王</td><td data-page-node-id="cg5kBZuoDjW2qPSKCtR4tw">国公、郡公、县公、县侯、县伯、县子、县男</td><td data-page-node-id="7upRsPeadaPGuOQRlomBbZ">九等爵；食邑多为<strong data-page-node-id="QAEHlhvH9Rp7gatsHtu3iA">虚封</strong>，只有标「食实封」才有真收益</td></tr>
+    <tr data-page-node-id="sBNNU4QhDzgGv5lha6cycW"><td class="g" data-page-node-id="IYcI79DSYn4lmWP9ZhPtfs">宋</td><td data-page-node-id="tEAJOENAsmpxNbKwXOMX6m">王、郡王、国公</td><td data-page-node-id="oW6LkQ7fEANmt6i4jkBqbs">开国公、开国侯、开国伯、开国子、开国男</td><td data-page-node-id="1j9UB0zlgclF3O7xuudjfZ">多为虚封加荣誉</td></tr>
+    <tr data-page-node-id="JSA7Emg202TWDbFriavhqx"><td class="g" data-page-node-id="eaz6ChvDnPeMMB7JNFFSho">明</td><td data-page-node-id="4Mtx978zBq8tRixxVT2ssr">亲王 → 郡王 → 镇国将军 → 辅国将军 → 奉国将军 → 镇国中尉 → 辅国中尉 → 奉国中尉（宗室八等）</td><td data-page-node-id="YwZ3CF4nPjhtUSrp7Wt1OU">公、侯、伯（三等，无子男）</td><td data-page-node-id="eybqxFfXf6Q3KLB8q80YTo">皇子封亲王，亲王余子降封郡王，逐代递降；明中后期宗室繁衍到数万人，成为财政包袱</td></tr>
+    <tr data-page-node-id="N4GLFVqDCGn3FViCm4KcG7"><td class="g" data-page-node-id="Ifa9SeGCl8mTgMLN5HxxKL">清</td><td data-page-node-id="SI4nzNZ7gXADOZ1IuvpP7U">和硕亲王 → 多罗郡王 → 多罗贝勒 → 固山贝子 → 奉恩镇国公 → 奉恩辅国公 → 不入八分镇国公 → 不入八分辅国公 → 镇国将军 → 辅国将军 → 奉国将军 → 奉恩将军（十二等，另设世子、长子）</td><td data-page-node-id="lcHQUQfmyFrI8wSECzpaW6">公、侯、伯（超品）→ 子（正一品）→ 男（正二品）→ 轻车都尉（正三品）→ 骑都尉（正四品）→ 云骑尉（正五品）→ 恩骑尉（正七品）</td><td data-page-node-id="93LZJGyCtqoJ7U8SFWsoRi">「贝勒」「贝子」是满语爵名，本意是部落首领；除十二家「铁帽子王」外，其余逐代降袭</td></tr>
+  </tbody>
+</table>
+
+<details data-page-node-id="P8yP2STqMtD6Bu8L2nFCdP">
+  <summary data-page-node-id="nSBwqIuLS5Fz4Bq7M20d7H">「王爷」这个称呼，到底指什么？</summary>
+  <div data-page-node-id="uYipZ7dxuy0emRXTYURJS0">
+    「王爷」是口语统称，正式爵位只有两级带「王」字：<strong data-page-node-id="lguoHtTBXYxZH2nzIXsLQu">亲王</strong>和<strong data-page-node-id="YGsOkDQUCilAhGGOFqi19z">郡王</strong>。亲王一般只封皇子或皇帝的兄弟，郡王是下一等（也用来封亲王世子、皇子中较低者）。
+    它<strong data-page-node-id="C5t6DFtLH8gXKnN4QU4QAo">不是官职，没有具体职掌</strong>——但权力大小完全看皇帝给不给差事：明代初年藩王手握兵权（燕王朱棣就是靠这个夺的位），明中后期王爷被圈在封地不许干政；清代亲王可以入军机、当议政王（如恭亲王奕䜣），那就权倾朝野了。
+    所以「王爷」三个字只说明身份高，不说明权力大。
+  </div>
+</details>
+
+<h2 id="quick" data-page-node-id="BHh3fOFQ419QMuRfq7hQnI"><span class="num" data-page-node-id="HHdzkIjnpXOOB9BXsF2cq4">⑧</span>常见职位速查</h2>
+<div class="search" data-page-node-id="kzTpHBzmvaXLucDaXFNkaT">
+  <input id="q" type="text" placeholder="输入关键词筛选，例如：尚书、提督、翰林、太监、总督……" data-page-node-id="l4uD7s95kXg62PaLIdm8lp">
+  <span data-page-node-id="RYVDPNThuBDPzZcf9EGN2W">直接在树上高亮</span>
+</div>
+
+<ul class="tree" id="tree" data-page-node-id="RPRfiIZSR3isLAmx1hnAF1">
+  <li data-page-node-id="nLmdwMEKHU9sMlpmZTjPrH"><span class="n r" data-page-node-id="EoBCmcd1Bg9PjgwBkVEQ6a">中枢决策类</span>
+    <ul data-page-node-id="LDuT6xvggZaoZ6DSjdMYEY">
+      <li data-page-node-id="jiNcPC8nlxsaMngPVFDPiF"><span class="n a" data-page-node-id="loyrY5YZGxqor38DdXJ1LA">丞相</span><span class="dim" data-page-node-id="pGqx70X0QCwuq9SbaTGkth">秦汉百官之首，洪武十三年被朱元璋废除</span></li>
+      <li data-page-node-id="dALynr3eqWDa83dH6AVGaC"><span class="n a" data-page-node-id="zpWsHvm7jKOCQHfR3mgO7x">同中书门下平章事</span><span class="dim" data-page-node-id="MoAvV8tTMfGBKRddvDXGMo">唐代事实上的宰相头衔（加衔）</span></li>
+      <li data-page-node-id="EPK7HTEvfEAFx6XiXQEena"><span class="n a" data-page-node-id="XDIgNym5Mr3saOcMirMFiO">内阁大学士 / 首辅</span><span class="dim" data-page-node-id="EqCDgV0tdUDc1sXxUfs4Gc">明；原五品，加衔后可至一品</span></li>
+      <li data-page-node-id="Aa0ImmoiVBcLH1jQMf14ET"><span class="n a" data-page-node-id="PmLfx4LWpXRgVTtPR8NSa8">军机大臣</span><span class="dim" data-page-node-id="pbKniJsdZVz5hNd2LFseJx">清；无定制品级，由大学士尚书兼任，实为最高决策圈</span></li>
+      <li data-page-node-id="0lym7ykpubp86ZbTcfrvWA"><span class="n a" data-page-node-id="BnM7voflVoaN5OyYqeNC8c">六部尚书</span><span class="dim" data-page-node-id="AdZq2IJR5KXrRu6UttBPGS">明正二品 / 清从一品，各管一部</span></li>
+      <li data-page-node-id="9MEro7Bz6TlYP4UtLF1kxF"><span class="n a" data-page-node-id="G949vp51z6akPdNXx0K0DT">侍郎</span><span class="dim" data-page-node-id="1htdZjQlE4GeOj3rryCz2E">部副首长，明正三品 / 清从二品</span></li>
+    </ul>
+  </li>
+  <li data-page-node-id="XC0YjRTuonO15tSUABCbwO"><span class="n b" data-page-node-id="BUOhGwhZ84d1Ic4HunXHnD">监察言路类</span>
+    <ul data-page-node-id="Hf1wvRF16tLyfg9txHyGFW">
+      <li data-page-node-id="8qfpzQfCnzVQOkQlJL6an8"><span class="n g" data-page-node-id="UiIytMX6Dbv0WuRN63r6IV">御史大夫 / 御史中丞</span><span class="dim" data-page-node-id="yrFijvbQF7EQOoR3EoPTze">秦汉监察系统，副丞相</span></li>
+      <li data-page-node-id="SgHcHnY4Cj8ebuOT28w8Dr"><span class="n g" data-page-node-id="x2PKfZa9qMX7RExp5SycLo">都察院左右都御史</span><span class="dim" data-page-node-id="WTQV8uGfxlkHAcU7uBFfoL">明清最高监察官，明正二品 / 清从一品</span></li>
+      <li data-page-node-id="0hvAqOf3ACu1GZVseA2LWp"><span class="n g" data-page-node-id="6xHIIlbidQHi9euT7I8FWv">六科给事中</span><span class="dim" data-page-node-id="PMx6rAFSRo4knTStiWIT6C">明；专门盯六部，有封驳权，品低权大</span></li>
+      <li data-page-node-id="DbJXTPRsPnXN25ENodoNYy"><span class="n g" data-page-node-id="B9ksvInWO3rPiEHdOb4Gnb">刺史 / 巡按御史</span><span class="dim" data-page-node-id="3UfpuNzVRavjIGJAa8JKom">派到地方查官的「中央巡视组」</span></li>
+    </ul>
+  </li>
+  <li data-page-node-id="FF0ciHLdqH2y8irU8z7suf"><span class="n t" data-page-node-id="1FNm8qEjfNZSJmmeTqX6aB">地方治理类</span>
+    <ul data-page-node-id="tUHYY53d5ug8oYiLKcTg8p">
+      <li data-page-node-id="XzlbGN825rCaQRMZ409OrD"><span class="n g" data-page-node-id="95NkTThTmsnelpuAfvw6FV">郡守 / 太守</span><span class="dim" data-page-node-id="7iMp6hHMNRc9GRjZzFd7O7">秦汉一郡之长（二千石）</span></li>
+      <li data-page-node-id="y4d0T6FeDJOG7eZswYpOEs"><span class="n g" data-page-node-id="cnfI7IZ7nnVszcmeQmGJSc">布政使</span><span class="dim" data-page-node-id="nFiYX2SjOhBaeCWaIrkekj">明清一省行政财政，从二品</span></li>
+      <li data-page-node-id="XvbCU91ydj5iOdNdVmS7fd"><span class="n g" data-page-node-id="U9ivMBAsGMGxiSyHxolluB">按察使</span><span class="dim" data-page-node-id="XA9Rmy9NCXtoiCBFy9YuxD">明清一省司法监察，正三品</span></li>
+      <li data-page-node-id="sM1wLTJMxgl4UM2UmV0zoU"><span class="n g" data-page-node-id="rVMgvX46epWplaBBbfliu6">知府</span><span class="dim" data-page-node-id="awGxpYVFOqLLvX5wBE6iqL">一府之长，明正四品 / 清从四品</span></li>
+      <li data-page-node-id="ygOF3rSs0H4aev8QDYbAAu"><span class="n g" data-page-node-id="wNOKCRoBWhjjrLTOpHizRu">知县</span><span class="dim" data-page-node-id="62jySREzrz7sDKPQSvwnMe">一县之长，正七品，体制的神经末梢</span></li>
+      <li data-page-node-id="9L9TaWCg9Bf1zgcyCmMi4R"><span class="n g" data-page-node-id="UxOUVri2JzkmXLT8wIId8C">总督 / 巡抚</span><span class="dim" data-page-node-id="iWDL4ufsO639bYRn5nEjg7">明临时差遣 → 清固定封疆大吏</span></li>
+    </ul>
+  </li>
+  <li data-page-node-id="VtyGnR112Jm8059QxVgw5d"><span class="n p" data-page-node-id="ASOFNDK3353Whw3M4VZtVg">特殊机构类</span>
+    <ul data-page-node-id="PQ0jEzTBDixTgYfFpipOl0">
+      <li data-page-node-id="3Mh16s4c6FDSfNpTH58TOL"><span class="n g" data-page-node-id="OP1jQqvonPaRasGpfxuc09">锦衣卫指挥使</span><span class="dim" data-page-node-id="0F2Jc0ovgOR2h94B4vM96X">明，正三品；同时管仪仗、侦缉、诏狱</span></li>
+      <li data-page-node-id="imTL9PXB6o4PPnBvX49ZRz"><span class="n g" data-page-node-id="RmEAlRHV9nQffDjsWxBsvI">东厂提督太监</span><span class="dim" data-page-node-id="6JIYQ9SOFkNItOZJyp0D5l">明；司礼监太监兼任，厂卫合流的最高形态</span></li>
+      <li data-page-node-id="rQfDpBx8z9pumVBhWpEA3P"><span class="n g" data-page-node-id="W4HfGfMFFpLSP9nSNBd7qR">九门提督</span><span class="dim" data-page-node-id="uakeYOb8p8hntAsA1HyPuY">清，从一品；京师九门与步军统领衙门</span></li>
+      <li data-page-node-id="xpOXmGahHSQqqbB69lguyr"><span class="n g" data-page-node-id="znJMGHsoLqFVIjoq7xZdjR">理藩院尚书</span><span class="dim" data-page-node-id="NX1e9eQBLsCOTc6fzDePpg">清；专管蒙藏事务，与六部同级</span></li>
+      <li data-page-node-id="ovOQLvpxbrWznrvTP7d5CD"><span class="n g" data-page-node-id="aBNAC9CzkxQtIz7q8Ea2xK">内务府总管</span><span class="dim" data-page-node-id="K4demXId0bWZKCi5btDfHS">清，正二品；皇帝的家务总管，油水极厚</span></li>
+      <li data-page-node-id="25yABjF21RYdtOs0ZcMiRF"><span class="n g" data-page-node-id="OHWusikovnM03K9GYC4sbU">翰林院编修 / 修撰</span><span class="dim" data-page-node-id="QxVqWnZsDdAjLT2KEqagOS">正七品 / 从六品，但仕途天花板极高</span></li>
+      <li data-page-node-id="kdM7yJlP2KRTe3njN7fp1C"><span class="n g" data-page-node-id="DsXHKHLU0w2ewu10nnOXDL">国子监祭酒</span><span class="dim" data-page-node-id="zYQBEQiRT59b4VUFFxX5FH">从四品，国家最高学府校长</span></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="myth" data-page-node-id="cTKRhD3hhl51D1NwSwiWt6"><span class="num" data-page-node-id="S2LeDPW7KjCLI2P1HHCm8U">⑨</span>四个最容易搞错的地方</h2>
+<details open data-page-node-id="qUhGRQ375FAQh0yuO9EUCi">
+  <summary data-page-node-id="Gm0SohicBWNYrifMTOdmg1">①「九品」不是九个小官，而是九个大等级</summary>
+  <div data-page-node-id="ueatFQCqiqC6zDKV2oHKyS">九品里每一品都分正、从两级（共十八级），而<strong data-page-node-id="yTUKl8mTa9tRWnyDWmdBHG">每一级里都挤着一大堆职位</strong>。正一品可以同时有太师、大学士、领侍卫内大臣；正七品里既有知县，也有翰林院编修。所以「你是几品」只告诉你排第几档，不告诉你具体干什么。</div>
+</details>
+<details open data-page-node-id="nMYtJCJLH8hlR8qHRyqv2o">
+  <summary data-page-node-id="Mo2mlfjxt3p6r3xYPGgQ5E">②品级高低 ≠ 权力大小</summary>
+  <div data-page-node-id="CwXKuh2aHFznW36LaIn8QB">明代六科给事中只是正七品，但能封驳皇帝诏令、弹劾尚书，实际影响力远超品级。反过来，清代大学士虽是正一品，若不进军机处，就只是荣誉头衔。看权力要看<strong data-page-node-id="yp1Q15YLE0okalNpjZzNsY">是否在决策圈、是否管钱管兵管人</strong>。</div>
+</details>
+<details open data-page-node-id="5cp7WAXUs9cq5uAG6CEn6A">
+  <summary data-page-node-id="OF0uAXLaQWdEOYqGLFfgj6">③同一个官名，换朝就换含义</summary>
+  <div data-page-node-id="AJKU5KmJHvukB189TaGPq1">「校尉」汉代是高级武官、唐代是低级武官、同时「骁骑尉」成了荣誉勋号、清代「骁骑校」是正六品编制岗位。「太守」汉代是郡守，宋代变成州郡长官的雅称，明清则完全是古称。所以考据官名，<strong data-page-node-id="2PcrEcDmYHdmKtw16TX1Sd">朝代永远比名称重要</strong>。</div>
+</details>
+<details open data-page-node-id="rDYJ5dct7HSBicWJ6s9mGb">
+  <summary data-page-node-id="wCImArd1tRsXKg4LDf7OM4">④古代官员身上同时挂好几层头衔</summary>
+  <div data-page-node-id="6aZBZBUdodsxJ78Heo8xfx">回到第一部分的五层框架：爵位（身份）+ 勋官（功劳）+ 散官（待遇）+ 职事官（岗位）+ 加衔（权限）。史书里的长头衔是把它们串起来写，不是一个人有五个官。</div>
+</details>
+
+<footer data-page-node-id="GmwHDGtuvHfalpioWGr4uO">
+  依据：《历代职官表》《唐六典》《旧唐书·职官志》《明史·职官志》《清史稿·职官志》《清会典》《通典》等。
+  品级细节在不同史料与不同时期存在差异（尤其是清代逐朝调整过的职位），本页取通行说法，并以朝代标注区分；如需精确定位某个具体官职，请带上朝代与年份。
+</footer>
+
+</div>
+<script>
+(function(){
+  var q = document.getElementById('q');
+  var tree = document.getElementById('tree');
+  if(!q || !tree) return;
+  var items = Array.prototype.slice.call(tree.querySelectorAll('li'));
+  q.addEventListener('input', function(){
+    var term = q.value.trim();
+    items.forEach(function(li){ li.classList.remove('dimmed','hit'); });
+    if(!term) return;
+    items.forEach(function(li){ li.classList.add('dimmed'); });
+    items.forEach(function(li){
+      var own = false;
+      for(var i=0; i<li.childNodes.length; i++){
+        var n = li.childNodes[i];
+        if(n.nodeType===1 && (n.classList.contains('n') || n.classList.contains('dim'))){
+          if(n.textContent.indexOf(term) > -1) own = true;
+        }
+      }
+      if(own){
+        li.classList.remove('dimmed'); li.classList.add('hit');
+        var p = li.parentElement;
+        while(p && p !== tree){
+          if(p.tagName === 'LI'){ p.classList.remove('dimmed'); p.classList.add('hit'); }
+          p = p.parentElement;
+        }
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
