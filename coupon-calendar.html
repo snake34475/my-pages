@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>成都薅羊毛优惠日历 · 数字花园</title>
+<meta name="description" content="成都本地约 26 个品牌的每周优惠与每月会员日历：茶百道周一 1.9 元咖啡、达美乐周二三四 7 折、肯德基疯狂星期四、量贩零食 6/7/8 号会员日接力。月历一点看当天，品牌一点看规则。">
+<style>
+  :root {
+    --bg: #0b0b10;
+    --surface: rgba(255,255,255,.04);
+    --surface-hover: rgba(255,255,255,.07);
+    --border: rgba(255,255,255,.09);
+    --text: #f2f2f5;
+    --muted: #9b9ba6;
+    --faint: #63636e;
+    --accent: #f5b942;              /* 琥珀：时间语义（今天/会员日/警告） */
+    --fastfood: #ff6b6b; --tea: #ffa94d; --coffee: #b197fc; --snack: #69db7c; --other: #74c0fc;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC","HarmonyOS Sans SC","Segoe UI",sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; overflow-x: hidden;
+  }
+  .aurora { position: fixed; inset:0; z-index:-1; overflow:hidden; }
+  .blob { position:absolute; border-radius:50%; filter:blur(110px); opacity:.32; }
+  .blob-1 { width:560px; height:560px; top:-180px; left:-120px; background:#5b3df5; animation:drift 18s ease-in-out infinite alternate; }
+  .blob-2 { width:460px; height:460px; top:10%; right:-140px; background:#0e7ae6; animation:drift 22s ease-in-out infinite alternate-reverse; }
+  .blob-3 { width:380px; height:380px; bottom:-140px; left:30%; background:#a78bfa; opacity:.2; animation:drift 26s ease-in-out infinite alternate; }
+  @keyframes drift { from{transform:translate(0,0) scale(1);} to{transform:translate(70px,50px) scale(1.12);} }
+
+  .wrap { max-width:900px; margin:0 auto; padding:0 22px; }
+
+  /* 页头 */
+  .eyebrow { display:block; font-size:12px; color:var(--faint); letter-spacing:.14em; padding-top:56px; }
+  h1 { font-size:clamp(28px,4.5vw,38px); font-weight:700; letter-spacing:-.02em; margin:10px 0 12px; }
+  h1 .grad { background:linear-gradient(100deg,#a78bfa,#60a5fa); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .lede { font-size:14px; color:var(--muted); line-height:1.8; max-width:560px; }
+  .lede b { color:var(--text); font-weight:600; }
+  .verify { display:inline-block; font-size:11.5px; background:var(--accent); color:#1a1a1a; padding:2px 10px; border-radius:20px; margin-left:8px; vertical-align:4px; }
+
+  /* 筛选区 */
+  .filter-zone { margin:30px 0 0; }
+  .filter-toggle {
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:13px; color:var(--muted); background:var(--surface);
+    border:1px solid var(--border); border-radius:100px; padding:8px 16px; cursor:pointer;
+    transition:all .2s;
+  }
+  .filter-toggle:hover { background:var(--surface-hover); color:var(--text); }
+  .filter-toggle.active { color:var(--text); border-color:rgba(167,139,250,.5); }
+  .filter-panel { display:none; margin-top:14px; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:16px 18px 18px; }
+  .filter-panel.open { display:block; }
+  .fgroup { margin-bottom:12px; }
+  .fgroup:last-child { margin-bottom:0; }
+  .fgroup-title { font-size:11.5px; color:var(--faint); letter-spacing:.1em; margin-bottom:7px; display:flex; align-items:center; gap:6px; }
+  .fgroup-title i { width:7px; height:7px; border-radius:50%; display:inline-block; }
+  .chips { display:flex; flex-wrap:wrap; gap:7px; }
+  .chip {
+    font-size:12.5px; color:var(--muted); background:rgba(255,255,255,.03);
+    border:1px solid var(--border); border-radius:100px; padding:5px 13px; cursor:pointer;
+    transition:all .15s; user-select:none;
+  }
+  .chip:hover { color:var(--text); background:var(--surface-hover); }
+  .chip.on { color:var(--text); border-color:var(--cc); background:color-mix(in srgb, var(--cc) 16%, transparent); }
+  .clear-btn {
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:12.5px; color:var(--accent); background:transparent;
+    border:1px dashed rgba(245,185,66,.45); border-radius:100px; padding:5px 13px; cursor:pointer; margin-left:2px;
+  }
+  .clear-btn:hover { background:rgba(245,185,66,.08); }
+  .filter-hint { font-size:11.5px; color:var(--faint); margin-top:12px; }
+
+  /* 月份条 + 图例 */
+  .month-bar { display:flex; align-items:center; justify-content:center; gap:20px; margin:28px 0 14px; }
+  .month-bar button {
+    background:var(--surface); color:var(--text); border:1px solid var(--border);
+    width:36px; height:36px; border-radius:10px; font-size:16px; cursor:pointer; transition:all .2s;
+  }
+  .month-bar button:hover { background:var(--surface-hover); }
+  .month-bar .now { font-size:18px; font-weight:700; letter-spacing:2px; min-width:140px; text-align:center; font-variant-numeric:tabular-nums; }
+  .legend { display:flex; gap:15px; flex-wrap:wrap; justify-content:center; margin-bottom:14px; font-size:11.5px; color:var(--faint); }
+  .legend span { display:inline-flex; align-items:center; gap:5px; }
+  .legend i { width:8px; height:8px; border-radius:50%; }
+
+  /* 月历 */
+  .cal { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+  .dow { text-align:center; font-size:12px; color:var(--faint); padding:2px 0 8px; font-weight:600; }
+  .cell {
+    background:var(--surface); border:1px solid var(--border); border-radius:11px;
+    min-height:76px; padding:7px 8px; cursor:pointer; position:relative;
+    transition:border-color .15s, opacity .2s, filter .2s;
+  }
+  .cell:hover { border-color:rgba(255,255,255,.25); }
+  .cell.empty { background:transparent; border-color:transparent; cursor:default; }
+  .cell .num { font-size:13px; font-weight:700; color:var(--muted); font-variant-numeric:tabular-nums; display:flex; align-items:center; gap:4px; }
+  .cell .star { color:var(--accent); font-size:10px; }
+  .cell.today { border-color:var(--accent); box-shadow:0 0 0 1px rgba(245,185,66,.28); }
+  .cell.today .num { color:var(--accent); }
+  .cell.selected { border-color:#fff; }
+  .cell.dim { opacity:.32; filter:grayscale(.65); }
+  .cell.dim.today { opacity:1; filter:none; }   /* 今天永远醒目 */
+  .cell.hit { border-color:color-mix(in srgb, var(--cc) 55%, transparent); }
+  .badge {
+    position:absolute; top:6px; right:6px;
+    font-size:10px; font-weight:700; line-height:1;
+    padding:3px 6px; border-radius:8px;
+    background:rgba(255,255,255,.08); color:var(--muted);
+    font-variant-numeric:tabular-nums;
+  }
+  .badge.hit { background:var(--cc); color:#0b0b10; }
+
+  /* 详情面板 */
+  .detail {
+    margin-top:22px; background:var(--surface); border:1px solid var(--border);
+    border-radius:16px; padding:18px 20px 20px; scroll-margin-top:20px;
+  }
+  .detail h3 { font-size:16px; margin-bottom:14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .detail h3 .hint { font-size:12px; color:var(--faint); font-weight:normal; }
+  .dlist { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:9px; }
+  .ditem {
+    background:rgba(255,255,255,.03); border-radius:10px; padding:10px 12px;
+    font-size:12.5px; line-height:1.6; border-left:3px solid var(--cc);
+  }
+  .ditem .brand { font-weight:700; font-size:13px; color:var(--cc); }
+  .ditem .badge-m { font-size:10px; background:var(--accent); color:#1a1a1a; padding:1px 7px; border-radius:8px; margin-left:7px; vertical-align:1px; }
+  .ditem .desc { color:var(--muted); margin-top:3px; }
+  .ditem .desc b { color:var(--text); font-weight:600; }
+  .ditem .warn { color:var(--accent); font-size:11px; margin-top:3px; display:block; }
+  .day-jump { display:flex; flex-wrap:wrap; gap:7px; margin-top:12px; }
+  .day-jump a {
+    font-size:12px; color:var(--text); text-decoration:none;
+    background:rgba(255,255,255,.06); border:1px solid var(--border);
+    border-radius:8px; padding:4px 10px; cursor:pointer;
+  }
+  .day-jump a:hover { background:var(--surface-hover); }
+
+  /* 品牌规则卡 */
+  .brandcard {
+    margin-top:18px; background:var(--surface); border:1px solid var(--border);
+    border-left:4px solid var(--cc); border-radius:14px; padding:18px 20px 20px;
+  }
+  .brandcard h3 { font-size:17px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .brandcard h3 .cat-tag { font-size:11px; color:var(--cc); border:1px solid color-mix(in srgb, var(--cc) 45%, transparent); border-radius:100px; padding:2px 10px; }
+  .brandcard h3 .hits { font-size:12px; color:var(--faint); font-weight:normal; }
+  .brules { margin-top:13px; }
+  .brule { display:flex; gap:10px; padding:9px 0; border-top:1px dashed var(--border); font-size:12.5px; line-height:1.65; }
+  .brule:first-child { border-top:none; }
+  .brule .rtag { flex-shrink:0; min-width:64px; font-size:11px; color:var(--faint); padding-top:2px; }
+  .brule .rbody { color:var(--muted); }
+  .brule .rbody b { color:var(--text); font-weight:600; }
+  .brule .warn { color:var(--accent); font-size:11px; display:block; margin-top:2px; }
+
+  /* 时效说明 */
+  .notice {
+    margin-top:30px; background:var(--surface); border:1px solid var(--border);
+    border-left:4px solid var(--accent); border-radius:12px;
+    padding:14px 17px; font-size:12.5px; color:var(--muted); line-height:1.85;
+  }
+  .notice b { color:var(--accent); font-weight:600; }
+
+  /* 页尾（仓库文章页同款） */
+  .postnav {
+    max-width:680px; margin:52px auto 0; padding:20px 24px;
+    border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:20px;
+  }
+  .postnav a { text-decoration:none; }
+  .postnav .lbl { display:block; font-size:11px; color:var(--faint); }
+  .postnav .ttl { display:block; font-size:13px; color:var(--muted); }
+  .postnav a:hover .ttl { color:var(--text); }
+  .copy { max-width:680px; margin:0 auto 48px; padding-top:16px; text-align:center; font-size:12px; color:var(--faint); }
+  .copy a { color:var(--faint); text-decoration:none; }
+  .copy a:hover { color:var(--muted); }
+
+  @media (max-width:600px){
+    .wrap { padding:0 14px; }
+    .eyebrow { padding-top:36px; }
+    .cal { gap:4px; }
+    .cell { min-height:56px; padding:5px 6px; border-radius:9px; }
+    .cell .num { font-size:11.5px; }
+    .badge { top:4px; right:4px; font-size:9px; padding:2px 5px; }
+    .dlist { grid-template-columns:1fr; }
+    .detail, .brandcard { padding:14px 15px 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="aurora"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
+
+<div class="wrap">
+  <span class="eyebrow">生活方式 · 成都</span>
+  <h1>成都薅羊毛<span class="grad">优惠日历</span><span class="verify">2026-10-08 查证</span></h1>
+  <p class="lede">
+    约 <b>26 个品牌</b>的每周优惠与每月会员日：月历<b>点日期</b>看当天清单，
+    <b>点品牌</b>筛选它专属的日子和规则。限时补贴都有 ⚠ 标注，去之前先开对应小程序确认当日活动。
+  </p>
+
+  <!-- 筛选区 -->
+  <div class="filter-zone">
+    <button class="filter-toggle" id="filterToggle">⚙ 按品牌筛选</button>
+    <div class="filter-panel" id="filterPanel"></div>
+  </div>
+
+  <!-- 月份条 -->
+  <div class="month-bar">
+    <button id="prev" title="上个月">‹</button>
+    <div class="now" id="monthLabel"></div>
+    <button id="next" title="下个月">›</button>
+  </div>
+  <div class="legend">
+    <span><i style="background:var(--fastfood)"></i>快餐披萨</span>
+    <span><i style="background:var(--tea)"></i>茶饮</span>
+    <span><i style="background:var(--coffee)"></i>咖啡</span>
+    <span><i style="background:var(--snack)"></i>零食/零售</span>
+    <span><i style="background:var(--other)"></i>其他</span>
+    <span><i style="background:var(--accent)"></i>今天 / 会员日 ★</span>
+  </div>
+
+  <!-- 月历 -->
+  <div class="cal" id="cal"></div>
+
+  <!-- 当日详情 -->
+  <div class="detail" id="detail"></div>
+  <!-- 品牌规则卡（筛选态） -->
+  <div id="brandcardZone"></div>
+
+  <div class="notice">
+    <b>时效说明：</b>信息查证于 2026-10-08，来源为品牌官方微博/小程序、界面新闻、什么值得买等公开渠道。
+    限时补贴（茶百道 1.9 元咖啡、沪上阿姨次卡等）随时可能调整或结束；赵一鸣会员日成都部分门店为 18 号而非 8 号；
+    达美乐 7 折限指定城市与饼底；书亦周二抽免单限四川等地区。<b>置灰的日子也能点</b>——没活动的日子会告诉你还能薅什么。</b>
+  </div>
+</div>
+
+<div class="postnav">
+  <a href="index.html"><span class="lbl">目录</span><span class="ttl">⊕</span></a>
+  <span style="flex:1"></span>
+  <a href="enfj-deep-dive.html" style="text-align:right;min-width:0;"><span class="lbl">下一篇 →</span><span class="ttl" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">ENFJ 深度解析</span></a>
+</div>
+<div class="copy">© 2026 数字花园 · <a href="index.html">返回首页</a> · <a href="https://github.com/snake34475/my-pages">GitHub</a></div>
+
+<script>
+/* ============================================================
+   数据区 —— 想加品牌 / 改活动，只动这三个表，其余不用碰
+   品类 cat：fastfood 快餐 | tea 茶饮 | coffee 咖啡 | snack 零食 | other 其他
+   WEEKLY.dow：0=周日 1=周一 ... 6=周六，一个活动跨多天就写数组
+   ============================================================ */
+const CATS = [
+  { id:'fastfood', name:'快餐披萨' },
+  { id:'tea',      name:'茶饮' },
+  { id:'coffee',   name:'咖啡' },
+  { id:'snack',    name:'零食/零售' },
+  { id:'other',    name:'其他' },
+];
+
+const BRANDS = [
+  { id:'tatao',     name:'茶百道',         cat:'coffee' },
+  { id:'sbux',      name:'星巴克',         cat:'coffee' },
+  { id:'mcd',       name:'麦当劳',         cat:'fastfood' },
+  { id:'kfc',       name:'肯德基',         cat:'fastfood' },
+  { id:'domino',    name:'达美乐',         cat:'fastfood' },
+  { id:'tastien',   name:'塔斯汀',         cat:'fastfood' },
+  { id:'pizzahut',  name:'必胜客',         cat:'fastfood' },
+  { id:'bk',        name:'汉堡王',         cat:'fastfood' },
+  { id:'zhengxin',  name:'正新鸡排',       cat:'fastfood' },
+  { id:'laoxiangji',name:'老乡鸡',         cat:'fastfood' },
+  { id:'wallace',   name:'华莱士',         cat:'fastfood' },
+  { id:'dicos',     name:'德克士',         cat:'fastfood' },
+  { id:'bawang',    name:'霸王茶姬/1点点', cat:'tea' },
+  { id:'heytea',    name:'喜茶',           cat:'tea' },
+  { id:'mixue',     name:'蜜雪冰城',       cat:'tea' },
+  { id:'shuyi',     name:'书亦烧仙草',     cat:'tea' },
+  { id:'yihetang',  name:'益禾堂',         cat:'tea' },
+  { id:'guming',    name:'古茗',           cat:'tea' },
+  { id:'hotmaxx',   name:'好特卖 HotMaxx', cat:'snack' },
+  { id:'luming',    name:'零食有鸣',       cat:'snack' },
+  { id:'snackhb',   name:'零食很忙',       cat:'snack' },
+  { id:'zym',       name:'赵一鸣零食',     cat:'snack' },
+  { id:'hxl',       name:'好想来',         cat:'snack' },
+  { id:'yangguofu', name:'杨国福',         cat:'other' },
+  { id:'haidilao',  name:'海底捞',         cat:'other' },
+  { id:'lawson',    name:'罗森便利店',     cat:'other' },
+];
+
+const WEEKLY = [
+  { brand:'tatao',   dow:[1],     desc:'周一会员日：美式 1.9 元、瑰夏美式 3.9 元（小程序下单）', warn:'⚠ 限时活动，约 2700 家门店有咖啡机，下单前先看门店' },
+  { brand:'mcd',     dow:[1],     desc:'会员日：App 领券，随心配 1+1 等特价' },
+  { brand:'bawang',  dow:[1],     desc:'霸王茶姬 / 1点点：免费升大杯' },
+  { brand:'heytea',  dow:[1],     desc:'喜茶：下单免配送费' },
+  { brand:'yangguofu',dow:[1],    desc:'会员日 8.8 折' },
+
+  { brand:'domino',  dow:[2,3,4], desc:'比萨 7 折（接二连三四，营业时间全天）', warn:'⚠ 指定城市活动，限酥香烤盘/经典手拍/轻巧薄脆三种饼底' },
+  { brand:'tastien', dow:[2],     desc:'会员日：小程序领券（买一送一等）' },
+  { brand:'pizzahut',dow:[2],     desc:'会员日' },
+  { brand:'shuyi',   dow:[2],     desc:'周二会员日：小程序输口令抽免单', warn:'✅ 限四川等地区，成都适用' },
+  { brand:'luming',  dow:[2],     desc:'会员积分翻倍日' },
+  { brand:'zhengxin',dow:[2],     desc:'鸡排 15 元 2 个' },
+
+  { brand:'hotmaxx', dow:[3],     desc:'每周三会员日：特价基础上折上折 / 随机立减' },
+  { brand:'pizzahut',dow:[3],     desc:'尖叫星期三（买一送一等）' },
+  { brand:'mixue',   dow:[3],     desc:'满 12 减 2' },
+  { brand:'bk',      dow:[3],     desc:'国王日 9.9 元套餐' },
+  { brand:'sbux',    dow:[3],     desc:'会员日：外卖免配送费' },
+  { brand:'haidilao',dow:[3],     desc:'会员日菜品权益' },
+
+  { brand:'kfc',     dow:[4],     desc:'🔥 疯狂星期四：19.9 元 15 块热辣香骨鸡等', warn:'部分爆款限量供应' },
+  { brand:'laoxiangji',dow:[4],   desc:'会员送鸡腿' },
+  { brand:'bk',      dow:[4],     desc:'活动期免费薯条' },
+
+  { brand:'wallace', dow:[5],     desc:'会员日：买一送一' },
+  { brand:'lawson',  dow:[5],     desc:'周五面包日（成都门店）' },
+  { brand:'tastien', dow:[5],     desc:'6 元翅根桶（用券）' },
+
+  { brand:'tastien', dow:[6,0],   desc:'周末五折券：美团搜「五折外卖」满 40-20 / 60-30 / 80-40 / 100-50', warn:'⚠ 部分门店不参与' },
+  { brand:'kfc',     dow:[6,0],   desc:'周末 8 拼 5 折 / 28 元 8 个帕尼尼' },
+];
+
+const MONTHLY = [
+  { brand:'hotmaxx', date:5,  desc:'会员等级变更日，卡包自动派本月礼券' },
+  { brand:'luming',  date:6,  desc:'全场正价 8.8 折（特价/日化/粮油除外）' },
+  { brand:'snackhb', date:7,  desc:'全场 8.8 折（特价商品除外）' },
+  { brand:'zym',     date:8,  desc:'全场 8.8 折', warn:'⚠ 成都部分门店会员日设在 18 号，以门店为准' },
+  { brand:'hxl',     date:8,  desc:'全场 8.8 折' },
+  { brand:'yihetang',date:8,  desc:'会员日半价 / 买 1 送 1' },
+  { brand:'zym',     date:18, desc:'会员日 8.8 折', warn:'⚠ 仅部分成都门店' },
+  { brand:'dicos',   date:18, desc:'会员日买 1 送 1' },
+  { brand:'guming',  date:20, desc:'会员日券包 / 折扣（蹲小程序）' },
+];
+
+/* ============================================================
+   以下为逻辑区，改数据不用动
+   ============================================================ */
+const BRAND_MAP = Object.fromEntries(BRANDS.map(b => [b.id, b]));
+const CAT_NAME  = Object.fromEntries(CATS.map(c => [c.id, c.name]));
+const DOW_CN = ['日','一','二','三','四','五','六'];
+
+function eventsFor(y, m, d) {          // m: 1-12
+  const dow = new Date(y, m - 1, d).getDay();
+  const out = WEEKLY.filter(w => w.dow.includes(dow))
+    .map(w => ({ ...w, ...BRAND_MAP[w.brand], member:false }));
+  MONTHLY.filter(x => x.date === d)
+    .forEach(x => out.push({ ...x, ...BRAND_MAP[x.brand], member:true }));
+  return out;
+}
+function brandHitDates(bid, y, m) {
+  const days = new Date(y, m, 0).getDate();
+  const hits = [];
+  for (let d = 1; d <= days; d++)
+    if (eventsFor(y, m, d).some(e => e.brand === bid)) hits.push(d);
+  return hits;
+}
+function topCat(evs) {                 // 当日活动最多的品类 → 徽标色
+  const cnt = {};
+  evs.forEach(e => cnt[e.cat] = (cnt[e.cat] || 0) + 1);
+  return Object.keys(cnt).sort((a,b) => cnt[b] - cnt[a])[0] || 'other';
+}
+
+/* ---------- 状态 ---------- */
+const today = new Date();
+let state = null;
+function defaultState() {
+  return { y: today.getFullYear(), m: today.getMonth() + 1,
+           sel: today.getDate(), filter: null };
+}
+function syncHash() {
+  let h = `${state.y}-${String(state.m).padStart(2,'0')}`;
+  if (state.filter) h += `/b-${state.filter}`;
+  if (state.sel)    h += `/d${state.sel}`;
+  history.replaceState(null, '', '#' + h);
+}
+function readHash() {
+  const parts = location.hash.replace(/^#/, '').split('/');
+  if (!/^\d{4}-\d{2}$/.test(parts[0] || '')) return false;
+  const [y, m] = parts[0].split('-').map(Number);
+  if (m < 1 || m > 12) return false;
+  const s = { y, m, sel: null, filter: null };
+  for (const p of parts.slice(1)) {
+    if (p.startsWith('b-') && BRAND_MAP[p.slice(2)]) s.filter = p.slice(2);
+    else if (p.startsWith('d')) {
+      const d = parseInt(p.slice(1), 10);
+      if (d >= 1 && d <= new Date(y, m, 0).getDate()) s.sel = d;
+    }
+  }
+  return s;
+}
+state = readHash() || defaultState();
+
+/* ---------- 筛选面板 ---------- */
+const filterPanel = document.getElementById('filterPanel');
+function renderFilterPanel() {
+  let html = '';
+  CATS.forEach(c => {
+    const bs = BRANDS.filter(b => b.cat === c.id);
+    html += `<div class="fgroup"><div class="fgroup-title"><i style="background:var(--${c.id})"></i>${c.name} · ${bs.length}</div><div class="chips">`;
+    bs.forEach(b => {
+      html += `<span class="chip ${state.filter === b.id ? 'on' : ''}" style="--cc:var(--${b.cat})" data-b="${b.id}">${b.name}</span>`;
+    });
+    html += '</div></div>';
+  });
+  html += `<div style="margin-top:14px"><button class="clear-btn" id="clearBtn">✕ 清除筛选，回到全月浏览</button></div>
+           <div class="filter-hint">点品牌 → 它有活动的日期高亮、其余置灰；再点一次取消。规则卡会出现在日历下方。</div>`;
+  filterPanel.innerHTML = html;
+  filterPanel.querySelectorAll('.chip').forEach(el => {
+    el.onclick = () => {
+      const id = el.dataset.b;
+      state.filter = (state.filter === id ? null : id);
+      syncHash(); renderAll();
+    };
+  });
+  document.getElementById('clearBtn').onclick = () => {
+    state.filter = null; syncHash(); renderAll();
+  };
+}
+const filterToggle = document.getElementById('filterToggle');
+filterToggle.onclick = () => {
+  filterPanel.classList.toggle('open');
+  filterToggle.classList.toggle('active');
+  filterToggle.textContent = filterPanel.classList.contains('open') ? '✕ 收起筛选' : '⚙ 按品牌筛选';
+};
+
+/* ---------- 月历 ---------- */
+function renderCal(y, m) {
+  const cal = document.getElementById('cal');
+  cal.innerHTML = '';
+  ['周一','周二','周三','周四','周五','周六','周日'].forEach(d => {
+    const el = document.createElement('div'); el.className = 'dow'; el.textContent = d; cal.appendChild(el);
+  });
+  const firstDow = new Date(y, m - 1, 1).getDay();
+  const lead = (firstDow + 6) % 7;
+  const days = new Date(y, m, 0).getDate();
+  const isToday = (d) => y === today.getFullYear() && m === today.getMonth() + 1 && d === today.getDate();
+  const hits = state.filter ? brandHitDates(state.filter, y, m) : null;
+
+  for (let i = 0; i < lead; i++) {
+    const e = document.createElement('div'); e.className = 'cell empty'; cal.appendChild(e);
+  }
+  for (let d = 1; d <= days; d++) {
+    const evs = eventsFor(y, m, d);
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    const cat = topCat(evs);
+    cell.style.setProperty('--cc', `var(--${cat})`);
+    if (isToday(d)) cell.classList.add('today');
+    if (state.sel === d) cell.classList.add('selected');
+    if (state.filter) {
+      if (hits.includes(d)) { cell.classList.add('hit'); }
+      else { cell.classList.add('dim'); }
+    }
+    const member = evs.some(e => e.member);
+    cell.innerHTML = `<div class="num">${d}${member ? ' <span class="star">★</span>' : ''}</div>`
+                   + (evs.length ? `<span class="badge ${state.filter && hits.includes(d) ? 'hit' : ''}">×${evs.length}</span>` : '');
+    cell.onclick = () => {
+      state.sel = (state.sel === d ? null : d);
+      syncHash(); renderAll();
+      if (window.innerWidth <= 600 && state.sel)
+        document.getElementById('detail').scrollIntoView({ behavior:'smooth', block:'nearest' });
+    };
+    cal.appendChild(cell);
+  }
+}
+
+/* ---------- 详情面板 ---------- */
+function renderDetail(y, m) {
+  const box = document.getElementById('detail');
+  const d = state.sel;
+  const isToday = (dd) => y === today.getFullYear() && m === today.getMonth() + 1 && dd === today.getDate();
+
+  // 未选中日期
+  if (!d) {
+    if (state.filter) { renderBrandCard(y, m); return; }   // 只筛选未选日 → 详情区给规则卡
+    box.innerHTML = '<h3>👆 点击上方任意日期</h3><div class="dlist"><div class="ditem" style="--cc:var(--accent)"><span class="desc">当天全部优惠会展开在这里；也可以展开顶部「按品牌筛选」，只看某一家。</span></div></div>';
+    return;
+  }
+
+  const evs = eventsFor(y, m, d);
+  const filtered = state.filter ? evs.filter(e => e.brand === state.filter) : evs;
+  const hits = state.filter ? brandHitDates(state.filter, y, m) : null;
+  const dateObj = new Date(y, m - 1, d);
+  let title = `${m} 月 ${d} 日 · 周${DOW_CN[dateObj.getDay()]}`;
+  if (isToday(d)) title += ' · 今天';
+  title += ` <span class="hint">${state.filter
+      ? `已筛选「${BRAND_MAP[state.filter].name}」：${filtered.length} 项（全部 ${evs.length} 项）`
+      : `共 ${evs.length} 项`}</span>`;
+
+  let inner = '';
+  if (!evs.length) {
+    inner = `<div class="ditem" style="--cc:var(--accent)"><span class="brand">这一天没有收录的固定活动</span>
+      <div class="desc">还能薅：奥特乐（全年全场折扣无需会员）· 瑞幸 App 每周 9.9 券 · 库迪 8.8 元任饮券 · 蜜雪 5 元美式</div></div>`;
+  } else if (state.filter && !filtered.length) {
+    inner = `<div class="ditem" style="--cc:var(--${BRAND_MAP[state.filter].cat})">
+      <span class="brand">${BRAND_MAP[state.filter].name}</span>
+      <div class="desc">${BRAND_MAP[state.filter].name} 在 ${m} 月 ${d} 日没有活动。它本月的活动日 ↓</div></div>
+      <div class="day-jump">${hits.map(h => `<a data-d="${h}">${m}月${h}日</a>`).join('')}</div>`;
+  } else {
+    inner = filtered.map(e => `
+      <div class="ditem" style="--cc:var(--${e.cat})">
+        <span class="brand">${e.name}</span>${e.member ? '<span class="badge-m">★ 会员日</span>' : ''}
+        <div class="desc"><b>${e.desc}</b></div>
+        ${e.warn ? `<span class="warn">${e.warn}</span>` : ''}
+      </div>`).join('');
+  }
+  box.innerHTML = `<h3>${title}</h3><div class="dlist">${inner}</div>`;
+  box.querySelectorAll('.day-jump a').forEach(a => {
+    a.onclick = () => { state.sel = +a.dataset.d; syncHash(); renderAll(); };
+  });
+  renderBrandCard(y, m);
+}
+
+/* ---------- 品牌规则卡 ---------- */
+function renderBrandCard(y, m) {
+  const zone = document.getElementById('brandcardZone');
+  if (!state.filter) { zone.innerHTML = ''; return; }
+  const b = BRAND_MAP[state.filter];
+  const wr = WEEKLY.filter(w => w.brand === b.id);
+  const mr = MONTHLY.filter(x => x.brand === b.id);
+  const hits = brandHitDates(b.id, y, m);
+  const dowName = a => a.map(x => '周' + DOW_CN[x]).join('、');
+
+  let rules = '';
+  wr.forEach(w => {
+    rules += `<div class="brule"><span class="rtag">${dowName(w.dow)}</span>
+      <span class="rbody"><b>${w.desc}</b>${w.warn ? `<span class="warn">${w.warn}</span>` : ''}</span></div>`;
+  });
+  mr.forEach(x => {
+    rules += `<div class="brule"><span class="rtag">每月 ${x.date} 号</span>
+      <span class="rbody"><b>${x.desc}</b>${x.warn ? `<span class="warn">${x.warn}</span>` : ''}</span></div>`;
+  });
+  if (!rules) rules = '<div class="brule"><span class="rbody">暂无收录的固定规则</span></div>';
+
+  zone.innerHTML = `<div class="brandcard" style="--cc:var(--${b.cat})">
+    <h3>${b.name}<span class="cat-tag">${CAT_NAME[b.cat]}</span>
+      <span class="hits">${y} 年 ${m} 月活动日：${hits.length ? hits.map(h => h + ' 号').join(' / ') : '本月无收录'}</span></h3>
+    <div class="brules">${rules}</div>
+  </div>`;
+}
+
+/* ---------- 总渲染 ---------- */
+function renderAll() {
+  const { y, m } = state;
+  document.getElementById('monthLabel').textContent = `${y} 年 ${m} 月`;
+  renderFilterPanel();
+  renderCal(y, m);
+  renderDetail(y, m);
+  // 月份条上的筛选提示
+  const old = document.getElementById('filteringNow');
+  if (old) old.remove();
+  if (state.filter) {
+    const tip = document.createElement('div');
+    tip.id = 'filteringNow';
+    tip.style.cssText = 'text-align:center;font-size:12px;color:var(--muted);margin:-4px 0 12px;';
+    tip.innerHTML = `筛选中：<b style="color:var(--text)">${BRAND_MAP[state.filter].name}</b>
+      <a id="quickClear" style="color:var(--accent);cursor:pointer;margin-left:8px">✕ 清除</a>`;
+    document.getElementById('monthLabel').after(tip);
+    document.getElementById('quickClear').onclick = () => { state.filter = null; syncHash(); renderAll(); };
+  }
+}
+document.getElementById('prev').onclick = () => {
+  state.m--; if (state.m < 1) { state.m = 12; state.y--; }
+  const days = new Date(state.y, state.m, 0).getDate();
+  if (state.sel > days) state.sel = null;
+  syncHash(); renderAll();
+};
+document.getElementById('next').onclick = () => {
+  state.m++; if (state.m > 12) { state.m = 1; state.y++; }
+  const days = new Date(state.y, state.m, 0).getDate();
+  if (state.sel > days) state.sel = null;
+  syncHash(); renderAll();
+};
+window.addEventListener('hashchange', () => { const s = readHash(); if (s) { state = s; renderAll(); } });
+
+renderAll();
+</script>
+</body>
+</html>
