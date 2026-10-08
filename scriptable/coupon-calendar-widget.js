@@ -57,7 +57,7 @@ async function fetchJson(url) {
 
 async function loadData() {
   const fm = FileManager.local();
-  const cachePath = fm.joinPath(fm.documentsDirectory, "coupon-calendar-cache.json");
+  const cachePath = fm.joinPath(fm.documentsDirectory(), "coupon-calendar-cache.json");
 
   let cache = null;
   if (fm.fileExists(cachePath)) {
