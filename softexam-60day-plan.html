@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>软件设计师 · 60天每日学习计划</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    background: #f5f7fa; color: #1f2933; line-height: 1.6;
+    padding: 24px 16px 60px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 22px; font-weight: 700; text-align: center; }
+  .sub { text-align: center; color: #5b6770; font-size: 13px; margin: 6px 0 18px; }
+  .progress-box {
+    background: #fff; border: 1px solid #e1e8f0; border-radius: 12px;
+    padding: 16px 18px; margin-bottom: 22px;
+  }
+  .progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .progress-top span { font-size: 14px; font-weight: 500; }
+  .progress-num { color: #4F8DFD; font-weight: 700; }
+  .bar { height: 10px; background: #eef1f6; border-radius: 6px; overflow: hidden; }
+  .bar > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg,#4F8DFD,#2BB673); transition: width .3s; }
+  .reset { font-size: 12px; color: #8a94a6; cursor: pointer; border: none; background: none; }
+  .reset:hover { color: #E0533D; }
+  .phase { background: #fff; border: 1px solid #e1e8f0; border-radius: 12px; margin-bottom: 18px; overflow: hidden; }
+  .phase-h {
+    display: flex; align-items: center; gap: 10px;
+    padding: 13px 18px; font-weight: 700; font-size: 15px; color: #fff;
+  }
+  .phase-h small { font-weight: 400; font-size: 12px; opacity: .9; }
+  .p1 .phase-h { background: #4F8DFD; }
+  .p2 .phase-h { background: #2BB673; }
+  .p3 .phase-h { background: #F5A623; }
+  .p4 .phase-h { background: #E0533D; }
+  .p1 .day { border-left: 4px solid #4F8DFD; }
+  .p2 .day { border-left: 4px solid #2BB673; }
+  .p3 .day { border-left: 4px solid #F5A623; }
+  .p4 .day { border-left: 4px solid #E0533D; }
+  .day {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 11px 18px; border-bottom: 1px solid #f0f2f6;
+  }
+  .day:last-child { border-bottom: none; }
+  .day input { margin-top: 4px; width: 17px; height: 17px; accent-color: #4F8DFD; cursor: pointer; flex: none; }
+  .badge {
+    flex: none; min-width: 62px; text-align: center; font-size: 12px; font-weight: 700;
+    color: #fff; border-radius: 6px; padding: 2px 6px; margin-top: 1px;
+  }
+  .p1 .badge { background: #4F8DFD; }
+  .p2 .badge { background: #2BB673; }
+  .p3 .badge { background: #F5A623; }
+  .p4 .badge { background: #E0533D; }
+  .task { font-size: 14px; }
+  .task b { color: #2b3440; }
+  .day.done .task { color: #9aa4b2; text-decoration: line-through; }
+  .foot { text-align: center; color: #8a94a6; font-size: 12px; margin-top: 24px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>软件设计师 · 60天每日学习计划</h1>
+  <div class="sub">中级软考 ｜ 上午 75 选择 + 下午 75 主观 ｜ 双科均需 ≥45 分 ｜ 勾选自动保存进度</div>
+
+  <div class="progress-box">
+    <div class="progress-top">
+      <span>已完成 <span class="progress-num" id="cnt">0</span> / <span id="tot">60</span> 天</span>
+      <button class="reset" id="reset">清空进度</button>
+    </div>
+    <div class="bar"><i id="bar"></i></div>
+  </div>
+
+  <div id="root"></div>
+
+  <div class="foot">策略：真题优先于教程 ｜ 下午题定 Java ｜ 设计模式是你的护城河</div>
+</div>
+
+<script>
+const data = [
+  { cls:"p1", name:"阶段一 · 基础夯实", range:"Day 1–18 · 主攻上午题广度", days:[
+    ["Day 1","计算机组成：数制转换、原反补码、定点/浮点表示"],
+    ["Day 2","计算机组成：CPU 结构、指令系统、寻址方式"],
+    ["Day 3","存储系统：Cache 映射、主存、虚拟存储"],
+    ["Day 4","计算机组成：流水线、吞吐率/加速比计算"],
+    ["Day 5","操作系统：进程与线程、调度算法、PV 操作"],
+    ["Day 6","操作系统：死锁（必要条件、银行家算法、预防）"],
+    ["Day 7","操作系统：内存管理（分页/分段/段页式、虚拟内存）"],
+    ["Day 8","操作系统：文件管理、设备管理、磁盘调度"],
+    ["Day 9","计网：OSI/TCP-IP 模型、物理层、数据链路层"],
+    ["Day 10","计网：网络层（IP、路由、ARP/ICMP）"],
+    ["Day 11","计网：子网划分与 VLSM（重点，必练计算）"],
+    ["Day 12","计网：传输层 TCP/UDP、应用层 HTTP/DNS/SMTP/FTP"],
+    ["Day 13","数据库：关系代数、SQL 基础（增删改查）"],
+    ["Day 14","数据库：复杂 SQL（连接、子查询、聚合、视图）"],
+    ["Day 15","数据库：函数依赖、范式（1NF–BCNF）、规范化"],
+    ["Day 16","数据结构：线性表、树/二叉树、图、查找与排序"],
+    ["Day 17","软件工程：生命周期、开发模型、CMM、质量与测试"],
+    ["Day 18","知识产权+标准化+多媒体+专业英语扫盲；复盘阶段一错题"]
+  ]},
+  { cls:"p2", name:"阶段二 · 下午题突破", range:"Day 19–38 · 主观大题", days:[
+    ["Day 19","DFD：父图子图平衡原则、加工补全（真题1）"],
+    ["Day 20","DFD：易错点（数据流/数据存储混淆）练习（真题2）"],
+    ["Day 21","DFD：综合限时练 1 套"],
+    ["Day 22","数据库设计：E-R 图绘制与联系转关系模式（真题1）"],
+    ["Day 23","数据库设计：SQL 编写 + 范式判断（真题2）"],
+    ["Day 24","数据库设计：综合限时练 1 套"],
+    ["Day 25","UML：用例图、类图、对象图（真题1）"],
+    ["Day 26","UML：状态图、活动图、时序图/协作图（真题2）"],
+    ["Day 27","UML：综合限时练 1 套"],
+    ["Day 28","算法：贪心、分治（填空+复杂度分析）（真题1）"],
+    ["Day 29","算法：动态规划、回溯（重点，真题2）"],
+    ["Day 30","算法：综合限时练 1 套"],
+    ["Day 31","面向对象 Java：类结构、继承多态、接口（真题1）"],
+    ["Day 32","面向对象 Java：填空补全套路（真题2）"],
+    ["Day 33","面向对象 Java：综合限时练 1 套"],
+    ["Day 34","设计模式：创建型（工厂/单例/建造者）（真题1）"],
+    ["Day 35","设计模式：结构型+行为型（策略/观察者/装饰/适配器）（真题2）"],
+    ["Day 36","设计模式：综合限时练 1 套（你的强项，务必拿稳）"],
+    ["Day 37","下午整套限时练 1（2.5h）"],
+    ["Day 38","下午整套限时练 2 + 订正，固化各题答题模板"]
+  ]},
+  { cls:"p3", name:"阶段三 · 真题冲刺", range:"Day 39–52", days:[
+    ["Day 39","全真套题 1（上下午各 2.5h）+ 订正，建错题本"],
+    ["Day 40","回填薄弱模块（按套题1错题定向复习）"],
+    ["Day 41","全真套题 2 + 订正"],
+    ["Day 42","回填薄弱模块（套题2错题）"],
+    ["Day 43","全真套题 3 + 订正"],
+    ["Day 44","全真套题 4 + 订正"],
+    ["Day 45","错题本第一轮复盘（上午易混：子网/范式/Cache）"],
+    ["Day 46","全真套题 5 + 订正"],
+    ["Day 47","全真套题 6 + 订正"],
+    ["Day 48","知识产权、多媒体、专业英语专项突破（上午小题）"],
+    ["Day 49","错题第二轮复盘 + 查漏补缺"],
+    ["Day 50","全真套题 7 + 订正"],
+    ["Day 51","全真套题 8 + 订正"],
+    ["Day 52","错题第三轮复盘，整理速记卡"]
+  ]},
+  { cls:"p4", name:"阶段四 · 临门一脚", range:"Day 53–60", days:[
+    ["Day 53","全真模拟 9（严格考试时间）"],
+    ["Day 54","模拟订正 + 设计模式/算法模板默写"],
+    ["Day 55","全真模拟 10"],
+    ["Day 56","模拟订正 + 上午易错点速记卡"],
+    ["Day 57","错题本终轮二刷"],
+    ["Day 58","DFD/E-R/设计模式/算法 套路默写固化"],
+    ["Day 59","轻量回顾：只看模板与错题，不钻难题，调整作息"],
+    ["Day 60","考试日：上午+下午，带齐证件，稳住心态"]
+  ]}
+];
+
+const KEY = "rjs60_progress_v1";
+const root = document.getElementById("root");
+let total = 0;
+data.forEach(p => {
+  total += p.days.length;
+  const sec = document.createElement("div");
+  sec.className = "phase " + p.cls;
+  sec.innerHTML = `<div class="phase-h">${p.name}<small>${p.range}</small></div>`;
+  p.days.forEach((d, i) => {
+    const id = p.cls + i;
+    const row = document.createElement("label");
+    row.className = "day";
+    row.innerHTML = `<input type="checkbox" data-id="${id}"><span class="badge">${d[0]}</span><span class="task"><b>${d[1]}</b></span>`;
+    sec.appendChild(row);
+  });
+  root.appendChild(sec);
+});
+document.getElementById("tot").textContent = total;
+
+const saved = JSON.parse(localStorage.getItem(KEY) || "{}");
+function refresh() {
+  let done = 0;
+  document.querySelectorAll(".day input").forEach(c => {
+    const on = !!saved[c.dataset.id];
+    c.checked = on;
+    c.closest(".day").classList.toggle("done", on);
+    if (on) done++;
+  });
+  document.getElementById("cnt").textContent = done;
+  document.getElementById("bar").style.width = (done / total * 100) + "%";
+}
+refresh();
+
+document.querySelectorAll(".day input").forEach(c => {
+  c.addEventListener("change", () => {
+    if (c.checked) saved[c.dataset.id] = 1; else delete saved[c.dataset.id];
+    localStorage.setItem(KEY, JSON.stringify(saved));
+    refresh();
+  });
+});
+document.getElementById("reset").addEventListener("click", () => {
+  if (confirm("确定清空所有勾选进度？")) {
+    localStorage.removeItem(KEY);
+    for (const k in saved) delete saved[k];
+    refresh();
+  }
+});
+</script>
+</body>
+</html>

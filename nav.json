@@ -28,5 +28,53 @@
     "desc": "相处与互补速查",
     "url": "https://snake34475.github.io/my-pages/enfj-infp-guide.html",
     "logo": "💬"
+  },
+  {
+    "title": "Clash 配置指南",
+    "desc": "从安装到规则配置的完整手册",
+    "url": "https://snake34475.github.io/my-pages/clash-config-guide.html",
+    "logo": "🛰️"
+  },
+  {
+    "title": "贷款对比计算器",
+    "desc": "等额本息 vs 等额本金一目了然",
+    "url": "https://snake34475.github.io/my-pages/loan-compare.html",
+    "logo": "💰"
+  },
+  {
+    "title": "健身知识库",
+    "desc": "每日健身知识推送，持续更新",
+    "url": "https://snake34475.github.io/my-pages/fitness-daily/",
+    "logo": "🏋️"
+  },
+  {
+    "title": "动作图库",
+    "desc": "肌肉部位与训练动作 SVG 示意",
+    "url": "https://snake34475.github.io/my-pages/fitness-daily/figures/gallery.html",
+    "logo": "💪"
+  },
+  {
+    "title": "古代官制图谱",
+    "desc": "从秦汉到明清的官制体系",
+    "url": "https://snake34475.github.io/my-pages/ancient-official-ranks.html",
+    "logo": "🏛️"
+  },
+  {
+    "title": "原码·反码·补码·移码",
+    "desc": "四种机器码的爱恨情仇（软考版）",
+    "url": "https://snake34475.github.io/my-pages/number-code.html",
+    "logo": "🔢"
+  },
+  {
+    "title": "Android 加固与签名",
+    "desc": "加固与签名机制完全图解",
+    "url": "https://snake34475.github.io/my-pages/android-hardening-signing.html",
+    "logo": "🤖"
+  },
+  {
+    "title": "软件设计师 60 天计划",
+    "desc": "软考备考学习计划表",
+    "url": "https://snake34475.github.io/my-pages/softexam-60day-plan.html",
+    "logo": "📝"
   }
 ]

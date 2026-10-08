@@ -1,0 +1,2345 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>健身知识库</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#f5f6f8;color:#1c1f24;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;font-size:15px;line-height:1.7}
+header{background:#fff;padding:22px 18px 16px;border-bottom:1px solid #e4e6ea;position:sticky;top:0;z-index:9}
+h1{font-size:19px;margin:0 0 6px;font-weight:600}
+.stat{font-size:13px;color:#7a828c}
+.filters{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.row{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.row::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid #dfe2e7;background:#fff;color:#3c444e;border-radius:16px;padding:5px 12px;font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap}
+.chip span{color:#9aa2ac;margin-left:5px;font-size:12px}
+.chip.on{background:#1c1f24;border-color:#1c1f24;color:#fff}
+.chip.on span{color:#b9c0c9}
+main{padding:14px 12px 60px;max-width:760px;margin:0 auto}
+.card{background:#fff;border:1px solid #e8eaee;border-radius:12px;padding:16px;margin-bottom:12px}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:9px}
+.id{font-size:12px;color:#9aa2ac;font-family:ui-monospace,Menlo,monospace}
+.seq{font-size:12px;color:#9aa2ac}
+.tag{font-size:11px;padding:2px 8px;border-radius:10px}
+.t-cat{background:#eef3fb;color:#3a6ea5}
+.t-mus{background:#eef7f1;color:#3f7d5a}
+h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
+.body{margin:0 0 10px;color:#414952}
+.pts{margin:0 0 12px;padding-left:18px;color:#58606a;font-size:14px}
+.pts li{margin-bottom:4px}
+.act{margin:0 0 10px;padding:10px 12px;background:#f7f9fb;border-left:3px solid #4a90d0;border-radius:0 6px 6px 0;font-size:14px;color:#333b44}
+.act b{display:block;font-size:12px;color:#7a828c;font-weight:500;margin-bottom:3px}
+.src{margin:0;font-size:12px;color:#9aa2ac;border-top:1px solid #f0f2f5;padding-top:9px}
+.dt{color:#c3c9d0}
+.empty{text-align:center;color:#9aa2ac;padding:40px 0;font-size:14px}
+.arcs{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.arcl{font-size:12px;color:#9aa2ac;margin-right:2px}
+.arc{font-size:13px;color:#3a6ea5;text-decoration:none;border:1px solid #dfe2e7;border-radius:14px;padding:3px 10px;background:#fff;white-space:nowrap}
+.arc:active{opacity:.6}
+</style></head><body>
+<header>
+<h1>健身知识库</h1>
+<div class="stat">325 条知识 · 6 类知识 × 8 个肌群 · 每日 9:45 推送一条</div>
+<div class="arcs"><span class="arcl">月度合集</span><a class="arc" href="archive-2026-08.html">2026年8月</a></div>
+<div class="filters">
+<div class="row"><button class="chip on" data-k="all" data-v="">全部</button><button class="chip" data-k="cat" data-v="动作技术">动作技术<span>66</span></button><button class="chip" data-k="cat" data-v="解剖机制">解剖机制<span>31</span></button><button class="chip" data-k="cat" data-v="训练变量">训练变量<span>69</span></button><button class="chip" data-k="cat" data-v="有氧与代谢">有氧与代谢<span>39</span></button><button class="chip" data-k="cat" data-v="恢复与营养">恢复与营养<span>49</span></button><button class="chip" data-k="cat" data-v="冷知识与辟谣">冷知识与辟谣<span>71</span></button></div>
+<div class="row"><button class="chip" data-k="mus" data-v="胸">胸<span>40</span></button><button class="chip" data-k="mus" data-v="肩">肩<span>40</span></button><button class="chip" data-k="mus" data-v="背">背<span>40</span></button><button class="chip" data-k="mus" data-v="腿">腿<span>40</span></button><button class="chip" data-k="mus" data-v="二头">二头<span>15</span></button><button class="chip" data-k="mus" data-v="三头">三头<span>15</span></button><button class="chip" data-k="mus" data-v="核心">核心<span>15</span></button><button class="chip" data-k="mus" data-v="全身">全身<span>120</span></button></div>
+</div>
+</header>
+<main id="list"><article class="card" data-cat="动作技术" data-mus="胸">
+<div class="meta"><span class="id">CH-001</span><span class="seq">Day 126</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">胸</span></div>
+<h3>卧推的肩胛后缩，缩的到底是什么</h3>
+<p class="body">把肩胛骨向后、向下压死在凳面上，并全程保持。它不是「挺胸」的附属动作，而是决定肩关节安全与胸肌发力角度的前置条件。</p>
+<ul class="pts"><li>后缩下沉后，肩胛骨给肱骨头让出前侧空间，避免挤压肩峰下组织</li><li>肩胛固定后胸大肌的起点才稳定，推的力才不会漏到肩关节</li></ul>
+<p class="act"><b>今日可执行</b>下次卧推前，先空手做 5 次肩胛后缩下沉，记住这个位置再上杠。</p>
+<p class="src">依据：NSCA 大众卧推标准　<span class="dt">2027-01-24</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="胸">
+<div class="meta"><span class="id">CH-002</span><span class="seq">Day 153</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">胸</span></div>
+<h3>触胸点不在乳头，而在胸骨下缘</h3>
+<p class="body">杠铃下放的落点应在胸骨下缘到乳线之间，而不是锁骨下方。落点偏高会把负荷压到肩关节前侧，落点偏低则手腕压力增大。</p>
+<ul class="pts"><li>落点越高，肩关节外展角度越大，风险越高</li><li>小臂应全程接近垂直地面，这是判断落点是否合适的直接标准</li></ul>
+<p class="act"><b>今日可执行</b>用空杆下放到底，检查小臂是否垂直；不垂直就前后微调落点。</p>
+<p class="src">依据：NSCA 大众卧推标准　<span class="dt">2027-02-20</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="胸">
+<div class="meta"><span class="id">CH-003</span><span class="seq">Day 93</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">胸</span></div>
+<h3>肘部外展角度，45 度比 90 度安全</h3>
+<p class="body">上臂与躯干的夹角控制在 45 到 70 度之间。完全外展到 90 度会让肩关节处于最不稳定的位置，是卧推肩伤的典型诱因。</p>
+<ul class="pts"><li>外展角越小，胸肌参与越少、三头发力越多，需要在安全与刺激之间取平衡</li><li>有肩部不适史的人，角度应更靠近 45 度</li></ul>
+<p class="act"><b>今日可执行</b>下放时让肘部指向斜下方约 45 度，而不是向两侧完全张开。</p>
+<p class="src">依据：NSCA 大众卧推标准　<span class="dt">2026-12-22</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="胸">
+<div class="meta"><span class="id">CH-004</span><span class="seq">Day 16</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">胸</span></div>
+<h3>脚不是摆设，它在产生脚推力</h3>
+<p class="body">双脚踩实地面，通过腿把力量传导到上背，让身体在凳面上形成稳定的支撑结构。脚一松，上背就散，肩胛也守不住。</p>
+<ul class="pts"><li>脚滑会让整条动力链断开，推力直接损失</li><li>是踩实并向上传导，不是把臀部推离凳面</li></ul>
+<p class="act"><b>今日可执行</b>起杠前先做一次踩地、夹臀、压肩胛的准备动作。</p>
+<p class="src">依据：NSCA 大众卧推标准　<span class="dt">2026-10-06</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="胸">
+<div class="meta"><span class="id">CH-005</span><span class="seq">Day 226</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">胸</span></div>
+<h3>杠铃路径不是直线，是一条弧线</h3>
+<p class="body">从胸骨下缘推起时先略向头部方向移动，接近锁定时再回到肩关节正上方。这条弧线让肩关节全程保持在相对安全的角度内。</p>
+<ul class="pts"><li>轨迹是正确发力的自然结果，不必刻意画出弧线</li><li>锁定时杠应在肩关节正上方，此时由骨骼承重</li></ul>
+<p class="act"><b>今日可执行</b>用手机从侧面录一组，回看杠的轨迹是不是从下缘走向肩上方。</p>
+<p class="src">依据：NSCA 大众卧推标准　<span class="dt">2027-05-04</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="胸">
+<div class="meta"><span class="id">CH-006</span><span class="seq">Day 283</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">胸</span></div>
+<h3>手腕保持中立，不要向后折</h3>
+<p class="body">杠压在掌根、手腕与前臂成一条直线。手腕过度后折会把压力集中在腕关节，也无法把推力有效传导上去。</p>
+<ul class="pts"><li>握杠位置偏向掌根，而不是手指根部</li><li>拇指必须扣住杠铃，空握在失手时没有任何保护</li></ul>
+<p class="act"><b>今日可执行</b>检查握姿：杠压在掌根，手腕不折，拇指扣紧。</p>
+<p class="src">依据：NSCA 大众卧推标准　<span class="dt">2027-06-30</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="胸">
+<div class="meta"><span class="id">CH-007</span><span class="seq">Day 299</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">胸</span></div>
+<h3>离心阶段慢一点，收益比想象中大</h3>
+<p class="body">下放用 2 到 3 秒，推起用 1 秒左右。离心阶段承担了更多张力，控制下放能提高刺激质量，也降低失控风险。</p>
+<ul class="pts"><li>ACSM 2026 明确提到离心超负荷可作为增肌的强化手段</li><li>控制下放不等于慢慢磨，仍要保持连贯节奏</li></ul>
+<p class="act"><b>今日可执行</b>这组卧推心里默数两秒下、一秒上，体会与平时的差别。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-07-16</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="胸">
+<div class="meta"><span class="id">CH-008</span><span class="seq">Day 291</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">胸</span></div>
+<h3>上斜角度超过 45 度，练的就主要是肩了</h3>
+<p class="body">上斜卧推的常见角度是 15 到 30 度。角度越高，三角肌前束参与越多，胸大肌上束的独占刺激反而下降。</p>
+<ul class="pts"><li>15 到 30 度已足以改变发力侧重</li><li>角度过大时动作性质已经接近坐姿推举</li></ul>
+<p class="act"><b>今日可执行</b>把上斜凳调到最低档试一组，比较胸上部与肩部的感受差异。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-07-08</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="胸">
+<div class="meta"><span class="id">CH-009</span><span class="seq">Day 263</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">胸</span></div>
+<h3>哑铃比杠铃更安全，但更能暴露左右不平衡</h3>
+<p class="body">哑铃需要自己控制两侧稳定，能在底部给到更大的伸展幅度。左右力量差异会在这个动作里立刻显形。</p>
+<ul class="pts"><li>行程可比杠铃更深，对胸肌的拉伸刺激更充分</li><li>代价是需要更强的稳定性，可用重量会比杠铃低</li></ul>
+<p class="act"><b>今日可执行</b>用哑铃卧推做一组，观察两侧是否同时力竭。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-06-10</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="胸">
+<div class="meta"><span class="id">CH-010</span><span class="seq">Day 48</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">胸</span></div>
+<h3>夹胸类动作的作用，是把胸肌放在缩短位</h3>
+<p class="body">绳索夹胸或蝴蝶机让上臂在体前完成内收，此时胸大肌处于缩短位置。它与卧推的拉长位刺激互补，而不是替代关系。</p>
+<ul class="pts"><li>缩短位的持续张力是卧推给不了的</li><li>夹胸无法替代卧推的机械张力，两者并存优于二选一</li></ul>
+<p class="act"><b>今日可执行</b>卧推结束后加 2 组夹胸，注意力放在中缝的挤压感上。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2026-11-07</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="胸">
+<div class="meta"><span class="id">CH-011</span><span class="seq">Day 102</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">胸</span></div>
+<h3>胸大肌的起点在锁骨和胸骨，止点在肱骨</h3>
+<p class="body">它从锁骨内侧、胸骨和上位肋软骨出发，汇合后止于肱骨的小结节嵴。这个走向决定了它的功能是把上臂拉向身体前内侧。</p>
+<ul class="pts"><li>所以练胸的本质动作是上臂内收加内旋，不是把重物推出去</li><li>理解这一点，就知道为什么手臂张开的角度会影响胸肌参与</li></ul>
+<p class="act"><b>今日可执行</b>空手做一次上臂内收的动作，感受胸肌的收缩方向。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2026-12-31</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="胸">
+<div class="meta"><span class="id">CH-012</span><span class="seq">Day 130</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">胸</span></div>
+<h3>所谓上胸下胸，是同一块肌肉的不同纤维束</h3>
+<p class="body">胸大肌的锁骨部、胸肋部和腹部纤维走向不同，在不同角度下被优先募集。但它仍然是一块肌肉，无法真正分开练。</p>
+<ul class="pts"><li>改变角度能调整侧重比例，但不会让某一部分独立生长</li><li>上斜凳练上部、双杠或下斜练下部，都是侧重而非隔离</li></ul>
+<p class="act"><b>今日可执行</b>记住这个区别，避免为孤立练上胸投入过多精力。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2027-01-28</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="胸">
+<div class="meta"><span class="id">CH-013</span><span class="seq">Day 52</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">胸</span></div>
+<h3>肩胛骨是卧推的地基，但它自己不动</h3>
+<p class="body">卧推时肩胛骨应保持后缩下沉且相对固定。它一旦跟着手臂移动，胸肌的起点就飘了，推力会被肩关节结构分散掉。</p>
+<ul class="pts"><li>把肩胛骨和手臂当成两件分开的事来处理</li><li>手臂的屈伸不应该带动肩胛骨开合</li></ul>
+<p class="act"><b>今日可执行</b>想象把两块肩胛骨塞进后裤兜，推起过程中保持不松开。</p>
+<p class="src">依据：NSCA 大众卧推标准　<span class="dt">2026-11-11</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="胸">
+<div class="meta"><span class="id">CH-014</span><span class="seq">Day 81</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">胸</span></div>
+<h3>肩袖肌群不负责推，但它决定你能推多久</h3>
+<p class="body">冈上肌、冈下肌、小圆肌和肩胛下肌构成肩袖，负责把肱骨头稳定在关节盂里。卧推时它们做的是稳定工作，一旦疲劳，肩关节就开始晃。</p>
+<ul class="pts"><li>肩袖薄弱的人，卧推时更容易出现关节不适</li><li>练胸不练背，长期会让肩前后侧力量失衡</li></ul>
+<p class="act"><b>今日可执行</b>每次练胸前，用弹力带做 2 组肩外旋作为激活。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2026-12-10</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="胸">
+<div class="meta"><span class="id">CH-015</span><span class="seq">Day 90</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">胸</span></div>
+<h3>拉长位和缩短位，刺激机制不一样</h3>
+<p class="body">胸肌在哑铃卧推底部或飞鸟张开时被拉长，在夹胸末端被缩短。两种位置都会带来生长刺激，但机制侧重不同。</p>
+<ul class="pts"><li>拉长位常与更大的机械张力相关</li><li>缩短位的持续张力与代谢压力更突出</li></ul>
+<p class="act"><b>今日可执行</b>训练里同时安排一个拉长位动作和一个缩短位动作。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2026-12-19</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="胸">
+<div class="meta"><span class="id">CH-016</span><span class="seq">Day 123</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">胸</span></div>
+<h3>胸肌的功能包括内旋，这点常被忽略</h3>
+<p class="body">胸大肌除了内收上臂，还参与上臂内旋。这就是为什么含胸圆肩的体态往往伴随胸肌紧张，而胸肌紧张又加重圆肩。</p>
+<ul class="pts"><li>只练胸不练背，会强化这种前侧紧张</li><li>拉伸胸肌应配合强化中下斜方与菱形肌</li></ul>
+<p class="act"><b>今日可执行</b>练完胸后拉伸胸小肌，并加一组划船类动作做平衡。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2027-01-21</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="胸">
+<div class="meta"><span class="id">CH-017</span><span class="seq">Day 238</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">胸</span></div>
+<h3>每周每肌群 10 组以上，是增肌的有效区间</h3>
+<p class="body">ACSM 2026 立场声明指出，训练量是肌肥大最一致的变量。每个肌群每周 10 组以上更有利于增长，超过 20 到 25 组后恢复会成为限制因素。</p>
+<ul class="pts"><li>10 组是更可能进一步增长的参考值，不是最低门槛</li><li>组数应分散到每周 2 次以上，一次堆 10 组不如分两次</li></ul>
+<p class="act"><b>今日可执行</b>数一下你这周所有胸部动作的总组数，看看是否达到 10 组。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-05-16</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="胸">
+<div class="meta"><span class="id">CH-018</span><span class="seq">Day 160</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">胸</span></div>
+<h3>负荷不是越大越增肌，30% 到 100% 1RM 都可以</h3>
+<p class="body">ACSM 2026 指出，在约 30% 到 100% 1RM 的范围内，更高负荷本身并未稳定带来更多肌肥大。关键在训练量，以及是否练到足够接近力竭。</p>
+<ul class="pts"><li>追求最大力量才需要 80% 1RM 以上的负荷</li><li>追增肌可以用中等重量，把注意力放在训练量上</li></ul>
+<p class="act"><b>今日可执行</b>不必执着加重，试着在同样重量下多做 1 到 2 次。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-02-27</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="胸">
+<div class="meta"><span class="id">CH-019</span><span class="seq">Day 25</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">胸</span></div>
+<h3>每组留 1 到 2 次余力，是可持续的高效区间</h3>
+<p class="body">即 RIR 1 到 2，练到还能再做一到两次的程度。ACSM 2026 明确提到普通健身者不必强行练到力竭，安全比冲击极限更重要。</p>
+<ul class="pts"><li>力竭会显著增加疲劳，影响后续动作与恢复</li><li>留有余力时总训练量往往更高，长期收益更好</li></ul>
+<p class="act"><b>今日可执行</b>这周每组结束时自评还剩几次，控制在 1 到 2 次。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2026-10-15</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="胸">
+<div class="meta"><span class="id">CH-020</span><span class="seq">Day 209</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">胸</span></div>
+<h3>胸前侧训练的动作顺序，复合动作在前</h3>
+<p class="body">先做卧推、上斜推这类多关节动作，再做夹胸、飞鸟等单关节动作。ACSM 2026 建议把需要重点提升的动作放在训练开始阶段。</p>
+<ul class="pts"><li>疲劳状态下做复合动作，重量与稳定性都会下降</li><li>孤立动作放在后面，用于补足容量更合适</li></ul>
+<p class="act"><b>今日可执行</b>今天把夹胸挪到最后，看复合动作的表现是否变好。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-04-17</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="胸">
+<div class="meta"><span class="id">CH-021</span><span class="seq">Day 109</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">胸</span></div>
+<h3>组间休息 2 到 3 分钟，通常比 60 秒更划算</h3>
+<p class="body">复合动作需要更充分的神经与代谢恢复。休息不足会明显降低下一组的重量和次数，反而拉低总训练量。</p>
+<ul class="pts"><li>孤立动作可以短一些，60 到 90 秒即可</li><li>休息够不够，看下一组能不能维持同样的次数</li></ul>
+<p class="act"><b>今日可执行</b>卧推组间休息计时 2 分钟，比较和 60 秒时的次数差异。</p>
+<p class="src">依据：NSCA 训练指南　<span class="dt">2027-01-07</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="胸">
+<div class="meta"><span class="id">CH-022</span><span class="seq">Day 183</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">胸</span></div>
+<h3>渐进超负荷不止加重量这一条路</h3>
+<p class="body">增加负重只是其中一种。NSCA 提到还可通过增加次数、增加组数、缩短休息、改进动作幅度或放慢离心来实现渐进。</p>
+<ul class="pts"><li>NSCA 认为增加负重的优先度最低</li><li>初学者可用双进阶：次数到区间上限后再加重量</li></ul>
+<p class="act"><b>今日可执行</b>本周先试着在同样重量下把次数从 8 提到 10。</p>
+<p class="src">依据：NSCA 渐进超负荷模型　<span class="dt">2027-03-22</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="胸">
+<div class="meta"><span class="id">CH-023</span><span class="seq">Day 76</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">胸</span></div>
+<h3>每周练 2 次胸，通常优于 1 次</h3>
+<p class="body">ACSM 2026 建议每个肌群每周至少训练 2 次，同一肌群两次之间间隔不少于 48 小时。频率提高有利于把训练量分散，减少单次疲劳堆积。</p>
+<ul class="pts"><li>同样 10 组，分两次做比一次做完恢复更好</li><li>48 小时是安全下限，不是精确处方</li></ul>
+<p class="act"><b>今日可执行</b>把胸部训练拆成一周两次，每次 5 到 6 组。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2026-12-05</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="胸">
+<div class="meta"><span class="id">CH-024</span><span class="seq">Day 120</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">胸</span></div>
+<h3>训练动作每 6 到 8 周换一次，是够用的周期</h3>
+<p class="body">长期使用完全相同的动作与顺序，运动单位的募集模式会固化。定期轮换动作变式可以重新制造不适应，同时保持动作模式的基本稳定。</p>
+<ul class="pts"><li>换的是动作变式，不是推翻整个计划</li><li>把杠铃卧推换成哑铃卧推，就是一次有效的轮换</li></ul>
+<p class="act"><b>今日可执行</b>给当前计划标个日期，两个月后换一个胸部动作变式。</p>
+<p class="src">依据：训练周期化研究综述　<span class="dt">2027-01-18</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="胸">
+<div class="meta"><span class="id">CH-025</span><span class="seq">Day 220</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">胸</span></div>
+<h3>同一天又练胸又跑步，顺序会影响表现</h3>
+<p class="body">有氧与力量同一天进行时，顺序会带来不同结果。先做力量再做有氧，力量表现基本不受影响，有氧表现略降；反过来则力量明显受影响。</p>
+<ul class="pts"><li>若目标是力量与增肌，把力量训练放在前面</li><li>若只是减脂，顺序影响相对没那么大</li></ul>
+<p class="act"><b>今日可执行</b>把跑步安排在练胸之后，而不是之前。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2027-04-28</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="胸">
+<div class="meta"><span class="id">CH-026</span><span class="seq">Day 189</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">胸</span></div>
+<h3>过多有氧会干扰增肌，但需要真的过多</h3>
+<p class="body">高容量耐力训练与力量训练在适应信号上存在冲突。对普通健身者而言，每周 2 到 3 次中等强度有氧不会明显影响增肌，反而有益于心肺与恢复能力。</p>
+<ul class="pts"><li>一周 5 次以上长时间耐力跑才需要担心干扰效应</li><li>心肺能力不足会限制力量训练的恢复效率</li></ul>
+<p class="act"><b>今日可执行</b>每周留 2 到 3 次 20 到 30 分钟有氧，安排在非力量日或力量训练之后。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-03-28</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="胸">
+<div class="meta"><span class="id">CH-027</span><span class="seq">Day 258</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">胸</span></div>
+<h3>练胸后的酸痛，不是训练有效的证明</h3>
+<p class="body">延迟性肌肉酸痛主要源于结缔组织与肌纤维的微损伤，与肌肉增长没有稳定的对应关系。训练有素的人，同样的刺激会带来更少的酸痛。</p>
+<ul class="pts"><li>酸痛程度受动作是否新鲜影响很大</li><li>不酸痛不代表没效果，酸痛也不代表练到位</li></ul>
+<p class="act"><b>今日可执行</b>下次练胸后不再以酸痛判断效果，改看次数和重量是否进步。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-06-05</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="胸">
+<div class="meta"><span class="id">CH-028</span><span class="seq">Day 146</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">胸</span></div>
+<h3>肌肉是在休息时长的，不是训练时长的</h3>
+<p class="body">抗阻训练提供的是刺激信号，肌纤维的修复与合成发生在训练后的数十小时内，尤其集中在睡眠期间。</p>
+<ul class="pts"><li>同一肌群频繁高强度训练会压缩修复窗口</li><li>睡眠不足会直接削弱合成反应</li></ul>
+<p class="act"><b>今日可执行</b>把练胸日安排在睡眠充足的第二天。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2027-02-13</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="胸">
+<div class="meta"><span class="id">CH-029</span><span class="seq">Day 55</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">胸</span></div>
+<h3>蛋白质要分散到几餐，而不是一顿吃完</h3>
+<p class="body">肌肉蛋白合成对单次蛋白质摄入存在上限，每餐约 0.4 克每公斤体重的优质蛋白可较好激活合成，分散摄入优于集中摄入。</p>
+<ul class="pts"><li>增肌人群每日 1.6 到 2.2 克每公斤体重是常见区间</li><li>训练后数小时内摄入含亮氨酸的蛋白质更有利于合成</li></ul>
+<p class="act"><b>今日可执行</b>把一天的蛋白质拆成 3 到 4 餐，每餐都安排一份优质蛋白。</p>
+<p class="src">依据：ISSN 蛋白质与运动立场声明　<span class="dt">2026-11-14</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="胸">
+<div class="meta"><span class="id">CH-030</span><span class="seq">Day 200</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">胸</span></div>
+<h3>练胸前的热身，重点在肩而不是胸</h3>
+<p class="body">肩关节活动度与肩袖激活决定卧推时的稳定性。5 到 10 分钟的动态热身，包括肩胛控制练习与轻重量递增组，比静态拉伸更合适。</p>
+<ul class="pts"><li>训练前长时间静态拉伸可能短暂降低力量输出</li><li>轻重量递增组既是热身，也是动作模式的预演</li></ul>
+<p class="act"><b>今日可执行</b>正式组前做 2 组空杆和 1 组轻重量递增。</p>
+<p class="src">依据：生物力学与热身研究综述　<span class="dt">2027-04-08</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="胸">
+<div class="meta"><span class="id">CH-031</span><span class="seq">Day 253</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">胸</span></div>
+<h3>局部减脂不存在，练胸不会减掉胸部脂肪</h3>
+<p class="body">脂肪分解是全身性的，脂肪酸经血液循环被全身调用。练胸消耗的热量对胸部脂肪没有优先作用，所谓练哪瘦哪是流传最广的误区之一。</p>
+<ul class="pts"><li>多做卷腹减肚子、练胸减胸脂，都是同一个错误</li><li>减少某个部位的脂肪只能依靠整体体脂下降</li></ul>
+<p class="act"><b>今日可执行</b>不再为局部塑形纠结，把注意力放到整体训练与饮食。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-05-31</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="胸">
+<div class="meta"><span class="id">CH-032</span><span class="seq">Day 273</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">胸</span></div>
+<h3>女性练胸不会让胸变小，也不会让它变大</h3>
+<p class="body">乳房主要由脂肪和腺体构成，不含肌肉。练胸强化的是位于乳房下方的胸大肌，可能改善支撑与轮廓，但不改变脂肪组织的体积。</p>
+<ul class="pts"><li>体脂下降时胸部脂肪同步减少，看起来变小，那是减脂的结果</li><li>胸大肌强化能让胸廓支撑更好，视觉上更挺拔</li></ul>
+<p class="act"><b>今日可执行</b>了解机制即可，不必因担心练小而回避胸部训练。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-06-20</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="胸">
+<div class="meta"><span class="id">CH-033</span><span class="seq">Day 157</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">胸</span></div>
+<h3>肌肉不会变成脂肪，这是两种不同的组织</h3>
+<p class="body">肌纤维和脂肪细胞在结构、功能与代谢方式上完全不同，无法相互转化。停训后看起来松了，是肌肉萎缩与脂肪堆积同时发生的结果。</p>
+<ul class="pts"><li>完全停训后 2 到 3 周内肌肉量下降约 3% 到 5%</li><li>同时能量消耗下降，若饮食不变，多余热量转为脂肪</li></ul>
+<p class="act"><b>今日可执行</b>无法训练的那段时间，适当下调饮食摄入，减少脂肪堆积。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-02-24</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="胸">
+<div class="meta"><span class="id">CH-034</span><span class="seq">Day 116</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">胸</span></div>
+<h3>肌肉有记忆的说法，只在神经层面部分成立</h3>
+<p class="body">停训后重新训练，恢复速度通常快于初次获得，这与运动单位募集模式等神经适应的保留有关，而不是肌肉记得自己多大。</p>
+<ul class="pts"><li>神经适应的保留让复训恢复更快</li><li>长期停训后肌纤维本身的横截面积确实下降了</li></ul>
+<p class="act"><b>今日可执行</b>停训后复训不必从零开始，但仍需重新累积训练量。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-01-14</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="胸">
+<div class="meta"><span class="id">CH-035</span><span class="seq">Day 177</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">胸</span></div>
+<h3>卧推不是练胸的唯一答案，也不是必须项</h3>
+<p class="body">ACSM 2026 强调杠铃、哑铃、器械、弹力带与自重训练都有效，选择自己能长期坚持的方式，比选出最好的动作更重要。</p>
+<ul class="pts"><li>器械推胸对新手同样能带来肌肥大</li><li>重点在于能否长期、渐进、足够努力地练下去</li></ul>
+<p class="act"><b>今日可执行</b>如果卧推让你肩部不适，换成器械或哑铃推，不必硬扛。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-03-16</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="胸">
+<div class="meta"><span class="id">CH-036</span><span class="seq">Day 249</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">胸</span></div>
+<h3>出汗多少不能衡量训练效果</h3>
+<p class="body">出汗量受环境温度、湿度、体脂率、遗传与衣着影响，与训练强度或脂肪消耗没有稳定关系。出汗后体重下降主要是水分流失。</p>
+<ul class="pts"><li>补液之后体重会迅速回升</li><li>判断强度应看心率与还能做几次，而不是看衣服湿了多少</li></ul>
+<p class="act"><b>今日可执行</b>下次练胸用还能做几次来判断强度，不再看出汗。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-05-27</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="胸">
+<div class="meta"><span class="id">CH-037</span><span class="seq">Day 85</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">胸</span></div>
+<h3>初学者前几周力量涨得快，长的主要不是肌肉</h3>
+<p class="body">训练初期力量提升主要来自神经适应，包括运动单位募集效率提高与同步化增强。未经训练者常只能激活约六成可用运动单位，系统训练后可显著提高。</p>
+<ul class="pts"><li>肌肉横截面积的变化在这个阶段相对滞后</li><li>这也解释了为什么新手能在几周内明显加重量</li></ul>
+<p class="act"><b>今日可执行</b>别因为力量涨得快但围度没变，就怀疑训练方向。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2026-12-14</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="胸">
+<div class="meta"><span class="id">CH-038</span><span class="seq">Day 165</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">胸</span></div>
+<h3>泵感不是增肌的必要条件</h3>
+<p class="body">训练中的充血感与代谢产物堆积有关，确实是刺激机制之一，但机械张力才是肌肥大最主要的驱动。没有泵感并不代表这次训练无效。</p>
+<ul class="pts"><li>代谢压力是三条机制中的一条，不是全部</li><li>大重量低次数训练常常没什么泵感，但刺激充分</li></ul>
+<p class="act"><b>今日可执行</b>不再把泵感当作判断训练是否有效的依据。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-03-04</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="胸">
+<div class="meta"><span class="id">CH-039</span><span class="seq">Day 99</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">胸</span></div>
+<h3>训练后不必掐着 30 分钟补蛋白</h3>
+<p class="body">训练后 30 分钟窗口期是被过度简化的说法。训练后数小时内肌肉对氨基酸的敏感性提高，只要全天蛋白质总量与分布合理，不必抢时间。</p>
+<ul class="pts"><li>窗口期比想象中宽，不是 30 分钟的倒计时</li><li>训练前已经进食的人更不必紧张</li></ul>
+<p class="act"><b>今日可执行</b>正常安排练后一餐即可，不必因此打乱生活节奏。</p>
+<p class="src">依据：ISSN 蛋白质与运动立场声明　<span class="dt">2026-12-28</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="胸">
+<div class="meta"><span class="id">CH-040</span><span class="seq">Day 169</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">胸</span></div>
+<h3>静态拉伸不会让你拉出肌肉线条</h3>
+<p class="body">拉伸改变的是肌肉与结缔组织的延展性和关节活动度，不直接改变肌肉体积或体脂。把拉伸当成塑形手段，效果会很有限。</p>
+<ul class="pts"><li>训练前长时间静态拉伸可能短暂降低最大力量</li><li>拉伸更适合放在训练后或独立时段</li></ul>
+<p class="act"><b>今日可执行</b>把拉伸安排在训练结束后，训练前改用动态活动。</p>
+<p class="src">依据：生物力学与热身研究综述　<span class="dt">2027-03-08</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="肩">
+<div class="meta"><span class="id">SH-001</span><span class="seq">Day 167</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">肩</span></div>
+<h3>侧平举的肘部角度，决定练的是肩还是别的地方</h3>
+<p class="body">侧平举时肘部保持约 10 到 20 度的微屈并固定，由肩关节带动上臂外展。如果靠屈肘去甩起重量，发力点就跑到斜方肌上部和手臂。</p>
+<ul class="pts"><li>肘部微微高于手腕，让力线落在三角肌中束</li><li>全程保持肘角不变，不要边举边屈伸</li></ul>
+<p class="act"><b>今日可执行</b>用轻重量做一组，专注让肘部带动而不是手掌带动。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-03-06</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="肩">
+<div class="meta"><span class="id">SH-002</span><span class="seq">Day 203</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">肩</span></div>
+<h3>侧平举不必刻意翻转拇指朝上</h3>
+<p class="body">把拇指略微向下（像倒水）或保持中立，能减少肩峰下空间的挤压。过往流行的拇指朝上内旋姿势，会让肩关节处于更窄的空间里。</p>
+<ul class="pts"><li>拇指朝下的姿势更符合肩关节的结构空间</li><li>有肩部不适的人尤其应避免顶部的过度内旋</li></ul>
+<p class="act"><b>今日可执行</b>把侧平举的拇指从朝上调成略微朝下，感受肩部的变化。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2027-04-11</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="肩">
+<div class="meta"><span class="id">SH-003</span><span class="seq">Day 217</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">肩</span></div>
+<h3>侧平举抬到肩膀高度就够，再高斜方接管</h3>
+<p class="body">上臂抬至与地面平行即可。超过肩高之后，主要由斜方肌上部完成上提，三角肌中束的贡献不再增加。</p>
+<ul class="pts"><li>肩高是常见且有效的活动范围上界</li><li>抬高不等于刺激更多，往往只是让斜方代偿</li></ul>
+<p class="act"><b>今日可执行</b>这组侧平举在肘部与肩同高时停住，不要再往上抬。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2027-04-25</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="肩">
+<div class="meta"><span class="id">SH-004</span><span class="seq">Day 180</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">肩</span></div>
+<h3>推举时保护腰椎，靠的是夹臀而不是后仰</h3>
+<p class="body">站姿过头推举时，常见错误是腰部过度后仰来借力。正确做法是夹紧臀部、收紧腹部，让肋骨下沉，躯干保持接近直立。</p>
+<ul class="pts"><li>腰后仰会把负荷转移到腰椎，而非肩部</li><li>推起时头部略后让出空间，杠过头后回到耳朵正上方</li></ul>
+<p class="act"><b>今日可执行</b>推举前先夹臀收腹，全程不让腰塌下去。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-03-19</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="肩">
+<div class="meta"><span class="id">SH-005</span><span class="seq">Day 57</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">肩</span></div>
+<h3>面拉是被低估的肩健康动作</h3>
+<p class="body">面拉让肩关节完成水平外展与外旋，正好对抗日常前侧紧张的姿势。它对后束与肩袖都有刺激，适合作为练肩或练背的收尾动作。</p>
+<ul class="pts"><li>绳索高度约在面部或略高，拉向眉心方向</li><li>末端强调外旋与肩胛后缩，而不是单纯拉重</li></ul>
+<p class="act"><b>今日可执行</b>本周安排 2 组面拉，重量以能完成外旋为准。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2026-11-16</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="肩">
+<div class="meta"><span class="id">SH-006</span><span class="seq">Day 176</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">肩</span></div>
+<h3>后束飞鸟用俯身或反向蝴蝶机，别用大重量</h3>
+<p class="body">三角肌后束是较小的肌群，负责肩关节水平外展。这个动作靠的是控制与收缩，用大重量只会让斜方肌与背部抢走发力。</p>
+<ul class="pts"><li>重点是感受到后束收缩，而不是把重量举起来</li><li>俯身角度越接近水平，后束参与越多</li></ul>
+<p class="act"><b>今日可执行</b>用你能严格控制的重量做 12 到 15 次，感受肩后侧收缩。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-03-15</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="肩">
+<div class="meta"><span class="id">SH-007</span><span class="seq">Day 239</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">肩</span></div>
+<h3>前平举通常不是必需品</h3>
+<p class="body">三角肌前束在日常推类动作（卧推、推举、俯卧撑）中已经被大量使用。额外安排前平举，容易让前束过度发达，加剧前后侧不平衡。</p>
+<ul class="pts"><li>推类动作已提供足够的前束刺激</li><li>前后侧失衡与肩部不适有关联</li></ul>
+<p class="act"><b>今日可执行</b>如果已经有充足推类训练，可以暂时略过前平举。</p>
+<p class="src">依据：训练计划设计共识　<span class="dt">2027-05-17</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="肩">
+<div class="meta"><span class="id">SH-008</span><span class="seq">Day 243</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">肩</span></div>
+<h3>耸肩的动作幅度，比你以为的小</h3>
+<p class="body">斜方肌上部负责肩胛骨上提。耸肩的关键是向上顶到位并短暂停顿，而不是靠甩动或大幅度转圈。绕圈式耸肩会让肩关节做无必要的旋转。</p>
+<ul class="pts"><li>直上直下的幅度最有效</li><li>顶峰停顿比加大行程更有价值</li></ul>
+<p class="act"><b>今日可执行</b>做一组耸肩，在最高点停 1 秒再放下。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-05-21</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="肩">
+<div class="meta"><span class="id">SH-009</span><span class="seq">Day 159</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">肩</span></div>
+<h3>哑铃推举可以让肩胛自然活动，杠铃则限制更多</h3>
+<p class="body">哑铃过头推举时肩胛骨可以随上臂上举而自然上回旋，这更接近肩关节的正常运动学。杠铃因为路径固定，会限制这种自然活动。</p>
+<ul class="pts"><li>肩部有不适史的人，哑铃通常比杠铃更友好</li><li>无论哪种，都要避免用腰后仰代偿</li></ul>
+<p class="act"><b>今日可执行</b>把一次杠铃推举换成哑铃推举，感受肩胛的活动差异。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2027-02-26</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="肩">
+<div class="meta"><span class="id">SH-010</span><span class="seq">Day 235</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">肩</span></div>
+<h3>侧平举的发力起点在肩，不在手</h3>
+<p class="body">常见的错误是想象用手把哑铃提起来，结果是先屈肘再抬臂。正确的心像是用肘部去引导，手掌只是挂在末端。</p>
+<ul class="pts"><li>想象肘部向外侧推开，而不是手向上提</li><li>手腕保持中立，不要勾腕</li></ul>
+<p class="act"><b>今日可执行</b>下次侧平举时只想肘部的移动方向。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-05-13</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="肩">
+<div class="meta"><span class="id">SH-011</span><span class="seq">Day 118</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">肩</span></div>
+<h3>三角肌分三束，走向不同功能也不同</h3>
+<p class="body">前束从锁骨外侧出发，负责肩关节屈曲与内旋；中束从肩峰出发，负责外展；后束从肩胛冈出发，负责水平外展与外旋。三束需分别照顾。</p>
+<ul class="pts"><li>中束决定肩的宽度视觉，后束决定圆润与健康</li><li>前束在推类动作中已被充分刺激</li></ul>
+<p class="act"><b>今日可执行</b>检查你的计划里后束的训练量是否和中束相当。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2027-01-16</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="肩">
+<div class="meta"><span class="id">SH-012</span><span class="seq">Day 145</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">肩</span></div>
+<h3>肩关节最灵活，也最容易失稳</h3>
+<p class="body">肩关节是球窝关节，关节盂浅、活动范围大，代价是骨性稳定性差。它主要靠肩袖与韧带维持稳定，这也是肩伤高发的原因。</p>
+<ul class="pts"><li>活动范围大的关节，对稳定肌的要求更高</li><li>强化肩袖与肩胛控制，是长期安全训练的前提</li></ul>
+<p class="act"><b>今日可执行</b>把肩袖激活加入每次上肢训练前的热身。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2027-02-12</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="肩">
+<div class="meta"><span class="id">SH-013</span><span class="seq">Day 197</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">肩</span></div>
+<h3>肩胛骨不贴着胸壁动，肩就一定出问题</h3>
+<p class="body">很多肩部问题并非出在肩关节本身，而是肩胛骨在胸壁上的滑动异常。肩胛骨是肩关节的移动底座，底座不稳，球窝关节就无处借力。</p>
+<ul class="pts"><li>肩胛前伸、后缩、上回旋、下回旋共同配合上举动作</li><li>训练中常见的问题是肩胛固定不动或过早抬起</li></ul>
+<p class="act"><b>今日可执行</b>做一组墙上滑手，感受肩胛骨在胸壁上的滑动。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2027-04-05</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="肩">
+<div class="meta"><span class="id">SH-014</span><span class="seq">Day 111</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">肩</span></div>
+<h3>肩峰下的空间很窄，姿势决定它够不够用</h3>
+<p class="body">肩峰与肱骨头之间有肌腱与滑囊通过。当上臂在特定角度过度内旋或外展时，这个空间会变窄，组织受到挤压，产生不适。</p>
+<ul class="pts"><li>避免在顶部做大幅度的肩关节内旋</li><li>侧平举拇指朝下、推举控制幅度，都是为了留出这个空间</li></ul>
+<p class="act"><b>今日可执行</b>检查侧平举与推举的动作轨迹，有无挤压感。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2027-01-09</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="肩">
+<div class="meta"><span class="id">SH-015</span><span class="seq">Day 23</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">肩</span></div>
+<h3>后束弱是圆肩体态的重要一环</h3>
+<p class="body">三角肌后束与中下斜方、菱形肌共同维持肩胛骨的后缩与下沉。这些肌肉薄弱时，肩胛前倾、肱骨内旋，形成含胸圆肩的姿势。</p>
+<ul class="pts"><li>圆肩不只是姿态问题，也影响推类动作的发力</li><li>后束与背部的训练量与胸部同等重要</li></ul>
+<p class="act"><b>今日可执行</b>每次练胸的同时安排 2 组后束或划船动作。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2026-10-13</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="肩">
+<div class="meta"><span class="id">SH-016</span><span class="seq">Day 95</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">肩</span></div>
+<h3>肩外旋肌群的力量，通常只有内旋的一半</h3>
+<p class="body">肩关节内旋肌群天然强于外旋肌群，这是解剖结构决定的。日常训练中推类动作又进一步强化内旋肌，使差距拉大。</p>
+<ul class="pts"><li>外旋训练是平衡肩关节的关键补充</li><li>弹力带外旋、面拉都能有效覆盖</li></ul>
+<p class="act"><b>今日可执行</b>每周至少 2 次弹力带外旋，每侧 2 组。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2026-12-24</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="肩">
+<div class="meta"><span class="id">SH-017</span><span class="seq">Day 149</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">肩</span></div>
+<h3>肩是小肌群，容量需求与大肌群不同</h3>
+<p class="body">三角肌体积较小，恢复速度与耐受容量低于胸背腿。同时它在上肢推拉动作中已被大量参与，计算训练量时应把间接刺激考虑进去。</p>
+<ul class="pts"><li>每周 10 组的通用参考需结合间接刺激打折</li><li>中束与后束可作为独立训练重点</li></ul>
+<p class="act"><b>今日可执行</b>统计你一周所有含肩部参与的动作，判断实际容量是否已经足够。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-02-16</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="肩">
+<div class="meta"><span class="id">SH-018</span><span class="seq">Day 11</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">肩</span></div>
+<h3>侧平举适合中等重量较高次数</h3>
+<p class="body">三角肌中束力矩臂短，大重量容易由斜方肌与借力完成。使用 12 到 20 次的重量区间，配合稳定控制，更有利于中束实际受力。</p>
+<ul class="pts"><li>轻重量没有错，关键是动作质量和接近力竭的程度</li><li>ACSM 2026 指出中等负荷在足够训练量下同样增肌</li></ul>
+<p class="act"><b>今日可执行</b>把侧平举重量下调一档，次数提到 15 次，看感受是否更集中在肩。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2026-10-01</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="肩">
+<div class="meta"><span class="id">SH-019</span><span class="seq">Day 39</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">肩</span></div>
+<h3>推拉比例失衡，是肩部不适的常见来源</h3>
+<p class="body">许多训练计划中推类动作远多于拉类动作，导致前束与胸肌发达、后束与背部薄弱，肩胛位置随之前倾。</p>
+<ul class="pts"><li>推与拉的水平接近或拉略多，更有利于肩部健康</li><li>这个比例指的是总训练量，不是动作数量</li></ul>
+<p class="act"><b>今日可执行</b>这周把拉类动作的组数提高到不低于推类。</p>
+<p class="src">依据：训练计划设计共识　<span class="dt">2026-10-29</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="肩">
+<div class="meta"><span class="id">SH-020</span><span class="seq">Day 125</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">肩</span></div>
+<h3>肩部训练放在推日往后排更合理</h3>
+<p class="body">大重量推举本身就需要肩部充分发力，若在推举前先做孤立侧平举，主要动作的表现会下降。孤立动作适合放在后面补充容量。</p>
+<ul class="pts"><li>先复合后孤立，是通用且有效的排序原则</li><li>如果侧平举是本周重点，可单独安排一次肩部训练</li></ul>
+<p class="act"><b>今日可执行</b>把侧平举移到推举和卧推之后。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-01-23</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="肩">
+<div class="meta"><span class="id">SH-021</span><span class="seq">Day 84</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">肩</span></div>
+<h3>后束值得单独安排训练量</h3>
+<p class="body">后束在划船类动作中参与有限，很多人实际训练量远低于中束。它是改善肩部外观与姿态平衡的关键，应主动安排孤立动作。</p>
+<ul class="pts"><li>后束的孤立动作包括反向飞鸟、面拉、绳索外旋</li><li>每周 6 到 10 组是比较实际的起点</li></ul>
+<p class="act"><b>今日可执行</b>在背部或肩部训练日固定加入 3 组后束动作。</p>
+<p class="src">依据：训练计划设计共识　<span class="dt">2026-12-13</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="肩">
+<div class="meta"><span class="id">SH-022</span><span class="seq">Day 170</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">肩</span></div>
+<h3>肩部不需要每次都练到力竭</h3>
+<p class="body">三角肌在上肢训练中参与频繁，若每次训练都推到力竭，疲劳会累积并影响推类动作表现。留 1 到 2 次余力更适合作为日常标准。</p>
+<ul class="pts"><li>ACSM 2026 明确普通健身者不必强行练到力竭</li><li>关键动作偶尔冲击极限可以，常态化没必要</li></ul>
+<p class="act"><b>今日可执行</b>侧平举与后束动作保持留 1 到 2 次余力。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-03-09</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="肩">
+<div class="meta"><span class="id">SH-023</span><span class="seq">Day 64</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">肩</span></div>
+<h3>组间休息对侧平举这类动作可以短一些</h3>
+<p class="body">单关节动作的代谢需求与神经负荷低于复合动作，休息 60 到 90 秒通常足够。复合推举则需要 2 分钟以上。</p>
+<ul class="pts"><li>休息时长应匹配动作类型，不必一刀切</li><li>过短的休息会降低后续组的表现</li></ul>
+<p class="act"><b>今日可执行</b>侧平举休息 60 秒，推举休息 2 分钟，分开计时试试。</p>
+<p class="src">依据：NSCA 训练指南　<span class="dt">2026-11-23</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="肩">
+<div class="meta"><span class="id">SH-024</span><span class="seq">Day 71</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">肩</span></div>
+<h3>肩部进展慢是正常的</h3>
+<p class="body">三角肌体积小、力矩臂短，力量增长的空间天然有限。用侧平举重量判断进步会很受挫，更适合用次数、控制质量与动作感受来衡量。</p>
+<ul class="pts"><li>小肌群的重量进步幅度本来就小</li><li>可以固定重量、增加次数作为进阶方式</li></ul>
+<p class="act"><b>今日可执行</b>记录侧平举在固定重量下能完成的严格次数，用它衡量进步。</p>
+<p class="src">依据：训练计划设计共识　<span class="dt">2026-11-30</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="肩">
+<div class="meta"><span class="id">SH-025</span><span class="seq">Day 129</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">肩</span></div>
+<h3>游泳不等于练肩的替代品</h3>
+<p class="body">游泳对上肢耐力与心肺有明确收益，但它提供的是低负荷高重复的刺激，与抗阻训练针对肌肥大的高张力刺激不同，无法互相替代。</p>
+<ul class="pts"><li>耐力型刺激更偏向肌耐力与心肺适应</li><li>增肌需要足够的机械张力与渐进负荷</li></ul>
+<p class="act"><b>今日可执行</b>把游泳当作有氧与恢复手段，而非肩部力量训练。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-01-27</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="肩">
+<div class="meta"><span class="id">SH-026</span><span class="seq">Day 60</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">肩</span></div>
+<h3>长时间持重物会持续拉扯肩胛稳定肌群</h3>
+<p class="body">单肩背包、长时间提重物会让一侧斜方肌与肩胛提肌持续等长收缩，造成紧张与不适。这与训练本身无关，却常被误当成训练过量。</p>
+<ul class="pts"><li>日常姿势性负荷容易被忽略</li><li>双侧均衡负重可减少这种不对称压力</li></ul>
+<p class="act"><b>今日可执行</b>通勤时改用双肩背包，或左右手定期交换。</p>
+<p class="src">依据：职业健康与姿势研究　<span class="dt">2026-11-19</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="肩">
+<div class="meta"><span class="id">SH-027</span><span class="seq">Day 105</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">肩</span></div>
+<h3>肩部不适往往不是训练伤的，是反复累积的</h3>
+<p class="body">肩关节的问题多为过度使用性损伤，源于长期重复的相同动作模式与恢复不足，而非某一次意外。早期信号是特定角度下的轻微不适。</p>
+<ul class="pts"><li>持续存在的关节不适是调整动作或幅度的信号</li><li>忽略早期信号往往导致问题加重</li></ul>
+<p class="act"><b>今日可执行</b>出现特定角度不适时，先降低幅度与重量，而非硬撑。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2027-01-03</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="肩">
+<div class="meta"><span class="id">SH-028</span><span class="seq">Day 8</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">肩</span></div>
+<h3>肩部训练后的恢复，睡眠比补剂重要</h3>
+<p class="body">肩部肌群小、参与频率高，恢复主要依赖整体状态。睡眠不足会抬高静息皮质醇、降低合成能力，直接拖慢恢复。</p>
+<ul class="pts"><li>睡眠不足时力量与恢复能力同步下降</li><li>肩部不适期间适当降低训练量比补充剂更有效</li></ul>
+<p class="act"><b>今日可执行</b>肩部疲劳感持续时，先看最近睡眠是否不足 7 小时。</p>
+<p class="src">依据：内分泌与恢复研究综述　<span class="dt">2026-09-28</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="肩">
+<div class="meta"><span class="id">SH-029</span><span class="seq">Day 115</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">肩</span></div>
+<h3>肩部热身要覆盖三个方向</h3>
+<p class="body">完整的肩部热身应包含肩胛控制、肩袖激活与动态活动度，而不是单一的方向。这三者共同为上肢训练准备稳定的发力环境。</p>
+<ul class="pts"><li>肩胛控制如墙上滑手、俯身 Y 字</li><li>肩袖激活如弹力带内旋外旋</li></ul>
+<p class="act"><b>今日可执行</b>练上肢前用 5 分钟做这三个方向的热身。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2027-01-13</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="肩">
+<div class="meta"><span class="id">SH-030</span><span class="seq">Day 250</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">肩</span></div>
+<h3>肩部训练量的减载比胸背更常需要</h3>
+<p class="body">由于肩部在上肢各动作中都被牵扯，累积疲劳容易超出主观感受。周期性安排减载周，把肩部训练量降低，能避免问题积累。</p>
+<ul class="pts"><li>每 4 到 8 周安排一次减载是常见做法</li><li>减载不等于停练，降低组数或重量即可</li></ul>
+<p class="act"><b>今日可执行</b>如果本周所有推举都感觉沉重，把肩部组数砍掉一半试试。</p>
+<p class="src">依据：训练周期化研究综述　<span class="dt">2027-05-28</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="肩">
+<div class="meta"><span class="id">SH-031</span><span class="seq">Day 17</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">肩</span></div>
+<h3>练肩不能让肩变宽，锁骨长度才是决定因素</h3>
+<p class="body">肩部的骨骼宽度主要由锁骨长度与肩胛位置决定，这是先天结构。训练能增加三角肌中束体积、改善体态带来的视觉宽度，但不能改变骨架。</p>
+<ul class="pts"><li>视觉上的肩宽，一部分来自斜方与肩胛的位置</li><li>改善圆肩姿态能立刻让肩看起来更展开</li></ul>
+<p class="act"><b>今日可执行</b>把注意力放在中束体积和体态改善上，而非骨架。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2026-10-07</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="肩">
+<div class="meta"><span class="id">SH-032</span><span class="seq">Day 277</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">肩</span></div>
+<h3>肩膀响不一定有问题，伴随疼痛才需要关注</h3>
+<p class="body">关节弹响在很多人身上存在，若无疼痛、无卡顿、无肿胀，通常属于无害的生理性弹响。疼痛性的弹响才需要评估。</p>
+<ul class="pts"><li>无痛弹响不需要因此停止训练</li><li>出现疼痛、无力或活动受限时应减少负荷并寻求专业评估</li></ul>
+<p class="act"><b>今日可执行</b>把判断标准从有没有响声改成有没有疼痛。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2027-06-24</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="肩">
+<div class="meta"><span class="id">SH-033</span><span class="seq">Day 54</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">肩</span></div>
+<h3>轻重量高次数并不比大重量更安全地练肩</h3>
+<p class="body">安全性取决于动作控制、活动范围与负荷是否匹配当前能力，而不是重量大小。轻重量配合失控的速度，同样会造成伤害；大重量配合严格动作，也未必危险。</p>
+<ul class="pts"><li>关键变量是控制与渐进，而非绝对重量</li><li>突然跳到远超能力的重量才是主要风险</li></ul>
+<p class="act"><b>今日可执行</b>用能否全程控制来判断重量是否合适。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2026-11-13</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="肩">
+<div class="meta"><span class="id">SH-034</span><span class="seq">Day 121</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">肩</span></div>
+<h3>斜方肌不会因为训练而变成脖子粗</h3>
+<p class="body">斜方肌上部增大的视觉效果取决于训练量、动作选择与个体结构。普通人适度的耸肩或拉类训练，并不会造成明显的颈部增粗。</p>
+<ul class="pts"><li>女性担心练出粗脖子，多属于过度担忧</li><li>若确实不希望斜方上部增长，可减少耸肩类动作</li></ul>
+<p class="act"><b>今日可执行</b>按训练目标选择动作，不必因担心外观而回避整个肌群。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2027-01-19</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="肩">
+<div class="meta"><span class="id">SH-035</span><span class="seq">Day 77</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">肩</span></div>
+<h3>绕肩转圈不是肩部热身的好选择</h3>
+<p class="body">大幅度的绕肩转圈会在肩关节做无必要的全范围旋转，对已经存在不稳定或挤压的人并不友好。动态热身应更贴近训练实际动作。</p>
+<ul class="pts"><li>优先选择与训练动作模式接近的动态活动</li><li>弹力带外旋、墙上滑手比绕圈更有针对性</li></ul>
+<p class="act"><b>今日可执行</b>把绕肩换成弹力带外旋和墙上滑手各一组。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2026-12-06</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="肩">
+<div class="meta"><span class="id">SH-036</span><span class="seq">Day 44</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">肩</span></div>
+<h3>肩部疼痛不一定是肩的问题</h3>
+<p class="body">部分肩部疼痛源自颈椎或肩胛周围肌群的牵涉痛。只处理肩关节本身，可能无法解决根本原因。</p>
+<ul class="pts"><li>颈源性疼痛可表现为肩部不适</li><li>持续不缓解的疼痛应由专业人员评估来源</li></ul>
+<p class="act"><b>今日可执行</b>如果肩部拉伸与调整无效，留意是否伴随颈部不适。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2026-11-03</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="肩">
+<div class="meta"><span class="id">SH-037</span><span class="seq">Day 206</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">肩</span></div>
+<h3>推举时头不能动是误解</h3>
+<p class="body">过头推举时头部需要略微后移，为杠铃让出路径，杠过头顶后再回到中立。刻意保持头部完全不动，反而会让杠铃路径与身体结构冲突。</p>
+<ul class="pts"><li>让路是必要且安全的动作组成</li><li>关键是腰部不要代偿后仰</li></ul>
+<p class="act"><b>今日可执行</b>推举时让头自然后让再复位，不必僵硬固定。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-04-14</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="肩">
+<div class="meta"><span class="id">SH-038</span><span class="seq">Day 3</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">肩</span></div>
+<h3>三角肌后束不会因为练背就被充分练到</h3>
+<p class="body">划船与下拉主要刺激背阔肌、斜方肌与菱形肌。后束参与的是肩关节水平外展，与背部主要动作的模式并不相同。</p>
+<ul class="pts"><li>后束需要专门的水平外展动作</li><li>认为练背顺带练到后束，是常见的高估</li></ul>
+<p class="act"><b>今日可执行</b>单独安排 2 到 3 组反向飞鸟或面拉。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2026-09-23</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="肩">
+<div class="meta"><span class="id">SH-039</span><span class="seq">Day 89</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">肩</span></div>
+<h3>肩部训练不会让身高变化</h3>
+<p class="body">身高由骨骼决定，成年后不再变化。肩部训练能改善体态、减少含胸带来的身高损失错觉，但不会真正增加身高。</p>
+<ul class="pts"><li>改善圆肩能让人看起来更挺拔</li><li>体态改善带来的是视觉变化</li></ul>
+<p class="act"><b>今日可执行</b>把改善体态当作训练收益，而不是增高手段。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2026-12-18</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="肩">
+<div class="meta"><span class="id">SH-040</span><span class="seq">Day 36</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">肩</span></div>
+<h3>女性练肩不会变壮，但会改善线条</h3>
+<p class="body">女性睾酮水平远低于男性，肌肉增长速率的绝对值有限。适度的肩部训练带来的多是更清晰的肩部轮廓与更好的体态支撑。</p>
+<ul class="pts"><li>肌肉增长受激素环境约束，不会轻易变壮</li><li>肩部线条是改善上半身轮廓的关键</li></ul>
+<p class="act"><b>今日可执行</b>按正常训练量安排肩部，不必刻意回避。</p>
+<p class="src">依据：内分泌与运动研究　<span class="dt">2026-10-26</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="背">
+<div class="meta"><span class="id">BK-001</span><span class="seq">Day 287</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">背</span></div>
+<h3>引体向上先做肩胛下沉，再用手臂</h3>
+<p class="body">悬垂后第一步是把肩胛骨向下向后再开始拉，而不是立刻屈肘。缺少这一步，力量会由手臂和小臂承担，背部得不到应有的刺激。</p>
+<ul class="pts"><li>肩胛下沉是引体的启动动作，也是保护肩关节的关键</li><li>想象用胸口去够杠，而不是用下巴去够杠</li></ul>
+<p class="act"><b>今日可执行</b>下次引体先只做肩胛下沉，悬停 1 秒后再正式开始拉。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-07-04</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="背">
+<div class="meta"><span class="id">BK-002</span><span class="seq">Day 221</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">背</span></div>
+<h3>下拉时把肘部拉向身体，而不是把手拉下来</h3>
+<p class="body">高位下拉的目标是肩关节内收，发力点在肘部而非手掌。心像改成用肘部向下向后拉，背阔肌的参与会明显增加。</p>
+<ul class="pts"><li>手只是挂钩，肘部才是发力端</li><li>拉至锁骨附近即可，不必强行拉到胸前以下</li></ul>
+<p class="act"><b>今日可执行</b>这组下拉只想着把肘部往下带。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-04-29</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="背">
+<div class="meta"><span class="id">BK-003</span><span class="seq">Day 6</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">背</span></div>
+<h3>划船要先完成肩胛后缩再屈肘</h3>
+<p class="body">常见错误是一开始就屈肘，让小臂和肱二头肌主导。正确顺序是先让肩胛骨后缩靠拢，再靠肘部向后带动，最后收紧背部。</p>
+<ul class="pts"><li>肩胛后缩是划船的启动环节</li><li>顺序错了，练的是手臂而不是背</li></ul>
+<p class="act"><b>今日可执行</b>用轻重量做一组划船，刻意分成肩胛后缩与屈肘两步。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2026-09-26</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="背">
+<div class="meta"><span class="id">BK-004</span><span class="seq">Day 251</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">背</span></div>
+<h3>俯身划船的躯干角度，越接近水平越练上背</h3>
+<p class="body">躯干越接近与地面平行，越偏向中下斜方与菱形肌；躯干越接近直立，越偏向背阔肌下部。角度决定了刺激的侧重点。</p>
+<ul class="pts"><li>背部全程保持中立，不要弓背</li><li>角度一旦变化，发力模式就跟着变化</li></ul>
+<p class="act"><b>今日可执行</b>固定一个角度练完整个计划周期，不要边做边改。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2027-05-29</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="背">
+<div class="meta"><span class="id">BK-005</span><span class="seq">Day 122</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">背</span></div>
+<h3>握距改变的是角度，不是背部的宽窄</h3>
+<p class="body">宽握更偏向背阔肌上部与肩关节内收的角度，窄握更有利于行程与背阔肌下部参与。两者都能发展背部宽度与厚度。</p>
+<ul class="pts"><li>宽握在顶部缩短位停住，窄握强调完整行程</li><li>上宽下窄的说法并不严谨，不同握距练的是不同区域</li></ul>
+<p class="act"><b>今日可执行</b>在计划里同时安排宽握下拉与窄握划船。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2027-01-20</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="背">
+<div class="meta"><span class="id">BK-006</span><span class="seq">Day 112</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">背</span></div>
+<h3>单臂哑铃划船，注意不要旋转躯干</h3>
+<p class="body">单臂划船的好处是可以获得更大的行程与更自由的肩胛活动，但常见问题是靠旋转躯干把重量甩上去，让背部失去张力。</p>
+<ul class="pts"><li>躯干保持稳定，允许肩胛自然前伸与后缩</li><li>允许肩胛活动是单臂动作的优势，不要锁死</li></ul>
+<p class="act"><b>今日可执行</b>单臂划船时另一侧手撑稳，全程不让骨盆转动。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-01-10</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="背">
+<div class="meta"><span class="id">BK-007</span><span class="seq">Day 108</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">背</span></div>
+<h3>直臂下压是少见的背阔肌孤立动作</h3>
+<p class="body">直臂下压保持肘部微屈不变，由肩关节完成伸展，能较纯粹地刺激背阔肌。它适合用作练背前的激活或练后的补充。</p>
+<ul class="pts"><li>肘部角度全程固定，这是动作成立的前提</li><li>重量不必大，重点在背阔肌的牵拉与收缩感</li></ul>
+<p class="act"><b>今日可执行</b>在背部训练前做 2 组直臂下压作为激活。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-01-06</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="背">
+<div class="meta"><span class="id">BK-008</span><span class="seq">Day 207</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">背</span></div>
+<h3>罗马尼亚硬拉的髋铰链，膝盖几乎不弯</h3>
+<p class="body">这个动作是髋关节主导的铰链，不是深蹲。臀部向后推，膝盖保持微屈且角度基本不变，感受大腿后侧与臀部的牵拉。</p>
+<ul class="pts"><li>杠铃全程贴近身体，力臂越短腰椎压力越小</li><li>下放到膝盖下方即可，感受到拉伸就停</li></ul>
+<p class="act"><b>今日可执行</b>对着镜子做一组徒手髋铰链，确认膝盖角度没有明显变化。</p>
+<p class="src">依据：NSCA 大众硬拉标准　<span class="dt">2027-04-15</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="背">
+<div class="meta"><span class="id">BK-009</span><span class="seq">Day 230</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">背</span></div>
+<h3>硬拉的启动是蹬地，不是用腰去拽</h3>
+<p class="body">硬拉时背部的角色是稳定，发力来自髋膝伸展。想着握住杠铃站起来，而不是把杠铃拉起来，能自然减少腰部代偿。</p>
+<ul class="pts"><li>起始时杠铃位于脚掌中段正上方</li><li>髋部略高于膝盖，不是深蹲式的低髋</li></ul>
+<p class="act"><b>今日可执行</b>下次硬拉时心里默念站起来，而不是拉起来。</p>
+<p class="src">依据：NSCA 大众硬拉标准　<span class="dt">2027-05-08</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="背">
+<div class="meta"><span class="id">BK-010</span><span class="seq">Day 279</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">背</span></div>
+<h3>坐姿绳索划船不要前后摇摆借力</h3>
+<p class="body">坐姿划船的常见问题是用躯干前后摆动制造动量。这会让负荷在收缩位突然消失，背部实际受力反而减少。</p>
+<ul class="pts"><li>躯干保持相对固定，仅允许小幅自然前倾</li><li>在收缩位停住 1 秒，比加快次数更有效</li></ul>
+<p class="act"><b>今日可执行</b>这组划船在拉到底时停 1 秒，感受背部收紧。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-06-26</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="背">
+<div class="meta"><span class="id">BK-011</span><span class="seq">Day 86</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">背</span></div>
+<h3>背阔肌的功能是肩关节内收、伸展和内旋</h3>
+<p class="body">背阔肌从下位胸椎、腰椎、髂嵴等处出发，止于肱骨前侧。这个走向决定了它把上臂拉向身体后内侧，是下拉与划船的共同目标肌。</p>
+<ul class="pts"><li>理解走向，就知道为什么要用肘部引导动作</li><li>背部训练的核心是肩关节的运动，而不是手臂的屈伸</li></ul>
+<p class="act"><b>今日可执行</b>空手做一次肩关节伸展，感受背阔肌的收缩位置。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2026-12-15</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="背">
+<div class="meta"><span class="id">BK-012</span><span class="seq">Day 62</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">背</span></div>
+<h3>背部厚度来自中下斜方与菱形肌</h3>
+<p class="body">上背的厚度感主要来自中下斜方肌与菱形肌的发达程度。它们负责肩胛骨后缩与下沉，是划船类动作的主要目标。</p>
+<ul class="pts"><li>只练下拉，背部厚度增长会受限</li><li>划船类比下拉类更能刺激肩胛后缩肌群</li></ul>
+<p class="act"><b>今日可执行</b>确保每周划船类的训练量不低于下拉类。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2026-11-21</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="背">
+<div class="meta"><span class="id">BK-013</span><span class="seq">Day 14</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">背</span></div>
+<h3>竖脊肌是脊柱的稳定器，不是主要发力肌</h3>
+<p class="body">竖脊肌沿脊柱走行，主要功能是维持脊柱中立与抗屈曲。在硬拉中它做等长收缩稳定躯干，真正产生伸展力的是髋与膝。</p>
+<ul class="pts"><li>腰酸的硬拉通常是稳定性超负荷，而非训练到位</li><li>强化竖脊肌的方式包括硬拉、山羊挺身等</li></ul>
+<p class="act"><b>今日可执行</b>如果硬拉时腰先酸，先检查是否在用腰发力起杠。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2026-10-04</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="背">
+<div class="meta"><span class="id">BK-014</span><span class="seq">Day 41</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">背</span></div>
+<h3>肩胛骨的活动范围决定了背部的完整行程</h3>
+<p class="body">背部动作中肩胛骨需要完成前伸、后缩、上回旋与下回旋。允许肩胛自由活动，才能让背阔肌与斜方肌获得完整的长度变化。</p>
+<ul class="pts"><li>下拉时允许肩胛上回旋，划船时允许前伸</li><li>过度固定肩胛会压缩行程，减少刺激</li></ul>
+<p class="act"><b>今日可执行</b>在下拉起始位允许肩胛上提，再主动下沉启动动作。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2026-10-31</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="背">
+<div class="meta"><span class="id">BK-015</span><span class="seq">Day 156</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">背</span></div>
+<h3>握力常常是背部训练的隐形瓶颈</h3>
+<p class="body">背部是大肌群，能承受的负荷高于前臂与手部。握力先力竭时，背部往往还没得到足够刺激，这是很多人练背感觉不明显的真实原因。</p>
+<ul class="pts"><li>握力不足会提前终止有效组</li><li>辅助握带可以在背部动作中解决这个问题</li></ul>
+<p class="act"><b>今日可执行</b>如果总是手先没力，试试在大重量拉类动作中使用握带。</p>
+<p class="src">依据：训练实践共识　<span class="dt">2027-02-23</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="背">
+<div class="meta"><span class="id">BK-016</span><span class="seq">Day 67</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">背</span></div>
+<h3>大圆肌与背阔肌协同，共同决定背部宽度</h3>
+<p class="body">大圆肌位于肩胛骨外侧，功能与背阔肌相近，同样参与肩关节内收与伸展。它在引体向上与下拉中承担相当部分的工作量。</p>
+<ul class="pts"><li>宽握下拉与大圆肌参与度更高</li><li>背部宽度是背阔肌与大圆肌共同作用的结果</li></ul>
+<p class="act"><b>今日可执行</b>了解即可，无需为单独刺激大圆肌额外设计动作。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2026-11-26</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="背">
+<div class="meta"><span class="id">BK-017</span><span class="seq">Day 188</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">背</span></div>
+<h3>背部每周 10 组以上，且要覆盖两个方向</h3>
+<p class="body">ACSM 2026 指出每肌群每周 10 组以上更有利于肌肥大。背部还需兼顾垂直拉（下拉、引体）与水平拉（划船）两个方向。</p>
+<ul class="pts"><li>两个方向刺激的肌群侧重不同，都需要覆盖</li><li>组数应分散到每周 2 次训练中</li></ul>
+<p class="act"><b>今日可执行</b>统计本周背部总组数，并检查垂直与水平方向是否都有。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-03-27</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="背">
+<div class="meta"><span class="id">BK-018</span><span class="seq">Day 131</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">背</span></div>
+<h3>引体向上做不动，可以用离心或弹力带过渡</h3>
+<p class="body">引体向上的门槛在相对力量。跳起后缓慢下放的离心引体，或使用弹力带辅助，都能在接近动作模式的前提下渐进提升能力。</p>
+<ul class="pts"><li>离心训练对力量提升有效且负荷可控</li><li>辅助方式只是过渡，不是终点</li></ul>
+<p class="act"><b>今日可执行</b>每周安排 3 组离心引体，每组 5 次缓慢下放。</p>
+<p class="src">依据：NSCA 训练指南　<span class="dt">2027-01-29</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="背">
+<div class="meta"><span class="id">BK-019</span><span class="seq">Day 45</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">背</span></div>
+<h3>拉类动作的组间休息要够，才守得住行程</h3>
+<p class="body">背部动作行程长、负荷大，休息不足时会出现明显的行程缩短。2 分钟以上的休息有利于保持完整活动范围。</p>
+<ul class="pts"><li>行程缩短往往比重量下降更早出现</li><li>休息是否足够，看下一组能否维持同样行程</li></ul>
+<p class="act"><b>今日可执行</b>大重量划船与下拉的组间休息设为 2 分钟。</p>
+<p class="src">依据：NSCA 训练指南　<span class="dt">2026-11-04</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="背">
+<div class="meta"><span class="id">BK-020</span><span class="seq">Day 53</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">背</span></div>
+<h3>背部训练的感受度，比重量更难建立</h3>
+<p class="body">背部位于身体后侧、视野之外，本体感觉建立需要时间。降低重量、放慢节奏、在收缩位停顿，通常比加重量更能建立联系。</p>
+<ul class="pts"><li>感受度不足时加重量只会让代偿更强</li><li>先用轻重量建立神经肌肉联系，再逐步加负荷</li></ul>
+<p class="act"><b>今日可执行</b>用平时七成的重量，在每次收缩位停 1 秒，做 3 组感受一下。</p>
+<p class="src">依据：训练实践共识　<span class="dt">2026-11-12</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="背">
+<div class="meta"><span class="id">BK-021</span><span class="seq">Day 49</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">背</span></div>
+<h3>硬拉不宜每周安排过多次数</h3>
+<p class="body">硬拉对中枢神经与后链的疲劳累积显著高于一般动作。多数训练者每周 1 次、每次 3 到 5 组是比较可持续的安排。</p>
+<ul class="pts"><li>硬拉的技术要求高，疲劳状态下风险上升</li><li>训练量过高会拖累其他动作的表现</li></ul>
+<p class="act"><b>今日可执行</b>把硬拉固定在每周一天，控制总组数。</p>
+<p class="src">依据：训练计划设计共识　<span class="dt">2026-11-08</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="背">
+<div class="meta"><span class="id">BK-022</span><span class="seq">Day 192</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">背</span></div>
+<h3>背部可以承受较高频率</h3>
+<p class="body">背部肌群体积大、恢复能力较强，每周训练 2 次通常优于 1 次。把组数分散有利于维持每次训练的质量。</p>
+<ul class="pts"><li>ACSM 2026 建议每肌群每周至少 2 次</li><li>同一肌群两次之间保持 48 小时以上间隔</li></ul>
+<p class="act"><b>今日可执行</b>把背部训练拆成两次，一次以下拉为主，一次以划船为主。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-03-31</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="背">
+<div class="meta"><span class="id">BK-023</span><span class="seq">Day 256</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">背</span></div>
+<h3>动作幅度完整，比多加几公斤更重要</h3>
+<p class="body">拉类动作的收益很大程度来自拉长位的张力。刻意缩短行程换取重量，会让最有效的部分被跳过。</p>
+<ul class="pts"><li>拉长位的机械张力是肌肥大重要驱动</li><li>完整行程的标准是不丢失控制，而非拉到极限</li></ul>
+<p class="act"><b>今日可执行</b>这周把下拉重量降一档，换成完整的肩胛活动行程。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-06-03</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="背">
+<div class="meta"><span class="id">BK-024</span><span class="seq">Day 21</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">背</span></div>
+<h3>背部动作的节奏，离心控制值得强调</h3>
+<p class="body">下拉与划船的回放阶段常被忽略，任由重量把人拉回去。用 2 秒控制回放，能显著提高整组有效张力时间。</p>
+<ul class="pts"><li>离心控制不增加额外风险，收益明确</li><li>ACSM 2026 将离心部分视为可优化的变量</li></ul>
+<p class="act"><b>今日可执行</b>下拉回放时默数两秒，不让重量自己坠落。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2026-10-11</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="背">
+<div class="meta"><span class="id">BK-025</span><span class="seq">Day 142</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">背</span></div>
+<h3>划船机是少见的兼顾心肺与拉力的器械</h3>
+<p class="body">划船机在提供心肺刺激的同时，大量使用背阔肌、菱形肌与下肢，是少数能同时覆盖有氧与拉力模式的工具。</p>
+<ul class="pts"><li>可作为力量训练之外的补充，但要计入背部疲劳</li><li>它的刺激偏耐力型，不能替代负重划船</li></ul>
+<p class="act"><b>今日可执行</b>如果想加有氧又想兼顾背部，可以试试划船机 15 分钟。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-02-09</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="背">
+<div class="meta"><span class="id">BK-026</span><span class="seq">Day 233</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">背</span></div>
+<h3>拉力带训练与器械训练的刺激可以互补</h3>
+<p class="body">弹力带的阻力随拉伸长度增加，在缩短位负荷最大；器械与自由重量则在拉长位张力更大。两者安排在同一天能形成互补。</p>
+<ul class="pts"><li>弹力带在动作顶部提供额外阻力</li><li>自由重量在底部提供更大张力</li></ul>
+<p class="act"><b>今日可执行</b>在划船动作后加一组弹力带划船作为收尾。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2027-05-11</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="背">
+<div class="meta"><span class="id">BK-027</span><span class="seq">Day 91</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">背</span></div>
+<h3>练背后的腰痛，通常不是背练到了</h3>
+<p class="body">练背后出现腰部酸胀，多与躯干稳定不足、动作中腰椎代偿有关，而不是竖脊肌得到有效刺激的信号。</p>
+<ul class="pts"><li>腰部先疲劳，说明躯干稳定性成为限制因素</li><li>先降低重量、强化核心与髋铰链模式</li></ul>
+<p class="act"><b>今日可执行</b>如果练背总是腰先酸，先用山羊挺身或髋铰链练习打基础。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2026-12-20</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="背">
+<div class="meta"><span class="id">BK-028</span><span class="seq">Day 204</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">背</span></div>
+<h3>背部训练后的拉伸重点在背阔肌与胸小肌</h3>
+<p class="body">练背后胸廓前侧与背阔肌容易紧张，影响肩关节上举幅度。针对性的静态拉伸放在训练之后效果更好。</p>
+<ul class="pts"><li>训练前静态拉伸可能短暂降低力量输出</li><li>背阔肌拉伸可通过抓握固定物后坐完成</li></ul>
+<p class="act"><b>今日可执行</b>练背后各做 2 组背阔肌与胸小肌拉伸，各保持 30 秒。</p>
+<p class="src">依据：生物力学与热身研究综述　<span class="dt">2027-04-12</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="背">
+<div class="meta"><span class="id">BK-029</span><span class="seq">Day 31</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">背</span></div>
+<h3>硬拉后的疲劳是全身性的，恢复要按天算</h3>
+<p class="body">硬拉涉及全身多数肌群并带来较高的中枢疲劳。训练后 48 小时内表现为握力下降、整体沉重感，属于正常反应。</p>
+<ul class="pts"><li>硬拉后不安排其他高负荷动作更合理</li><li>恢复不足时先降低硬拉频率</li></ul>
+<p class="act"><b>今日可执行</b>把硬拉安排在训练周的后半段，或单独一天。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2026-10-21</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="背">
+<div class="meta"><span class="id">BK-030</span><span class="seq">Day 137</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">背</span></div>
+<h3>拉力训练对手肘的压力，需要主动管理</h3>
+<p class="body">大量握持类动作会反复牵扯前臂屈肌起点与肘部肌腱。出现肘内侧不适时，握力训练量与握法都需要调整。</p>
+<ul class="pts"><li>肘部不适常与握力负荷累积有关</li><li>改用握带、换直杆为中立握可缓解</li></ul>
+<p class="act"><b>今日可执行</b>如果肘内侧开始不适，先减少无握带的拉类动作。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2027-02-04</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="背">
+<div class="meta"><span class="id">BK-031</span><span class="seq">Day 58</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">背</span></div>
+<h3>高次数划船不会刻画背部线条</h3>
+<p class="body">背部线条来自体脂下降，而体脂由整体热量平衡决定。高次数训练改变的是肌耐力，不改变局部的脂肪分布。</p>
+<ul class="pts"><li>局部减脂不存在，练背不减背部脂肪</li><li>线条的前提是体脂足够低，而非次数足够高</li></ul>
+<p class="act"><b>今日可执行</b>把体脂管理交给饮食与整体消耗，训练专注在负荷与容量上。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2026-11-17</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="背">
+<div class="meta"><span class="id">BK-032</span><span class="seq">Day 195</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">背</span></div>
+<h3>引体向上不必强求下巴过杠</h3>
+<p class="body">下巴过杠只是一种判定标准，并非动作有效的必要条件。把注意力放在胸口向杠靠近、胸椎不弯曲，往往能得到更好的背部刺激。</p>
+<ul class="pts"><li>心像换成胸口触杠，比下巴过杠更有效</li><li>行程以能保持控制和背部张力为准</li></ul>
+<p class="act"><b>今日可执行</b>这次引体想着胸口去够杠，不要管下巴到哪。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-04-03</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="背">
+<div class="meta"><span class="id">BK-033</span><span class="seq">Day 245</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">背</span></div>
+<h3>背部不能靠单一动作练全</h3>
+<p class="body">背部由背阔肌、斜方肌、菱形肌、竖脊肌、大圆肌等多个肌群组成，功能方向各异。只做下拉或只做硬拉，都会留下明显空白。</p>
+<ul class="pts"><li>不同动作覆盖不同的肌群与方向</li><li>垂直拉、水平拉、髋铰链三类都需要</li></ul>
+<p class="act"><b>今日可执行</b>检查当前计划是否同时包含下拉、划船与髋铰链动作。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2027-05-23</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="背">
+<div class="meta"><span class="id">BK-034</span><span class="seq">Day 73</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">背</span></div>
+<h3>硬拉不伤腰，错误的硬拉才伤腰</h3>
+<p class="body">硬拉本身是安全的训练动作，风险来自圆背、杠铃远离身体、用腰代偿等具体错误。规范执行时，它对后链与整体力量的收益很高。</p>
+<ul class="pts"><li>椎间盘受压不均主要源于圆背时的剪切力</li><li>杠铃贴近身体能显著降低腰部力矩</li></ul>
+<p class="act"><b>今日可执行</b>每次硬拉前检查：杠贴小腿、背挺直、髋高于膝。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2026-12-02</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="背">
+<div class="meta"><span class="id">BK-035</span><span class="seq">Day 173</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">背</span></div>
+<h3>练背不会让脖子变短</h3>
+<p class="body">上背训练强化的是斜方肌与菱形肌，改善的是肩胛位置与体态。它通常让颈部线条显得更长，因为圆肩改善后头部前引减少。</p>
+<ul class="pts"><li>含胸圆肩会视觉上压缩颈部长度</li><li>改善体态带来的效果是正向的</li></ul>
+<p class="act"><b>今日可执行</b>把上背训练当作改善体态的一部分。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-03-12</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="背">
+<div class="meta"><span class="id">BK-036</span><span class="seq">Day 227</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">背</span></div>
+<h3>背部训练不需要先练小重量找感觉很久</h3>
+<p class="body">建立背部感受度确实需要时间，但长期停留在轻重量并不利于增长。正确做法是用中等负荷、严格动作，逐步提高负荷与容量。</p>
+<ul class="pts"><li>ACSM 2026 强调中等负荷在足够训练量下同样有效</li><li>感受度会随训练经验自然提升</li></ul>
+<p class="act"><b>今日可执行</b>感受度有改善后，按渐进原则逐步提高重量。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-05-05</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="背">
+<div class="meta"><span class="id">BK-037</span><span class="seq">Day 269</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">背</span></div>
+<h3>男女背部训练没有本质差异</h3>
+<p class="body">肌肉的结构与适应机制在男女之间一致，差别主要在初始力量水平与激素环境带来的增长速率。训练原则与动作选择基本相同。</p>
+<ul class="pts"><li>女性不必使用明显不同的背部训练方法</li><li>训练量应依据个体恢复能力而非性别调整</li></ul>
+<p class="act"><b>今日可执行</b>按同一套渐进原则安排背部训练即可。</p>
+<p class="src">依据：内分泌与运动研究　<span class="dt">2027-06-16</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="背">
+<div class="meta"><span class="id">BK-038</span><span class="seq">Day 240</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">背</span></div>
+<h3>握带不是作弊工具</h3>
+<p class="body">握带的目的是把握力限制从大肌群训练中剥离，让背部得到应有的刺激。在合适的动作上使用，是一种务实的训练手段。</p>
+<ul class="pts"><li>握力可以单独训练，不必在所有动作中都当限制因素</li><li>大重量拉类动作使用握带是常见做法</li></ul>
+<p class="act"><b>今日可执行</b>在硬拉与大重量划船中使用握带，把背部练到位。</p>
+<p class="src">依据：训练实践共识　<span class="dt">2027-05-18</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="背">
+<div class="meta"><span class="id">BK-039</span><span class="seq">Day 214</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">背</span></div>
+<h3>背部训练不会让肩变宽或变窄</h3>
+<p class="body">背部训练增加的是背部肌群体积与肩胛位置改善。肩部骨骼宽度先天决定，但背部发达会让上半身整体显得更厚实有力。</p>
+<ul class="pts"><li>视觉上的整体感来自多肌群共同发展</li><li>不存在的宽窄变化不必担心</li></ul>
+<p class="act"><b>今日可执行</b>按目标安排训练，不必顾虑不存在的副作用。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2027-04-22</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="背">
+<div class="meta"><span class="id">BK-040</span><span class="seq">Day 210</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">背</span></div>
+<h3>练背能改善体态，但不能纠正所有体态问题</h3>
+<p class="body">上背与后束强化对圆肩有明确改善作用，但体态受日常姿势、工作环境与关节活动度多重影响。训练只是其中一环。</p>
+<ul class="pts"><li>长时间久坐与屏幕位置是体态的主要外部因素</li><li>训练配合环境调整效果更好</li></ul>
+<p class="act"><b>今日可执行</b>搭配调整屏幕高度与定时起身，训练效果会更明显。</p>
+<p class="src">依据：职业健康与姿势研究　<span class="dt">2027-04-18</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="腿">
+<div class="meta"><span class="id">LG-001</span><span class="seq">Day 148</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">腿</span></div>
+<h3>深蹲的膝盖方向比膝盖位置更重要</h3>
+<p class="body">膝盖应当始终与脚尖指向一致。所谓膝盖不能超过脚尖是流传甚广的简化说法，对多数人并不成立——髋膝协同屈曲时，膝盖自然前移是正常的。</p>
+<ul class="pts"><li>膝盖内扣才是真正需要纠正的问题，它反映髋外展力量不足</li><li>脚踝活动度受限的人更容易出现脚跟离地，需要先解决活动度</li></ul>
+<p class="act"><b>今日可执行</b>下蹲时双脚想象向外拧地，主动让膝盖对着脚尖方向。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-02-15</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="腿">
+<div class="meta"><span class="id">LG-002</span><span class="seq">Day 117</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">腿</span></div>
+<h3>深蹲要学会用髋，否则压力全在膝上</h3>
+<p class="body">很多人在下蹲时只屈膝不主动屈髋，导致膝关节承受了大部分压力。髋膝同时屈曲、臀部向后下方坐，能把负荷分担给臀大肌与腘绳肌。</p>
+<ul class="pts"><li>只屈膝的深蹲容易让脚跟离地、膝关节压力增大</li><li>髋膝联动的深蹲更容易保护膝关节</li></ul>
+<p class="act"><b>今日可执行</b>下蹲时先想着臀部向后坐，再屈膝。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2027-01-15</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="腿">
+<div class="meta"><span class="id">LG-003</span><span class="seq">Day 65</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">腿</span></div>
+<h3>深蹲的深度，以保持腰椎中立为前提</h3>
+<p class="body">大腿达到与地面平行或略低是常见目标，但前提是全程腰椎保持中立。一旦在底部出现骨盆后倾、腰椎弯曲，就应停止加深。</p>
+<ul class="pts"><li>深度不足会减少臀大肌的参与</li><li>深度超过当前活动度能力时会带来代偿</li></ul>
+<p class="act"><b>今日可执行</b>下蹲到能保持腰背中立的最深处，不要为追深度牺牲姿势。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2026-11-24</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="腿">
+<div class="meta"><span class="id">LG-004</span><span class="seq">Day 303</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">腿</span></div>
+<h3>脚位宽窄，决定的是肌群侧重</h3>
+<p class="body">较窄的站距更偏向股四头肌，较宽的站距更偏向臀大肌与内收肌。脚尖外展的角度也应随站距调整，以匹配髋关节的结构。</p>
+<ul class="pts"><li>站距改变时，脚尖外展角度要同步调整</li><li>找到自己髋关节最适合的站距，比照搬他人更实际</li></ul>
+<p class="act"><b>今日可执行</b>试三种站距各做 3 次，选髋部最顺畅的那个。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2027-07-20</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="腿">
+<div class="meta"><span class="id">LG-005</span><span class="seq">Day 12</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">腿</span></div>
+<h3>高杠与低杠深蹲，练的侧重不同</h3>
+<p class="body">高杠位于斜方肌上，躯干更直立，股四头肌参与更多；低杠位于三角肌后束，躯干前倾更多，臀部与后链参与更多。</p>
+<ul class="pts"><li>两种都是有效变式，选择取决于目标与身体结构</li><li>低杠对肩关节活动度要求更高</li></ul>
+<p class="act"><b>今日可执行</b>确认当前用的杠位，并知道它偏重哪一侧。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2026-10-02</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="腿">
+<div class="meta"><span class="id">LG-006</span><span class="seq">Day 295</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">腿</span></div>
+<h3>保加利亚分腿蹲是单腿训练的高效选择</h3>
+<p class="body">后脚搭高的分腿蹲同时训练单腿力量、平衡与稳定性，对左右差异的暴露也很直接。它对臀大肌与股四头肌的刺激都很充分。</p>
+<ul class="pts"><li>后脚搭高越高，前腿的髋伸需求越大</li><li>躯干略前倾更偏臀，直立更偏股四头</li></ul>
+<p class="act"><b>今日可执行</b>用自身体重先做 2 组，每侧 8 到 10 次，评估稳定性。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-07-12</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="腿">
+<div class="meta"><span class="id">LG-007</span><span class="seq">Day 198</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">腿</span></div>
+<h3>腿举不要靠腰椎离开靠背来加深</h3>
+<p class="body">腿举时臀部与下背应全程贴住靠背。为了加大行程而让骨盆卷起，会让腰椎在负重下弯曲，是腿举最典型的风险动作。</p>
+<ul class="pts"><li>下放到能保持骨盆贴住靠背的深度即可</li><li>双脚位置越高越偏臀腿后侧，越低越偏股四头</li></ul>
+<p class="act"><b>今日可执行</b>腿举时刻意保持下背贴紧靠背，宁可减小行程。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-04-06</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="腿">
+<div class="meta"><span class="id">LG-008</span><span class="seq">Day 259</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">腿</span></div>
+<h3>腿弯举要控制离心，别让重量砸下来</h3>
+<p class="body">腘绳肌在腿弯举中做屈膝，回落阶段是离心收缩。控制 2 到 3 秒回放，能显著提高这组动作的有效张力。</p>
+<ul class="pts"><li>腘绳肌在离心阶段承受的张力更高</li><li>快速回落等于跳过了刺激最充分的部分</li></ul>
+<p class="act"><b>今日可执行</b>腿弯举回放默数两秒，感受大腿后侧的拉扯。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-06-06</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="腿">
+<div class="meta"><span class="id">LG-009</span><span class="seq">Day 20</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">腿</span></div>
+<h3>小腿训练要完整行程，包括底部拉伸</h3>
+<p class="body">提踵时在最高点停顿、在最低点充分下沉，让小腿三头肌经历完整的长度变化。多数人只做了行程的上半段。</p>
+<ul class="pts"><li>底部下沉带来的拉伸对小腿刺激很重要</li><li>站姿提踵偏腓肠肌，坐姿提踵偏比目鱼肌</li></ul>
+<p class="act"><b>今日可执行</b>这次提踵在底部停 1 秒再向上顶，顶部再停 1 秒。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2026-10-10</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="腿">
+<div class="meta"><span class="id">LG-010</span><span class="seq">Day 267</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">腿</span></div>
+<h3>硬拉与深蹲的区分，在于髋膝的比例</h3>
+<p class="body">深蹲是膝髋同时大幅屈曲的下蹲动作，硬拉是从地面通过伸髋伸膝站起。两者力线不同，训练目标也不同，不能互相替代。</p>
+<ul class="pts"><li>硬拉对后链的刺激更集中</li><li>深蹲对股四头肌的刺激更集中</li></ul>
+<p class="act"><b>今日可执行</b>确认计划里两者都有，而不是只做一个。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-06-14</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="腿">
+<div class="meta"><span class="id">LG-011</span><span class="seq">Day 190</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">腿</span></div>
+<h3>深蹲前的脚踝活动度，常被跳过</h3>
+<p class="body">脚踝背屈受限时，身体只能靠脚跟抬起或躯干过度前倾来完成下蹲。这两种代偿都会改变力线，增加膝与腰的负担。</p>
+<ul class="pts"><li>脚踝活动度是深蹲质量的上游限制</li><li>改善后可显著提升深蹲的深度与稳定性</li></ul>
+<p class="act"><b>今日可执行</b>用膝盖顶墙测试两侧脚踝背屈幅度，活动度差的一侧单独加练。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2027-03-29</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="腿">
+<div class="meta"><span class="id">LG-012</span><span class="seq">Day 271</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">腿</span></div>
+<h3>髋铰链是不会用腰的关键能力</h3>
+<p class="body">髋铰链指在保持脊柱中立的前提下，通过髋关节屈伸完成躯干前倾与复位。它是硬拉、罗马尼亚硬拉、山羊挺身等动作的共同基础。</p>
+<ul class="pts"><li>髋铰链模式正确，腰椎受压会明显减少</li><li>可以用木棍贴背法自查动作模式</li></ul>
+<p class="act"><b>今日可执行</b>用一根棍子贴住后脑、上背与骶骨，做 10 次徒手髋铰链。</p>
+<p class="src">依据：NSCA 大众硬拉标准　<span class="dt">2027-06-18</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="腿">
+<div class="meta"><span class="id">LG-013</span><span class="seq">Day 216</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">腿</span></div>
+<h3>股四头肌有四个头，功能一致但位置不同</h3>
+<p class="body">股直肌、股外侧肌、股内侧肌和股中间肌共同完成伸膝。股直肌跨髋膝两个关节，因此在髋伸位时处于缩短状态，伸展不充分。</p>
+<ul class="pts"><li>要完整训练股直肌，需要包含髋伸位的膝屈动作</li><li>腿屈伸器械对股四头肌的孤立刺激直接有效</li></ul>
+<p class="act"><b>今日可执行</b>在腿部训练中加入腿屈伸，作为深蹲的补充。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2027-04-24</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="腿">
+<div class="meta"><span class="id">LG-014</span><span class="seq">Day 174</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">腿</span></div>
+<h3>腘绳肌跨两个关节，屈膝与伸髋都归它管</h3>
+<p class="body">腘绳肌从坐骨结节出发，跨过髋关节与膝关节，止于胫骨与腓骨。因此它既参与屈膝，也参与伸髋，训练中需要同时覆盖这两种功能。</p>
+<ul class="pts"><li>只做腿弯举，会遗漏伸髋功能</li><li>罗马尼亚硬拉与腿弯举互补</li></ul>
+<p class="act"><b>今日可执行</b>确保腿部训练中同时有硬拉类和腿弯举类动作。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2027-03-13</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="腿">
+<div class="meta"><span class="id">LG-015</span><span class="seq">Day 47</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">腿</span></div>
+<h3>臀大肌是人体最大的肌肉，也是最强壮的伸髋肌</h3>
+<p class="body">臀大肌负责髋关节伸展与外旋，在深蹲、硬拉、臀推等动作中提供主要动力。它也是决定下肢力量上限的关键肌群。</p>
+<ul class="pts"><li>深蹲底部起身主要依赖臀大肌与股四头肌协同</li><li>臀部薄弱会让腰部承担更多代偿</li></ul>
+<p class="act"><b>今日可执行</b>加入臀推或髋外展动作，补足臀大肌训练。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2026-11-06</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="腿">
+<div class="meta"><span class="id">LG-016</span><span class="seq">Day 193</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">腿</span></div>
+<h3>膝关节前移本身不危险，问题是压力分布变了</h3>
+<p class="body">膝关节屈曲角度增大时，髌股关节的受力随之增加，这是正常力学现象。对健康关节而言，在可控负荷下并无问题；对已有髌股疼痛的人则需要调整。</p>
+<ul class="pts"><li>不存在适用于所有人的膝盖不能超过脚尖规则</li><li>个体结构差异让动作幅度的合理范围因人而异</li></ul>
+<p class="act"><b>今日可执行</b>按自身感受调整，无疼痛前提下不必刻意限制膝盖前移。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2027-04-01</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="腿">
+<div class="meta"><span class="id">LG-017</span><span class="seq">Day 151</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">腿</span></div>
+<h3>小腿三头肌由腓肠肌与比目鱼肌构成</h3>
+<p class="body">腓肠肌跨膝关节，因此在屈膝状态下参与度下降；比目鱼肌不跨膝，屈膝时仍能发力。这就是站姿提踵与坐姿提踵的区别所在。</p>
+<ul class="pts"><li>站姿提踵（直膝）更偏腓肠肌</li><li>坐姿提踵（屈膝）更偏比目鱼肌</li></ul>
+<p class="act"><b>今日可执行</b>两种提踵各安排 2 到 3 组，覆盖小腿完整结构。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2027-02-18</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="腿">
+<div class="meta"><span class="id">LG-018</span><span class="seq">Day 162</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">腿</span></div>
+<h3>髋外展肌群决定深蹲时膝盖稳不稳</h3>
+<p class="body">臀中肌与臀小肌负责髋关节外展与外旋，在单腿支撑和深蹲过程中维持骨盆与膝关节的稳定。它们薄弱时，膝盖内扣会明显出现。</p>
+<ul class="pts"><li>膝盖内扣往往是髋外展力量不足的信号</li><li>侧向弹力带行走是常见的激活方式</li></ul>
+<p class="act"><b>今日可执行</b>深蹲前用弹力带做 2 组侧向行走作为激活。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2027-03-01</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="腿">
+<div class="meta"><span class="id">LG-019</span><span class="seq">Day 219</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">腿</span></div>
+<h3>腿部训练量可以高于上肢</h3>
+<p class="body">下肢肌群体积大、承担日常负重，恢复能力与耐受容量相对更高。ACSM 2026 的每周 10 组参考值在腿部通常可以向上调整。</p>
+<ul class="pts"><li>腿部 12 到 20 组每周是常见区间</li><li>上限受恢复能力限制，超过后收益递减甚至倒退</li></ul>
+<p class="act"><b>今日可执行</b>如果腿部还有余力，尝试本周增加 2 到 3 组。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-04-27</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="腿">
+<div class="meta"><span class="id">LG-020</span><span class="seq">Day 5</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">腿</span></div>
+<h3>每周练腿 2 次，通常优于挤在一天</h3>
+<p class="body">腿部动作负荷大、疲劳高，一次训练很难兼顾足够的训练量与质量。分成两次，例如深蹲日与硬拉日，能更好平衡容量与恢复。</p>
+<ul class="pts"><li>ACSM 2026 建议每肌群每周至少 2 次</li><li>两次之间保持 48 小时以上间隔</li></ul>
+<p class="act"><b>今日可执行</b>把腿部训练拆成深蹲侧重日与硬拉侧重日。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2026-09-25</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="腿">
+<div class="meta"><span class="id">LG-021</span><span class="seq">Day 201</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">腿</span></div>
+<h3>腿部力量训练的次数区间可以很宽</h3>
+<p class="body">ACSM 2026 指出 30% 到 100% 1RM 的范围内，增肌效果与负荷高低没有稳定关联。腿部既可用 5 次做大重量，也可用 15 到 20 次做代谢刺激。</p>
+<ul class="pts"><li>大重量利于力量表现，中等重量利于容量累积</li><li>关键是训练量与接近力竭的程度</li></ul>
+<p class="act"><b>今日可执行</b>在腿部计划里同时保留一个低次数动作和一个高次数动作。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-04-09</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="腿">
+<div class="meta"><span class="id">LG-022</span><span class="seq">Day 242</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">腿</span></div>
+<h3>深蹲不深，臀腿收益会明显打折</h3>
+<p class="body">深度不足时，臀大肌与内收肌的参与显著减少，训练更偏向股四头肌。在保持腰椎中立的前提下尽可能蹲深，是提升下肢收益的直接方式。</p>
+<ul class="pts"><li>深度是影响臀腿参与度的关键变量</li><li>降低重量换取深度，通常比加重量更有价值</li></ul>
+<p class="act"><b>今日可执行</b>减掉两成重量，蹲到能保持中立的最深处，做 3 组。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2027-05-20</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="腿">
+<div class="meta"><span class="id">LG-023</span><span class="seq">Day 166</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">腿</span></div>
+<h3>腿举可以承担部分深蹲的容量</h3>
+<p class="body">腿举对躯干稳定性要求低，更适合在深蹲之后继续累积训练量，也适合腰背疲劳时作为替代。它的局限是稳定性需求低，功能性不如深蹲。</p>
+<ul class="pts"><li>腿举适合作为补充容量而不是完全替代</li><li>腰背受限时腿举是实用的选择</li></ul>
+<p class="act"><b>今日可执行</b>在深蹲后加 3 组腿举，把腿部容量补足。</p>
+<p class="src">依据：训练计划设计共识　<span class="dt">2027-03-05</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="腿">
+<div class="meta"><span class="id">LG-024</span><span class="seq">Day 264</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">腿</span></div>
+<h3>小腿需要更高频率和更大训练量</h3>
+<p class="body">小腿在行走中持续被使用，适应性较强，很多人需要更高的训练量才能看到变化。每周 2 到 3 次、每次 4 到 6 组是常见安排。</p>
+<ul class="pts"><li>小腿对低训练量反应不敏感</li><li>完整行程与顶峰停顿比加重更重要</li></ul>
+<p class="act"><b>今日可执行</b>把小腿训练频率提高到每周 3 次，每次 4 组。</p>
+<p class="src">依据：训练计划设计共识　<span class="dt">2027-06-11</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="腿">
+<div class="meta"><span class="id">LG-025</span><span class="seq">Day 15</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">腿</span></div>
+<h3>腿部训练后的恢复时间要留足</h3>
+<p class="body">腿部训练带来的全身疲劳与肌肉损伤程度高于上肢，需要更长的恢复窗口。通常 48 到 72 小时后再安排同一肌群的高强度训练。</p>
+<ul class="pts"><li>过早重复高强度腿部训练会压缩修复窗口</li><li>腿部与全身性动作（硬拉）尤其需要拉开间隔</li></ul>
+<p class="act"><b>今日可执行</b>把两次腿部训练之间留出至少两天。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2026-10-05</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="腿">
+<div class="meta"><span class="id">LG-026</span><span class="seq">Day 246</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">腿</span></div>
+<h3>腿部减载比上肢更需要严格执行</h3>
+<p class="body">下肢负荷大，累积疲劳容易超过主观感受。定期减载能避免进入长期停滞，同时给关节与结缔组织恢复机会。</p>
+<ul class="pts"><li>每 4 到 8 周降低一次训练量是常见做法</li><li>减载周保持动作模式，只降低组数或重量</li></ul>
+<p class="act"><b>今日可执行</b>设定每六周安排一次腿部减载周。</p>
+<p class="src">依据：训练周期化研究综述　<span class="dt">2027-05-24</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="腿">
+<div class="meta"><span class="id">LG-027</span><span class="seq">Day 213</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">腿</span></div>
+<h3>腿部动作顺序：大重量复合在前</h3>
+<p class="body">深蹲、硬拉这类动作对神经与技术要求高，应放在训练开始阶段。腿屈伸、腿弯举等孤立动作适合放在后面补充容量。</p>
+<ul class="pts"><li>疲劳后做大重量复合动作，技术会明显退化</li><li>孤立动作放在后面能更安全地累积容量</li></ul>
+<p class="act"><b>今日可执行</b>把腿屈伸与腿弯举挪到深蹲之后。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-04-21</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="腿">
+<div class="meta"><span class="id">LG-028</span><span class="seq">Day 68</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">腿</span></div>
+<h3>腿部力量与跑步表现互相支撑也互相干扰</h3>
+<p class="body">适量的下肢力量训练能提升跑步经济性与冲刺能力；但高容量耐力跑会影响下肢力量与肌肉量的增长。两者的训练量需要权衡。</p>
+<ul class="pts"><li>力量训练对跑步表现有正向作用</li><li>过量耐力训练会干扰增肌与最大力量</li></ul>
+<p class="act"><b>今日可执行</b>如果同时在跑步，把每周跑量控制在力量训练能恢复的范围内。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2026-11-27</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="腿">
+<div class="meta"><span class="id">LG-029</span><span class="seq">Day 158</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">腿</span></div>
+<h3>骑车是腿部训练后较友好的有氧选择</h3>
+<p class="body">骑行对下肢的离心冲击小，适合在腿部力量训练后作为低冲击有氧。跑步的离心负荷较高，可能加重腿部疲劳。</p>
+<ul class="pts"><li>离心冲击小的有氧对恢复干扰更小</li><li>训练后低强度骑行有助于促进循环</li></ul>
+<p class="act"><b>今日可执行</b>练腿后如果需要做有氧，优先选择骑车或椭圆机。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-02-25</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="腿">
+<div class="meta"><span class="id">LG-030</span><span class="seq">Day 229</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">腿</span></div>
+<h3>爬楼梯与爬坡走，是对腿部友好的有氧</h3>
+<p class="body">上坡走与爬楼以髋伸为主导，对下肢肌群刺激明显，同时冲击低于下坡跑。适合作为力量训练之外的低强度有氧补充。</p>
+<ul class="pts"><li>下坡的离心负荷远高于上坡，需要注意</li><li>强度可通过坡度与速度灵活调节</li></ul>
+<p class="act"><b>今日可执行</b>把跑步机坡度调到 8 到 10，以能说话的速度走 20 分钟。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2027-05-07</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="腿">
+<div class="meta"><span class="id">LG-031</span><span class="seq">Day 154</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">腿</span></div>
+<h3>练腿后第二天的酸痛，不是继续加量的理由</h3>
+<p class="body">延迟性肌肉酸痛在腿部训练后尤其明显。酸痛未消退时进行高强度重复训练，会延长恢复期并影响后续表现。</p>
+<ul class="pts"><li>酸痛期间可进行低强度活动促进循环</li><li>力量训练应等酸痛明显缓解后再安排</li></ul>
+<p class="act"><b>今日可执行</b>腿部酸痛未退时改为散步或轻松骑行。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-02-21</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="腿">
+<div class="meta"><span class="id">LG-032</span><span class="seq">Day 141</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">腿</span></div>
+<h3>练腿前的热身要覆盖髋、膝、踝三个关节</h3>
+<p class="body">下肢动作涉及三个关节的协同，热身应逐层推进：先升高体温，再做髋与踝的动态活动，最后用递增组进入正式重量。</p>
+<ul class="pts"><li>动态热身优于训练前长时间静态拉伸</li><li>递增组是最有针对性的专项热身</li></ul>
+<p class="act"><b>今日可执行</b>深蹲前安排 5 分钟动态热身加 3 组递增。</p>
+<p class="src">依据：生物力学与热身研究综述　<span class="dt">2027-02-08</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="腿">
+<div class="meta"><span class="id">LG-033</span><span class="seq">Day 182</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">腿</span></div>
+<h3>腿部训练消耗大，碳水不宜过度压低</h3>
+<p class="body">下肢训练的能量消耗与糖原需求高于上肢。长期低碳水会削弱训练表现与恢复速度，反而拖慢进度。</p>
+<ul class="pts"><li>碳水是力量训练的主要能量来源</li><li>训练前后安排碳水有助于表现与恢复</li></ul>
+<p class="act"><b>今日可执行</b>练腿日的训练前 1 小时安排一份易消化的碳水。</p>
+<p class="src">依据：运动营养学共识　<span class="dt">2027-03-21</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="腿">
+<div class="meta"><span class="id">LG-034</span><span class="seq">Day 100</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">腿</span></div>
+<h3>下肢关节的恢复速度慢于肌肉</h3>
+<p class="body">肌腱、韧带与软骨的血供少于肌肉，适应速度更慢。肌肉感觉已恢复时，结缔组织可能仍未完全适应新增负荷。</p>
+<ul class="pts"><li>负荷提升速度应以关节的耐受为准</li><li>突然增加深蹲重量是膝部不适的常见诱因</li></ul>
+<p class="act"><b>今日可执行</b>重量提升每次控制在 2% 到 5% 之间，给结缔组织适应时间。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2026-12-29</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="腿">
+<div class="meta"><span class="id">LG-035</span><span class="seq">Day 27</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">腿</span></div>
+<h3>久坐后练腿，先解决髋屈肌紧张</h3>
+<p class="body">长时间久坐会让髋屈肌处于缩短状态。髋屈肌紧张会限制髋伸幅度，让深蹲出现骨盆前倾或腰部代偿。</p>
+<ul class="pts"><li>髋屈肌紧张是久坐人群的常见限制</li><li>训练前做髋屈肌动态拉伸有助于改善动作</li></ul>
+<p class="act"><b>今日可执行</b>练腿前做 3 组弓步式髋屈肌拉伸，每组每侧 20 秒。</p>
+<p class="src">依据：职业健康与姿势研究　<span class="dt">2026-10-17</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="腿">
+<div class="meta"><span class="id">LG-036</span><span class="seq">Day 236</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">腿</span></div>
+<h3>深蹲伤膝盖是被夸大的说法</h3>
+<p class="body">规范执行、负荷渐进的深蹲并不会损伤健康膝关节。相反，它强化股四头肌与髋部肌群，对膝关节稳定有正向作用。问题多出在负荷突增与技术错误。</p>
+<ul class="pts"><li>跑步与深蹲都不是膝盖损伤的必然原因</li><li>不正确的动作与突然增加的负荷才是主要风险</li></ul>
+<p class="act"><b>今日可执行</b>遇到膝部不适先检查动作与负荷变化，而不是直接停练。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-05-14</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="腿">
+<div class="meta"><span class="id">LG-037</span><span class="seq">Day 94</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">腿</span></div>
+<h3>练腿不会让腿变粗，除非你真的长了肌肉</h3>
+<p class="body">腿部围度变化取决于肌肉增长与脂肪变化。适度力量训练配合正常饮食，通常带来更紧实的外观，而非明显增粗。担心变粗而回避腿部训练，反而错失代谢与力量的收益。</p>
+<ul class="pts"><li>肌肉增长需要长期足量训练与热量支持</li><li>腿部训练对整体代谢与激素环境有正向作用</li></ul>
+<p class="act"><b>今日可执行</b>按训练目标安排腿部训练，不必因担心围度而回避。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2026-12-23</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="腿">
+<div class="meta"><span class="id">LG-038</span><span class="seq">Day 223</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">腿</span></div>
+<h3>局部减脂对大腿同样不成立</h3>
+<p class="body">大腿的脂肪减少依靠全身脂肪的下降，针对性的腿部动作不会优先消耗大腿脂肪。腿部训练改变的是肌肉量与形态。</p>
+<ul class="pts"><li>大腿内侧训练不能优先减少大腿内侧脂肪</li><li>体脂下降后，训练过的部位形态更好</li></ul>
+<p class="act"><b>今日可执行</b>把腿部围度的期待放在整体体脂管理上。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-05-01</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="腿">
+<div class="meta"><span class="id">LG-039</span><span class="seq">Day 281</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">腿</span></div>
+<h3>跑步不会把小腿跑粗</h3>
+<p class="body">小腿围度变化主要取决于肌肉与脂肪。多数人的小腿外观变化来自脂肪减少与肌肉形态改善，而不是跑步导致的增粗。</p>
+<ul class="pts"><li>跑步不会让小腿围度必然增加</li><li>跑后小腿发硬多是暂时充血与紧张</li></ul>
+<p class="act"><b>今日可执行</b>跑后做小腿拉伸与放松，缓解紧张感。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-06-28</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="腿">
+<div class="meta"><span class="id">LG-040</span><span class="seq">Day 134</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">腿</span></div>
+<h3>只做有氧也能瘦，但保不住肌肉</h3>
+<p class="body">热量缺口是减脂的核心，只做有氧同样能减重。但缺少抗阻刺激时，减去的体重中肌肉占比会更高，基础代谢与体态都会受影响。</p>
+<ul class="pts"><li>减脂期保留力量训练有助于维持肌肉量</li><li>有氧与力量结合优于单独有氧</li></ul>
+<p class="act"><b>今日可执行</b>减脂期把力量训练保留在每周 2 到 3 次。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-02-01</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="二头">
+<div class="meta"><span class="id">BI-001</span><span class="seq">Day 33</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">二头</span></div>
+<h3>弯举时肘部要固定，别让它往前跑</h3>
+<p class="body">肘部前移会把动作变成肩关节屈曲，让三角肌前束参与进来，同时缩短肱二头肌的有效行程。把肘部固定在体侧，弯举才落在目标肌上。</p>
+<ul class="pts"><li>肘部前移是弯举最常见的代偿</li><li>行程缩短会削弱缩短位的收缩</li></ul>
+<p class="act"><b>今日可执行</b>靠墙做一组弯举，用墙限制肘部前移。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2026-10-23</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="二头">
+<div class="meta"><span class="id">BI-002</span><span class="seq">Day 82</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">二头</span></div>
+<h3>弯举末端的旋后，能加强二头肌收缩</h3>
+<p class="body">肱二头肌除了屈肘，还负责前臂旋后。在弯举顶端略微外旋手腕（小指向外），能进一步收紧肱二头肌。</p>
+<ul class="pts"><li>旋后是肱二头肌的解剖功能之一</li><li>哑铃比直杆更容易实现旋后动作</li></ul>
+<p class="act"><b>今日可执行</b>用哑铃弯举，在顶端把掌心再向上转一点。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2026-12-11</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="二头">
+<div class="meta"><span class="id">BI-003</span><span class="seq">Day 24</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">二头</span></div>
+<h3>锤式弯举更多练到肱肌与肱桡肌</h3>
+<p class="body">掌心相对的中立握弯举会减少肱二头肌的旋后参与，把更多负荷分给肱肌与肱桡肌。这两块肌肉的增厚能推动肱二头肌向上顶，视觉上更饱满。</p>
+<ul class="pts"><li>肱肌位于肱二头肌下方，增厚能抬高二头轮廓</li><li>中立握对肘部更友好</li></ul>
+<p class="act"><b>今日可执行</b>把锤式弯举加入手臂训练日，做 3 组。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2026-10-14</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="二头">
+<div class="meta"><span class="id">BI-004</span><span class="seq">Day 61</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">二头</span></div>
+<h3>上斜哑铃弯举能把二头肌放在拉长位</h3>
+<p class="body">上斜凳让肩关节处于伸展位，肱二头肌在起始时已被拉长。这个位置的张力是站姿弯举给不了的，也是很多人感觉更强烈的动作。</p>
+<ul class="pts"><li>肩关节伸展位可以增加肱二头肌长头的牵拉</li><li>重量要降低，否则容易在底部失控</li></ul>
+<p class="act"><b>今日可执行</b>在手臂训练中加入 2 到 3 组上斜哑铃弯举。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2026-11-20</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="二头">
+<div class="meta"><span class="id">BI-005</span><span class="seq">Day 275</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">二头</span></div>
+<h3> preacher 弯举限制肩关节，动作更纯粹</h3>
+<p class="body">牧师凳把上臂固定在斜面上，隔绝了肩关节的借力。代价是底部拉长位张力较大，重量需要明显降低。</p>
+<ul class="pts"><li>固定上臂是牧师凳的核心价值</li><li>底部不要完全放松，避免肘部承受突发张力</li></ul>
+<p class="act"><b>今日可执行</b>牧师凳弯举用较轻重量，全程保持张力不松劲。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-06-22</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="二头">
+<div class="meta"><span class="id">BI-006</span><span class="seq">Day 70</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">二头</span></div>
+<h3>反握弯举能覆盖前臂伸肌之外的屈肌群</h3>
+<p class="body">正握（掌心向下）弯举主要刺激肱桡肌与前臂伸肌群，与常规弯举形成互补。它对手臂整体的厚度有贡献。</p>
+<ul class="pts"><li>正握弯举是前臂训练的有效补充</li><li>重量通常明显低于常规弯举</li></ul>
+<p class="act"><b>今日可执行</b>在手臂训练末尾安排 2 组正握弯举，用轻重量。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2026-11-29</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="二头">
+<div class="meta"><span class="id">BI-007</span><span class="seq">Day 43</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">二头</span></div>
+<h3>弯举不要靠摆动躯干借力</h3>
+<p class="body">用腰部后仰来带动重量，会让下肢与躯干承担主要工作，肱二头肌的实际张力反而变小。摆动幅度越大，动作越无效。</p>
+<ul class="pts"><li>借力会让动作变成全身性的甩动</li><li>标准做法是躯干稳定，只有肘关节活动</li></ul>
+<p class="act"><b>今日可执行</b>靠墙或背靠立柱做弯举，消除躯干摆动的空间。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2026-11-02</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="二头">
+<div class="meta"><span class="id">BI-008</span><span class="seq">Day 247</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">二头</span></div>
+<h3>绳索弯举在顶端能提供更持续的张力</h3>
+<p class="body">绳索的阻力随拉伸长度增加，在弯举顶端仍有张力，而哑铃在顶端几乎没有负荷。绳索适合强调缩短位的收缩。</p>
+<ul class="pts"><li>绳索在缩短位保持张力是它的优势</li><li>适合作为弯举的补充动作</li></ul>
+<p class="act"><b>今日可执行</b>用绳索弯举做 2 组高次数收尾，在顶端停 1 秒。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2027-05-25</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="二头">
+<div class="meta"><span class="id">BI-009</span><span class="seq">Day 30</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">二头</span></div>
+<h3>肱二头肌有两个头，长头在肩关节也有作用</h3>
+<p class="body">长头起于肩胛骨盂上结节，短头起于喙突。长头跨过肩关节，因此肩关节位置会改变肱二头肌的长度与张力。</p>
+<ul class="pts"><li>上臂在体后时，长头被拉长</li><li>上臂在体前时，长头处于缩短位</li></ul>
+<p class="act"><b>今日可执行</b>理解这一点，就明白为什么上斜弯举感觉不同。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2026-10-20</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="二头">
+<div class="meta"><span class="id">BI-010</span><span class="seq">Day 9</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">二头</span></div>
+<h3>肱肌是肱二头肌的邻居，也是屈肘的主力</h3>
+<p class="body">肱肌位于肱二头肌深面，是纯粹的屈肘肌，不参与旋后。它增厚能把肱二头肌顶起来，让手臂看起来更粗。</p>
+<ul class="pts"><li>锤式弯举对肱肌刺激较好</li><li>肱肌增长对臂围的贡献常被低估</li></ul>
+<p class="act"><b>今日可执行</b>把中立握动作纳入手臂训练，兼顾肱肌。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2026-09-29</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="二头">
+<div class="meta"><span class="id">BI-011</span><span class="seq">Day 97</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">二头</span></div>
+<h3>手臂是小肌群，间接刺激已占一部分</h3>
+<p class="body">所有拉类动作（划船、下拉、引体）都会使用肱二头肌。计算训练量时，这部分间接刺激需要计入，否则容易练过量。</p>
+<ul class="pts"><li>背部训练日的拉类动作已给肱二头肌可观容量</li><li>手臂孤立动作每周 6 到 10 组通常足够</li></ul>
+<p class="act"><b>今日可执行</b>统计本周拉类动作组数，合理减少额外的弯举容量。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2026-12-26</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="二头">
+<div class="meta"><span class="id">BI-012</span><span class="seq">Day 135</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">二头</span></div>
+<h3>手臂放在背部训练之后更合理</h3>
+<p class="body">肱二头肌在拉类动作中是辅助肌。若先做弯举造成疲劳，会影响随后的背部训练质量；反过来的影响较小。</p>
+<ul class="pts"><li>先把背部练好，再用孤立动作补手臂</li><li>同一天训练时顺序很关键</li></ul>
+<p class="act"><b>今日可执行</b>把弯举安排在划船与下拉之后。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-02-02</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="二头">
+<div class="meta"><span class="id">BI-013</span><span class="seq">Day 19</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">二头</span></div>
+<h3>肘部肌腱的恢复慢于肌肉</h3>
+<p class="body">肱二头肌长头肌腱与前臂屈肌起点血供较少，恢复速度慢。高频率弯举容易累积肘部不适，需要控制总量。</p>
+<ul class="pts"><li>肘部不适常与弯举总量过高有关</li><li>出现不适时先减少握持类与弯举类容量</li></ul>
+<p class="act"><b>今日可执行</b>如果肘部开始隐痛，把弯举组数减半观察一周。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2026-10-09</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="二头">
+<div class="meta"><span class="id">BI-014</span><span class="seq">Day 186</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">二头</span></div>
+<h3>弯举不能减掉手臂上的脂肪</h3>
+<p class="body">手臂脂肪的减少依赖整体体脂下降。弯举增加的是肱二头肌体积，若体脂不变，手臂围度反而可能增加。</p>
+<ul class="pts"><li>局部减脂不存在，手臂同样适用</li><li>线条取决于体脂，围度取决于肌肉</li></ul>
+<p class="act"><b>今日可执行</b>把手臂线条的目标放在整体体脂管理上。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-03-25</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="二头">
+<div class="meta"><span class="id">BI-015</span><span class="seq">Day 152</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">二头</span></div>
+<h3>高次数弯举不会练出更清晰的线条</h3>
+<p class="body">次数高低影响的是肌耐力与代谢刺激，与局部脂肪无关。判断弯举是否有效，应看负荷与容量的渐进，而不是次数是否够多。</p>
+<ul class="pts"><li>线条由体脂决定，不由次数决定</li><li>ACSM 2026 指出中等负荷在足够训练量下同样有效</li></ul>
+<p class="act"><b>今日可执行</b>把弯举的次数区间设定在 8 到 15 次，不必刻意追求高次数。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-02-19</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="三头">
+<div class="meta"><span class="id">TR-001</span><span class="seq">Day 171</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">三头</span></div>
+<h3>窄距卧推的握距不必太窄</h3>
+<p class="body">握距与肩同宽或略窄即可。过窄的握距会让手腕与肘部承受额外压力，也不会带来更多三头参与。</p>
+<ul class="pts"><li>肘部贴近身体是关键，而不仅仅是握距</li><li>下放时肘部向后而不是向外张开</li></ul>
+<p class="act"><b>今日可执行</b>用与肩同宽的握距做窄距卧推，肘部贴紧身体。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-03-10</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="三头">
+<div class="meta"><span class="id">TR-002</span><span class="seq">Day 103</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">三头</span></div>
+<h3>下压时肘部要固定，不要前后摆</h3>
+<p class="body">绳索下压的常见问题是肘部随重量前后移动，变成肩关节的伸展动作。把肘部固定在体侧，三头肌才能独立完成伸肘。</p>
+<ul class="pts"><li>肘部前移会让背阔肌参与进来</li><li>在底部充分伸直并停顿</li></ul>
+<p class="act"><b>今日可执行</b>面对镜子做下压，观察肘部是否固定。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-01-01</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="三头">
+<div class="meta"><span class="id">TR-003</span><span class="seq">Day 144</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">三头</span></div>
+<h3>仰卧臂屈伸要控制肘部朝向</h3>
+<p class="body">做仰卧臂屈伸时肘部应指向天花板，而不是向两侧张开。肘部外张会让动作变形，也增加肘关节的扭矩。</p>
+<ul class="pts"><li>保持肘部相对内收</li><li>下放到额头后方即可，不必过度下压</li></ul>
+<p class="act"><b>今日可执行</b>用中等重量做一组，专注保持肘部朝上。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-02-11</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="三头">
+<div class="meta"><span class="id">TR-004</span><span class="seq">Day 211</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">三头</span></div>
+<h3>过顶臂屈伸能把三头肌长头放在拉长位</h3>
+<p class="body">三头肌长头跨过肩关节，只有在手臂上举时才会被充分拉长。过顶动作是覆盖长头的最有效方式。</p>
+<ul class="pts"><li>长头在手臂上举时处于拉长位</li><li>下拉类动作无法充分刺激长头</li></ul>
+<p class="act"><b>今日可执行</b>在手臂训练中加入过顶绳索臂屈伸，做 3 组。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2027-04-19</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="三头">
+<div class="meta"><span class="id">TR-005</span><span class="seq">Day 2</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">三头</span></div>
+<h3>双杠臂屈伸的躯干角度改变肌群侧重</h3>
+<p class="body">躯干越直立，三头肌参与越多；躯干前倾越多，胸大肌下部参与越多。想练三头就保持躯干接近垂直。</p>
+<ul class="pts"><li>角度是控制侧重的直接手段</li><li>下放到肩关节舒适的位置即可</li></ul>
+<p class="act"><b>今日可执行</b>用躯干直立的姿势做双杠臂屈伸，感受三头肌发力。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2026-09-22</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="三头">
+<div class="meta"><span class="id">TR-006</span><span class="seq">Day 138</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">三头</span></div>
+<h3>绳索下压的末端，可以稍微外展手腕</h3>
+<p class="body">在伸肘末端把手腕向两侧分开，能让三头肌外侧头更好地收缩。这是绳索附件相比直杆的优势之一。</p>
+<ul class="pts"><li>末端外分是常见的收缩强化技巧</li><li>前提是肘部仍然保持固定</li></ul>
+<p class="act"><b>今日可执行</b>用绳索下压，在底部把手向外分并停 1 秒。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-02-05</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="三头">
+<div class="meta"><span class="id">TR-007</span><span class="seq">Day 255</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">三头</span></div>
+<h3>三头训练的全行程，包括肩关节伸展</h3>
+<p class="body">三头肌长头跨肩关节，因此真正的全行程需要包含上臂上举的动作（过顶）。只做肘关节动作，长头始终得不到完整长度变化。</p>
+<ul class="pts"><li>伸肘动作覆盖外侧头与内侧头</li><li>过顶动作覆盖长头</li></ul>
+<p class="act"><b>今日可执行</b>手臂训练中至少安排一个过顶的三头动作。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2027-06-02</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="三头">
+<div class="meta"><span class="id">TR-008</span><span class="seq">Day 74</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">三头</span></div>
+<h3>器械臂屈伸适合作为高容量收尾</h3>
+<p class="body">器械提供固定轨迹，稳定性需求低，适合在自由重量三头动作之后继续累积容量，也适合初学者建立动作模式。</p>
+<ul class="pts"><li>固定轨迹降低了技术门槛</li><li>适合放在训练末尾做高次数</li></ul>
+<p class="act"><b>今日可执行</b>在手臂训练最后用器械臂屈伸做 3 组 12 到 15 次。</p>
+<p class="src">依据：训练计划设计共识　<span class="dt">2026-12-03</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="三头">
+<div class="meta"><span class="id">TR-009</span><span class="seq">Day 224</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">三头</span></div>
+<h3>肱三头肌三个头，长头是唯一跨肩关节的</h3>
+<p class="body">外侧头与内侧头只跨肘关节，长头起于肩胛骨盂下结节，跨过肩关节。这决定了长头需要上臂上举的动作才能被充分刺激。</p>
+<ul class="pts"><li>长头既参与伸肘，也参与肩关节伸展</li><li>过顶类动作是长头的专属补充</li></ul>
+<p class="act"><b>今日可执行</b>检查当前手臂计划是否有过顶的三头动作。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2027-05-02</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="三头">
+<div class="meta"><span class="id">TR-010</span><span class="seq">Day 18</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">三头</span></div>
+<h3>三头肌占上臂围度的比例比想象中大</h3>
+<p class="body">肱三头肌的体积约占上臂肌肉总量的三分之二。想让手臂变粗，三头肌的训练量往往应高于肱二头肌。</p>
+<ul class="pts"><li>臂围增长的主要来源是三头肌</li><li>很多人手臂练不大，问题出在三头训练量不足</li></ul>
+<p class="act"><b>今日可执行</b>让三头的总组数不少于二头。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2026-10-08</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="三头">
+<div class="meta"><span class="id">TR-011</span><span class="seq">Day 179</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">三头</span></div>
+<h3>三头在推类动作中已被大量使用</h3>
+<p class="body">卧推、推举、俯卧撑都会大量使用三头肌。计算训练量时需把这部分计入，否则容易在手臂训练日过量。</p>
+<ul class="pts"><li>推类动作为三头提供可观容量</li><li>额外的孤立三头训练每周 6 到 10 组通常足够</li></ul>
+<p class="act"><b>今日可执行</b>统计本周推类动作组数，据此调整孤立三头容量。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-03-18</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="三头">
+<div class="meta"><span class="id">TR-012</span><span class="seq">Day 232</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">三头</span></div>
+<h3>三头动作适合排在有氧或推日之后</h3>
+<p class="body">三头是小肌群，在前面的大肌群动作之后训练，能避免因手臂疲劳影响复合动作表现。</p>
+<ul class="pts"><li>先练大肌群，后练小肌群，是通用排序</li><li>孤立动作放在最后用于补足容量</li></ul>
+<p class="act"><b>今日可执行</b>把三头孤立动作放在胸肩训练之后。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-05-10</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="三头">
+<div class="meta"><span class="id">TR-013</span><span class="seq">Day 79</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">三头</span></div>
+<h3>肘部的过度使用问题，常来自三头训练量</h3>
+<p class="body">绳索下压、臂屈伸等动作反复牵扯肘部肌腱。肘后侧不适时，应优先减少三头的训练量与加重速度。</p>
+<ul class="pts"><li>肘部不适多与训练量累积有关</li><li>减少组数与调整握法通常有效</li></ul>
+<p class="act"><b>今日可执行</b>出现肘后侧不适时，把三头组数砍掉一半并降低重量。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2026-12-08</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="三头">
+<div class="meta"><span class="id">TR-014</span><span class="seq">Day 50</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">三头</span></div>
+<h3>手臂上的赘肉不会因为练三头而消失</h3>
+<p class="body">手臂后侧的松弛感来自皮下脂肪与皮肤弹性，三头肌训练增加的是肌肉体积。体脂不降，外观变化会很有限。</p>
+<ul class="pts"><li>局部减脂不存在</li><li>肌肉增长与脂肪减少是两个独立过程</li></ul>
+<p class="act"><b>今日可执行</b>把手臂形态的期望放在整体体脂管理上。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2026-11-09</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="三头">
+<div class="meta"><span class="id">TR-015</span><span class="seq">Day 40</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">三头</span></div>
+<h3>臂屈伸不必追求超大重量</h3>
+<p class="body">三头训练以大重量低次数冲击肘部的性价比不高。中等重量配合完整行程与控制，通常能带来更好的长期进展。</p>
+<ul class="pts"><li>肘关节对过大负荷较敏感</li><li>ACSM 2026 指出中等负荷在足够训练量下同样有效</li></ul>
+<p class="act"><b>今日可执行</b>把臂屈伸重量下调，做 10 到 15 次并保持完整行程。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2026-10-30</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="核心">
+<div class="meta"><span class="id">CO-001</span><span class="seq">Day 78</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">核心</span></div>
+<h3>平板支撑靠的是抗伸展，不是撑时间</h3>
+<p class="body">平板支撑的本质是核心肌群对抗脊柱被拉直的力量，做等长收缩。姿势一旦塌腰或抬臀，支撑时间再长也没有训练价值。</p>
+<ul class="pts"><li>臀部不抬高、腰部不下塌是基本要求</li><li>能保持标准姿势 30 到 45 秒即可，不必追求长时间</li></ul>
+<p class="act"><b>今日可执行</b>做一组平板支撑，在姿势开始变形时立刻结束。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2026-12-07</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="核心">
+<div class="meta"><span class="id">CO-002</span><span class="seq">Day 98</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">核心</span></div>
+<h3>卷腹是脊柱屈曲，不是把上身抬起来</h3>
+<p class="body">卷腹依靠腹直肌让胸廓向骨盆靠近，行程短、幅度小。常见的错误是整条躯干抬起，变成髋屈肌主导的动作。</p>
+<ul class="pts"><li>下背应保持贴地，只让胸椎段离地</li><li>幅度小但收缩到位比幅度大更有效</li></ul>
+<p class="act"><b>今日可执行</b>双手交叉放胸前，只做胸椎离地的短行程卷腹。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2026-12-27</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="核心">
+<div class="meta"><span class="id">CO-003</span><span class="seq">Day 87</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">核心</span></div>
+<h3>硬拉与深蹲本身就是最好的核心训练</h3>
+<p class="body">复合动作中核心肌群需要维持脊柱中立并传导力量，这种等长收缩的负荷远高于多数孤立腹部动作。</p>
+<ul class="pts"><li>抗旋转与抗屈曲能力在复合动作中得到训练</li><li>单独做腹部动作不必占用过多时间</li></ul>
+<p class="act"><b>今日可执行</b>把核心训练的重点放在复合动作的稳定性上。</p>
+<p class="src">依据：训练计划设计共识　<span class="dt">2026-12-16</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="核心">
+<div class="meta"><span class="id">CO-004</span><span class="seq">Day 132</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">核心</span></div>
+<h3>侧平板支撑训练的是抗侧屈</h3>
+<p class="body">侧平板让核心肌群对抗躯干向侧方塌陷，主要刺激腹斜肌与腰方肌。它是少数能有效训练侧向稳定性的动作。</p>
+<ul class="pts"><li>身体保持一条直线，髋部不下沉</li><li>可先采用屈膝版本降低难度</li></ul>
+<p class="act"><b>今日可执行</b>每侧做 2 组侧平板，各 20 到 30 秒。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-01-30</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="核心">
+<div class="meta"><span class="id">CO-005</span><span class="seq">Day 37</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">核心</span></div>
+<h3>死虫式是安全的抗伸展入门动作</h3>
+<p class="body">死虫式在仰卧位训练核心对抗腰椎伸展，同时对腰椎压力很小，适合作为核心训练的起点或腰部不适者的选择。</p>
+<ul class="pts"><li>全程保持下背贴地是关键</li><li>对侧手脚缓慢伸展，速度越慢越难</li></ul>
+<p class="act"><b>今日可执行</b>做 3 组死虫式，每组每侧 8 次，保持下背贴地。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2026-10-27</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="核心">
+<div class="meta"><span class="id">CO-006</span><span class="seq">Day 185</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">核心</span></div>
+<h3>悬垂举腿比地面抬腿更能训练腹肌</h3>
+<p class="body">悬垂举腿需要核心同时对抗身体摆动，负荷更大。常见错误是靠摆动惯性把腿甩起来，而非主动完成骨盆后倾。</p>
+<ul class="pts"><li>主动让骨盆后倾才是腹肌发力</li><li>做不动可先做屈膝版本</li></ul>
+<p class="act"><b>今日可执行</b>悬垂举腿时先屈膝，主动让骨盆向上卷。</p>
+<p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-03-24</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="核心">
+<div class="meta"><span class="id">CO-007</span><span class="seq">Day 163</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">核心</span></div>
+<h3>绳索卷腹可以负重渐进</h3>
+<p class="body">自重卷腹难以渐进加负荷，绳索卷腹允许持续增加重量，符合渐进超负荷原则，更适合作为长期核心训练动作。</p>
+<ul class="pts"><li>负重渐进是核心肌群增长的必要条件</li><li>动作以脊柱屈曲为主，髋部保持稳定</li></ul>
+<p class="act"><b>今日可执行</b>把绳索卷腹加入训练，从能完成 12 次的重量开始。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-03-02</span></p>
+</article><article class="card" data-cat="动作技术" data-mus="核心">
+<div class="meta"><span class="id">CO-008</span><span class="seq">Day 28</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">核心</span></div>
+<h3>鸟狗式训练的是抗旋转与协调</h3>
+<p class="body">鸟狗式要求在对侧手脚伸展时保持躯干稳定，训练核心的抗旋转能力与躯干协调。它对腰椎的压力也很小。</p>
+<ul class="pts"><li>伸展时骨盆不能转动</li><li>动作速度慢，控制优先于幅度</li></ul>
+<p class="act"><b>今日可执行</b>做 2 组鸟狗式，每侧 8 次，每次伸展停 3 秒。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2026-10-18</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="核心">
+<div class="meta"><span class="id">CO-009</span><span class="seq">Day 139</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">核心</span></div>
+<h3>核心不只是腹直肌，而是一整圈</h3>
+<p class="body">核心包括腹直肌、腹横肌、腹内斜肌、腹外斜肌、腰方肌、竖脊肌与膈肌等。它们共同维持脊柱稳定与呼吸功能。</p>
+<ul class="pts"><li>只练腹直肌会遗漏稳定脊柱的关键肌群</li><li>腹横肌负责腹内压调节，抗伸展训练能覆盖它</li></ul>
+<p class="act"><b>今日可执行</b>把核心训练安排成抗伸展、抗侧屈、抗旋转三类都覆盖。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2027-02-06</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="核心">
+<div class="meta"><span class="id">CO-010</span><span class="seq">Day 34</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">核心</span></div>
+<h3>腹直肌被腱划分成几段，块数改不了</h3>
+<p class="body">腹直肌的分段数目由腱划的解剖结构决定，是天生的。训练能改变肌肉厚度与体脂带来的可见度，不能改变分块数量。</p>
+<ul class="pts"><li>是否有六块腹肌是先天结构决定的</li><li>可见度取决于体脂、肌肉厚度与腱划深度</li></ul>
+<p class="act"><b>今日可执行</b>把目标放在整体厚度与体脂上，而非追求块数。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2026-10-24</span></p>
+</article><article class="card" data-cat="解剖机制" data-mus="核心">
+<div class="meta"><span class="id">CO-011</span><span class="seq">Day 106</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">核心</span></div>
+<h3>腹横肌像一条束带，负责腹内压</h3>
+<p class="body">腹横肌是腹部最深层的肌肉，纤维横向走行，收缩时像束带一样收紧腹腔，与膈肌共同参与呼吸和躯干稳定。</p>
+<ul class="pts"><li>腹内压是力量传导的重要环节</li><li>抗伸展类训练与呼吸控制能有效激活它</li></ul>
+<p class="act"><b>今日可执行</b>在平板支撑时刻意保持缓慢均匀的呼吸，而不是憋气。</p>
+<p class="src">依据：运动解剖学基础　<span class="dt">2027-01-04</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="核心">
+<div class="meta"><span class="id">CO-012</span><span class="seq">Day 196</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">核心</span></div>
+<h3>核心的稳定能力比动作次数更影响力量表现</h3>
+<p class="body">在大重量深蹲与硬拉中，核心负责把下肢产生力量传导到上肢。核心稳定性不足时，力量会在躯干处泄漏。</p>
+<ul class="pts"><li>核心是力量传导的中间环节</li><li>稳定性训练对大重量动作的表现有直接帮助</li></ul>
+<p class="act"><b>今日可执行</b>在深蹲前做 2 组腹式呼吸加绷紧练习。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2027-04-04</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="核心">
+<div class="meta"><span class="id">CO-013</span><span class="seq">Day 114</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">核心</span></div>
+<h3>核心每周 2 到 3 次、每次 5 到 10 分钟足够</h3>
+<p class="body">核心肌群在复合动作中已被大量使用，额外训练不需要占用太多时间。重点应放在动作质量与负荷渐进上。</p>
+<ul class="pts"><li>每天练腹并非必要，恢复同样重要</li><li>比起次数累积，更需要负重与难度渐进</li></ul>
+<p class="act"><b>今日可执行</b>每周安排 2 到 3 次核心训练，每次 3 个动作。</p>
+<p class="src">依据：训练计划设计共识　<span class="dt">2027-01-12</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="核心">
+<div class="meta"><span class="id">CO-014</span><span class="seq">Day 128</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">核心</span></div>
+<h3>卷腹不能减掉肚子上的脂肪</h3>
+<p class="body">局部减脂不存在。腹部脂肪的减少依赖于整体热量缺口，卷腹增加的是腹肌体积，不会优先消耗腹部脂肪。</p>
+<ul class="pts"><li>练腹不减腹脂，这是最常被误解的一点</li><li>体脂足够低时，腹肌自然可见</li></ul>
+<p class="act"><b>今日可执行</b>把腹部可见度交给体脂管理，训练专注在肌肉厚度上。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-01-26</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="核心">
+<div class="meta"><span class="id">CO-015</span><span class="seq">Day 261</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">核心</span></div>
+<h3>腹肌不是越练越明显，体脂才是关键</h3>
+<p class="body">腹肌的可见度取决于体脂率与肌肉厚度的比值。体脂较高时，无论做多少卷腹，腹肌都不会显现。</p>
+<ul class="pts"><li>男性和女性显现腹肌的体脂阈值不同</li><li>饮食与整体训练对可见度的作用大于腹部训练量</li></ul>
+<p class="act"><b>今日可执行</b>评估一下当前体脂，判断可见度受限的真实原因。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-06-08</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-001</span><span class="seq">Day 29</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>最大心率的估算公式只是粗略参考</h3>
+<p class="body">常用的 220 减年龄公式标准差很大，同年龄个体的实际最大心率可能相差十几到二十次。它适合作为粗略起点，不适合当作精确训练依据。</p>
+<ul class="pts"><li>220 减年龄的误差范围可达每分钟 10 到 15 次</li><li>更精确的方法是实测或使用储备心率法</li></ul>
+<p class="act"><b>今日可执行</b>用储备心率法重算一次你的训练区间：静息心率加（最大心率减静息心率）乘以强度百分比。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2026-10-19</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-002</span><span class="seq">Day 244</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>燃脂心率区间不等于减脂效率最高</h3>
+<p class="body">低强度运动时脂肪供能比例确实更高，但总热量消耗更低。中高强度运动虽然脂肪比例下降，绝对脂肪氧化量未必更少。减脂的核心仍是总热量缺口。</p>
+<ul class="pts"><li>脂肪供能比例与脂肪氧化总量是两回事</li><li>决定体脂变化的是长期热量平衡</li></ul>
+<p class="act"><b>今日可执行</b>选择你能长期坚持的强度，而不是纠结某个所谓最佳心率。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2027-05-22</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-003</span><span class="seq">Day 248</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>低强度稳态有氧的价值在于可持续</h3>
+<p class="body">低强度长时间有氧对心肺、血管功能与恢复都有正向作用，而且疲劳负担小，不容易影响力量训练。它是可以长期纳入计划的形态。</p>
+<ul class="pts"><li>强度约在能说话但略喘的水平</li><li>每周 2 到 3 次、每次 20 到 40 分钟是常见安排</li></ul>
+<p class="act"><b>今日可执行</b>安排一次 30 分钟的低强度有氧，全程保持能正常说话的强度。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2027-05-26</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-004</span><span class="seq">Day 113</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>高强度间歇的效率高，但恢复代价也高</h3>
+<p class="body">间歇训练在较短时间内带来更大的心肺刺激与代谢改善，但它对神经系统与肌肉的疲劳累积明显高于低强度有氧，不适合频繁安排。</p>
+<ul class="pts"><li>每周 1 到 2 次间歇训练通常足够</li><li>与力量训练安排在同一天时要注意间隔</li></ul>
+<p class="act"><b>今日可执行</b>把间歇训练安排在非力量日，或力量训练之后。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-01-11</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-005</span><span class="seq">Day 4</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>人体的三个供能系统同时工作，只是比例不同</h3>
+<p class="body">磷酸原系统负责极短时高强度输出，糖解系统负责中短时中高强度，氧化系统负责长时间低强度。任何运动都是三者按比例共同供能。</p>
+<ul class="pts"><li>不存在只动用某一个系统的运动</li><li>训练强度与持续时间决定各系统的贡献比例</li></ul>
+<p class="act"><b>今日可执行</b>理解这一点，就不再被有氧无氧截然分开的说法误导。</p>
+<p class="src">依据：运动生理学基础　<span class="dt">2026-09-24</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-006</span><span class="seq">Day 51</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>无氧运动一样能减脂</h3>
+<p class="body">力量训练与间歇训练同样消耗热量，并能通过增加肌肉量提高基础代谢。认为无氧不减肥是常见的误解。</p>
+<ul class="pts"><li>减脂取决于热量缺口，而非运动形式</li><li>力量训练有助于在减脂期保留肌肉</li></ul>
+<p class="act"><b>今日可执行</b>不必只靠有氧减脂，力量训练同样是减脂计划的核心。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2026-11-10</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-007</span><span class="seq">Day 38</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>空腹有氧提高的是运动中的脂肪氧化</h3>
+<p class="body">空腹状态下运动中脂肪供能比例会上升，但多项研究显示，它对 24 小时总脂肪氧化与长期体脂变化没有显著优势，且存在低血糖与肌肉分解的风险。</p>
+<ul class="pts"><li>运动中的脂肪氧化比例不等于长期减脂效果</li><li>血糖调节能力差的人应避免空腹训练</li></ul>
+<p class="act"><b>今日可执行</b>如果空腹训练让你头晕或表现下降，训练前吃点易消化的碳水。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2026-10-28</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-008</span><span class="seq">Day 306</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>运动后过量氧耗的额外消耗，常被高估</h3>
+<p class="body">运动后代谢率确实会在数小时内高于静息水平，但普通强度训练带来的额外消耗量级有限，无法抵消不合理的饮食摄入。</p>
+<ul class="pts"><li>过量氧耗的贡献通常只占运动总消耗的一小部分</li><li>把减脂希望寄托在过量氧耗上并不现实</li></ul>
+<p class="act"><b>今日可执行</b>以运动中的实际消耗与饮食控制作为减脂的主要抓手。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-07-23</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-009</span><span class="seq">Day 194</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>乳酸不是导致酸痛的物质</h3>
+<p class="body">乳酸在运动后很快被代谢或清除，与延迟性肌肉酸痛没有直接关系。酸痛主要来自肌纤维与结缔组织的微损伤。</p>
+<ul class="pts"><li>把乳酸当作酸痛元凶是流传广泛的错误</li><li>乳酸实际上可以被重新利用为能量底物</li></ul>
+<p class="act"><b>今日可执行</b>下次酸痛时不再归因于乳酸堆积。</p>
+<p class="src">依据：运动生理学基础　<span class="dt">2027-04-02</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-010</span><span class="seq">Day 215</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>心肺能力不足会限制力量训练的恢复</h3>
+<p class="body">每增加一公斤瘦体重，静息心输出量需求相应提高。心血管系统未能同步发展时，恢复效率会成为增肌的隐性瓶颈。</p>
+<ul class="pts"><li>心肺功能影响营养与氧气输送效率</li><li>适量的有氧训练对力量训练有间接支持作用</li></ul>
+<p class="act"><b>今日可执行</b>每周保留 2 次低强度有氧，作为力量训练的支撑。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-04-23</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-011</span><span class="seq">Day 56</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>有氧与力量的最佳安排，是拉开时间或拉开顺序</h3>
+<p class="body">同一天进行两种训练时，间隔 6 小时以上干扰最小；若无法间隔，把力量训练放在前面，能较好保护力量表现。</p>
+<ul class="pts"><li>顺序与间隔都会影响两者的相互干扰</li><li>普通健身者按此安排即可，不必过度复杂化</li></ul>
+<p class="act"><b>今日可执行</b>把有氧安排在力量训练之后或隔天。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2026-11-15</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-012</span><span class="seq">Day 10</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>减脂期有氧越多不一定越好</h3>
+<p class="body">过高的有氧容量会挤占恢复资源、增加食欲并可能影响肌肉保留。在热量缺口已经存在的前提下，适度有氧配合力量训练通常更高效。</p>
+<ul class="pts"><li>热量缺口主要靠饮食创造</li><li>有氧是辅助工具，不是越多越有效</li></ul>
+<p class="act"><b>今日可执行</b>如果已经每天有氧，试着减少到每周 3 次并观察变化。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2026-09-30</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-013</span><span class="seq">Day 72</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>爬坡走对关节友好且强度可控</h3>
+<p class="body">跑步机坡度走以髋伸为主导，冲击低于跑步，心率容易维持在目标区间，适合作为力量训练后的低冲击有氧。</p>
+<ul class="pts"><li>坡度越高越偏向臀部与大腿后侧</li><li>速度不必快，保持能说话即可</li></ul>
+<p class="act"><b>今日可执行</b>把坡度调到 8 到 12，走 20 分钟试试。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2026-12-01</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-014</span><span class="seq">Day 168</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>跳绳是高效率但冲击较高的选择</h3>
+<p class="body">跳绳在短时间内就能提高心率，对协调性与小腿耐力也有帮助。代价是下肢冲击较大，不适合每天进行。</p>
+<ul class="pts"><li>适合作为短时高效的有氧补充</li><li>小腿与跟腱需要适应期</li></ul>
+<p class="act"><b>今日可执行</b>从每天 5 分钟开始，逐步增加，注意小腿的酸胀反应。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2027-03-07</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-015</span><span class="seq">Day 119</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>椭圆机是低冲击有氧的稳妥选择</h3>
+<p class="body">椭圆机对下肢关节冲击小，同时涉及上下肢协同，适合关节敏感或腿部疲劳时使用。</p>
+<ul class="pts"><li>低冲击意味着恢复负担较小</li><li>阻力与速度可以灵活调节强度</li></ul>
+<p class="act"><b>今日可执行</b>在腿部训练后选择椭圆机做 20 分钟恢复性有氧。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2027-01-17</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-016</span><span class="seq">Day 286</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>运动时间越长不一定越好</h3>
+<p class="body">过量运动与多种运动损伤相关，包括肌腱与关节的长期磨损。训练量与恢复能力需要匹配，超过后收益不再增加而风险上升。</p>
+<ul class="pts"><li>运动损伤多与长期过量有关</li><li>训练量的上限由恢复能力决定</li></ul>
+<p class="act"><b>今日可执行</b>如果连续两周感到沉重，先减少总训练量再谈加量。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-07-03</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-017</span><span class="seq">Day 96</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>运动后的补水，比运动中的出汗量更重要</h3>
+<p class="body">运动中流失的主要是水分与电解质。运动后按体重变化补充，每减少一公斤体重约需补充 1 到 1.5 升液体。</p>
+<ul class="pts"><li>出汗后的体重下降主要是水分流失</li><li>大量出汗后应同时补充电解质</li></ul>
+<p class="act"><b>今日可执行</b>运动前后各称一次体重，按差额补充水分。</p>
+<p class="src">依据：运动营养学共识　<span class="dt">2026-12-25</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-018</span><span class="seq">Day 225</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>运动后不要立刻大量饮水</h3>
+<p class="body">短时间内大量饮水会稀释血液、增加胃部负担，可能引起恶心与不适。应少量多次补充。</p>
+<ul class="pts"><li>一次大量饮水可能造成胃部刺激</li><li>分次小口补充更利于吸收</li></ul>
+<p class="act"><b>今日可执行</b>运动后按每次 150 到 200 毫升、间隔十几分钟的方式补水。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-05-03</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-019</span><span class="seq">Day 136</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>有氧能力的提升需要渐进</h3>
+<p class="body">心肺适能的改善依赖持续且渐进的刺激。突然大幅增加跑量或强度，是下肢过用性损伤的常见诱因。</p>
+<ul class="pts"><li>每周增加量控制在总量的一成左右是常见原则</li><li>身体适应需要时间，心肺快于骨骼与肌腱</li></ul>
+<p class="act"><b>今日可执行</b>下周的跑量比本周增加不超过一成。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2027-02-03</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-020</span><span class="seq">Day 104</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>心率监测比主观感觉更可靠</h3>
+<p class="body">主观疲劳感受受睡眠、情绪与咖啡因影响。心率手表或胸带提供了更客观的强度参考，尤其是控制低强度有氧时。</p>
+<ul class="pts"><li>低强度有氧容易不自觉提速</li><li>心率数据能帮助稳定在目标区间</li></ul>
+<p class="act"><b>今日可执行</b>做低强度有氧时用设备监控心率，避免越做越快。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2027-01-02</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-021</span><span class="seq">Day 184</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>运动不需要非要出汗才算到位</h3>
+<p class="body">出汗量受环境温湿度、体脂与个体差异影响，与运动强度没有稳定对应关系。以强度和持续时间作为判断依据更可靠。</p>
+<ul class="pts"><li>冬天或空调环境下不出汗是正常的</li><li>以心率与自觉用力程度判断强度</li></ul>
+<p class="act"><b>今日可执行</b>改用呼吸节奏判断强度：能说话为低强度，说不完整句子为高强度。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-03-23</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-022</span><span class="seq">Day 164</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>持续性有氧与间歇有氧，心肺收益都可以很好</h3>
+<p class="body">两种形式都能有效改善心肺适能。选择取决于时间、关节耐受与偏好，不必认为其中一种更高级。</p>
+<ul class="pts"><li>长期坚持才是收益的前提</li><li>间歇更适合时间紧的人，持续更适合恢复较慢的人</li></ul>
+<p class="act"><b>今日可执行</b>选一个你更愿意长期做的形式，先坚持四周。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-03-03</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-023</span><span class="seq">Day 172</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>有氧训练的热量消耗常被高估</h3>
+<p class="body">多数中等强度的有氧，每小时消耗约数百千卡，而一顿加餐很容易就抵消。减脂的主力仍然是饮食控制。</p>
+<ul class="pts"><li>运动消耗与饮食摄入的量级需要对比着看</li><li>运动的价值更多在体成分与健康指标</li></ul>
+<p class="act"><b>今日可执行</b>记录一次运动与一次加餐的热量，直观比较一下。</p>
+<p class="src">依据：运动营养学共识　<span class="dt">2027-03-11</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-024</span><span class="seq">Day 202</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>日常活动量的消耗，容易被忽略但很重要</h3>
+<p class="body">非运动性活动产热指走路、站立、爬楼等日常活动消耗。它在总能量消耗中的占比可能高于刻意的运动训练。</p>
+<ul class="pts"><li>久坐会显著降低这部分消耗</li><li>增加日常步数是低成本的有效策略</li></ul>
+<p class="act"><b>今日可执行</b>设定一个每日步数目标，用通勤与午休补足。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2027-04-10</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-025</span><span class="seq">Day 124</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>减脂期的有氧安排，应该服务于恢复</h3>
+<p class="body">热量缺口下身体的恢复能力下降，高强度有氧会进一步挤压恢复资源。此时低强度有氧比高强度间歇更适合作为主要形式。</p>
+<ul class="pts"><li>减脂期优先保护力量训练的表现</li><li>低强度有氧对恢复的干扰最小</li></ul>
+<p class="act"><b>今日可执行</b>减脂期把间歇训练减少到每周 1 次以内。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-01-22</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-026</span><span class="seq">Day 278</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>运动前的动态活动优于静态拉伸</h3>
+<p class="body">训练前长时间静态拉伸可能短暂降低最大力量与爆发力。动态活动与专项递增组能提升体温与神经激活，更适合作热身。</p>
+<ul class="pts"><li>静态拉伸适合放在训练后</li><li>动态热身要与将进行的动作相关</li></ul>
+<p class="act"><b>今日可执行</b>把跑步前的静态拉伸换成动态活动与快走热身。</p>
+<p class="src">依据：生物力学与热身研究综述　<span class="dt">2027-06-25</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-027</span><span class="seq">Day 237</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>心肺适能是最重要的健康指标之一</h3>
+<p class="body">心肺适能与全因死亡风险的关系在多项大规模研究中被反复证实。它带来的健康收益超出体形变化本身。</p>
+<ul class="pts"><li>规律有氧对心血管与代谢健康有明确收益</li><li>健康收益不完全依赖体重变化</li></ul>
+<p class="act"><b>今日可执行</b>把每周累计 150 分钟中等强度有氧作为长期目标。</p>
+<p class="src">依据：公共卫生运动指南　<span class="dt">2027-05-15</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-028</span><span class="seq">Day 282</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>从完全不运动到开始运动，收益最大</h3>
+<p class="body">健康收益在从不运动到少量运动的阶段提升最快。纠结于最优化方案而迟迟不开始，是最大的机会成本。</p>
+<ul class="pts"><li>先练起来比追求完美方案更重要</li><li>ACSM 2026 同样强调参与度与坚持性的优先性</li></ul>
+<p class="act"><b>今日可执行</b>今天先做 10 分钟快走，不去想计划是否完美。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-06-29</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-029</span><span class="seq">Day 147</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>有氧与力量结合，是对体成分最有利的组合</h3>
+<p class="body">单纯有氧容易同时减少脂肪与肌肉，单纯力量训练对心肺刺激有限。两者结合能在减脂的同时较好保留肌肉量。</p>
+<ul class="pts"><li>力量训练保护肌肉，有氧提升心肺</li><li>结合训练优于单一形式</li></ul>
+<p class="act"><b>今日可执行</b>每周安排 3 次力量加 2 次有氧的框架。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-02-14</span></p>
+</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+<div class="meta"><span class="id">CA-030</span><span class="seq">Day 22</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
+<h3>感冒或身体不适时，训练强度应下调</h3>
+<p class="body">症状在颈部以上且轻微时，可进行低强度活动；出现发热、全身酸痛或明显乏力时，应暂停训练，恢复后再逐步回归。</p>
+<ul class="pts"><li>带病高强度训练会延长恢复时间</li><li>恢复期从低强度开始，不要立刻回到原水平</li></ul>
+<p class="act"><b>今日可执行</b>身体不适时改为散步等低强度活动，或直接休息。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2026-10-12</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-001</span><span class="seq">Day 241</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>睡眠是恢复的第一变量，优先于任何补剂</h3>
+<p class="body">深度睡眠阶段是生长激素分泌的高峰，肌肉修复与合成主要发生在睡眠期间。睡眠不足会直接削弱训练适应。</p>
+<ul class="pts"><li>每晚 7 小时以下会扰乱皮质醇节律</li><li>睡眠不足时力量与恢复能力同步下降</li></ul>
+<p class="act"><b>今日可执行</b>先保证连续一周每晚 7 小时以上，再考虑其他恢复手段。</p>
+<p class="src">依据：内分泌与恢复研究综述　<span class="dt">2027-05-19</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-002</span><span class="seq">Day 234</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>蛋白质总量比摄入时机更重要</h3>
+<p class="body">全天蛋白质总量是决定肌肉合成的首要因素，时机与分配是次要优化项。先保证总量达标，再谈分配。</p>
+<ul class="pts"><li>增肌人群每日 1.6 到 2.2 克每公斤体重是常见区间</li><li>长期训练者可能需要接近区间上限</li></ul>
+<p class="act"><b>今日可执行</b>先算出自己的每日目标克数，再分配到三餐。</p>
+<p class="src">依据：ISSN 蛋白质与运动立场声明　<span class="dt">2027-05-12</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-003</span><span class="seq">Day 266</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>每餐蛋白质有单次利用上限</h3>
+<p class="body">肌肉蛋白合成对单次蛋白质摄入存在饱和点，每餐约 0.4 克每公斤体重可较好激活合成反应。超过这个量，额外部分更多用于氧化供能。</p>
+<ul class="pts"><li>分散摄入优于集中在一餐</li><li>每餐含 2 到 3 克亮氨酸有利于合成</li></ul>
+<p class="act"><b>今日可执行</b>把每日蛋白质拆成 3 到 4 餐，每餐约 30 到 40 克。</p>
+<p class="src">依据：ISSN 蛋白质与运动立场声明　<span class="dt">2027-06-13</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-004</span><span class="seq">Day 270</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>亮氨酸是触发合成信号的关键氨基酸</h3>
+<p class="body">亮氨酸能直接激活肌肉蛋白合成通路。动物性蛋白与乳制品中亮氨酸含量较高，这也是它们合成效应较强的原因之一。</p>
+<ul class="pts"><li>乳清蛋白的亮氨酸含量较高</li><li>植物蛋白可通过增加总量或搭配来补足</li></ul>
+<p class="act"><b>今日可执行</b>每餐选择一份亮氨酸含量较高的蛋白来源，如蛋、奶、肉、鱼。</p>
+<p class="src">依据：ISSN 蛋白质与运动立场声明　<span class="dt">2027-06-17</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-005</span><span class="seq">Day 59</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>碳水是力量训练的主要燃料</h3>
+<p class="body">抗阻训练高度依赖糖原供能。长期低碳水会降低训练表现与恢复速度，尤其在腿部等高消耗训练日更明显。</p>
+<ul class="pts"><li>训练前后安排碳水有助于表现与恢复</li><li>碳水并非减脂的敌人，总量才是关键</li></ul>
+<p class="act"><b>今日可执行</b>训练前 1 到 2 小时安排一份易消化的碳水。</p>
+<p class="src">依据：运动营养学共识　<span class="dt">2026-11-18</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-006</span><span class="seq">Day 254</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>肌酸是证据最充分的力量训练补剂</h3>
+<p class="body">肌酸能提高高强度短时输出的能力，并辅助训练量提升。它是运动营养领域研究最充分的补剂之一，安全性有较多数据支持。</p>
+<ul class="pts"><li>常见方案是每日 3 到 5 克，无需冲击期</li><li>与训练量提升配合时，对肌肥大与力量有间接帮助</li></ul>
+<p class="act"><b>今日可执行</b>如果想尝试，从每天 3 到 5 克开始，保持规律摄入。</p>
+<p class="src">依据：ISSN 肌酸立场声明　<span class="dt">2027-06-01</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-007</span><span class="seq">Day 110</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>咖啡因能提升训练表现，但要控制时间</h3>
+<p class="body">咖啡因可降低主观疲劳感、提高力量与耐力表现。半衰期较长，下午或傍晚摄入容易影响睡眠，反而拖慢恢复。</p>
+<ul class="pts"><li>训练前 30 到 60 分钟摄入常见有效</li><li>咖啡因对睡眠的影响可能持续数小时</li></ul>
+<p class="act"><b>今日可执行</b>把咖啡与咖啡因补剂控制在下午之前。</p>
+<p class="src">依据：运动营养学共识　<span class="dt">2027-01-08</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-008</span><span class="seq">Day 75</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>补剂不能替代天然食物与训练</h3>
+<p class="body">补剂的定位是补充而非替代。在蛋白质总量、热量与训练刺激都没有安排好之前，补剂的作用非常有限。</p>
+<ul class="pts"><li>基础是训练、总热量与蛋白质总量</li><li>补剂只在基础做好后带来边际提升</li></ul>
+<p class="act"><b>今日可执行</b>先检查饮食与训练，再考虑是否需要补剂。</p>
+<p class="src">依据：ISSN 相关立场声明　<span class="dt">2026-12-04</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-009</span><span class="seq">Day 262</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>延迟性肌肉酸痛通常在 24 到 72 小时达峰</h3>
+<p class="body">酸痛多出现在训练后一天到三天之间，这与肌肉与结缔组织的微损伤修复过程有关，与训练效果没有稳定的对应关系。</p>
+<ul class="pts"><li>新动作或增加离心负荷会加重酸痛</li><li>训练经验增加后，同样刺激带来的酸痛会减少</li></ul>
+<p class="act"><b>今日可执行</b>酸痛期间保持低强度活动，不必完全静养。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-06-09</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-010</span><span class="seq">Day 298</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>拉伸对酸痛的缓解作用有限</h3>
+<p class="body">训练后拉伸能改善柔韧性与主观放松感，但对延迟性肌肉酸痛的缓解效果在研究中并不显著。它不应被视为恢复的核心手段。</p>
+<ul class="pts"><li>拉伸的价值主要在活动度维护</li><li>恢复的核心仍是睡眠与营养</li></ul>
+<p class="act"><b>今日可执行</b>把拉伸作为长期活动度投资，而不是酸痛解药。</p>
+<p class="src">依据：运动医学综述　<span class="dt">2027-07-15</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-011</span><span class="seq">Day 127</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>按摩与泡沫轴的作用，主要是主观放松</h3>
+<p class="body">泡沫轴与按摩可以改善短期的主观酸痛感与活动度，但对肌肉修复的生理作用有限。作为放松手段是有价值的。</p>
+<ul class="pts"><li>主观舒适度提升本身就有价值</li><li>不要期待它显著加快肌肉修复</li></ul>
+<p class="act"><b>今日可执行</b>训练后花 5 到 10 分钟放松紧张部位。</p>
+<p class="src">依据：运动医学综述　<span class="dt">2027-01-25</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-012</span><span class="seq">Day 46</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>冷疗可能削弱部分训练适应</h3>
+<p class="body">训练后立即冷水浸泡能减轻主观酸痛，但部分研究提示它可能削弱肌肉的适应性反应。在增肌为目标时，需要权衡使用。</p>
+<ul class="pts"><li>冷疗适合在需要快速恢复表现时使用</li><li>追求长期适应时，慎用常规化冷疗</li></ul>
+<p class="act"><b>今日可执行</b>把冷水浸泡保留在比赛或连续高强度日程的场合。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2026-11-05</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-013</span><span class="seq">Day 63</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>主动恢复优于完全静坐</h3>
+<p class="body">低强度活动能促进血液循环、缓解僵硬感，并帮助清除代谢产物。恢复日的散步或轻松骑行比躺着更有利于恢复。</p>
+<ul class="pts"><li>恢复日不等于完全不动</li><li>强度以能轻松交谈为准</li></ul>
+<p class="act"><b>今日可执行</b>休息日安排 20 到 30 分钟散步。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2026-11-22</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-014</span><span class="seq">Day 178</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>酒精会干扰恢复与合成</h3>
+<p class="body">酒精影响睡眠结构、蛋白质合成与糖原恢复。训练后大量饮酒尤其不利于恢复，也会影响第二天的训练表现。</p>
+<ul class="pts"><li>酒精降低深度睡眠质量，影响生长激素分泌</li><li>训练后与睡前的影响最明显</li></ul>
+<p class="act"><b>今日可执行</b>训练日尽量避免饮酒，尤其不要在训练后立即喝。</p>
+<p class="src">依据：运动营养学共识　<span class="dt">2027-03-17</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-015</span><span class="seq">Day 150</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>皮质醇不是敌人，长期偏高才是问题</h3>
+<p class="body">皮质醇是正常的应激激素，训练后短暂升高是适应过程的一部分。真正的问题是长期压力与睡眠不足带来的持续高皮质醇。</p>
+<ul class="pts"><li>单次训练后的激素波动几乎不影响长期增肌</li><li>长期睡眠不足与慢性压力才是恢复的敌人</li></ul>
+<p class="act"><b>今日可执行</b>与其担心皮质醇，不如先解决睡眠与压力管理。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-02-17</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-016</span><span class="seq">Day 187</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>过度训练是累积出来的，不是一次练出来的</h3>
+<p class="body">过度训练表现为持续疲劳、表现下降、睡眠变差与情绪低落，通常由训练量长期超过恢复能力导致，而不是单次训练过猛。</p>
+<ul class="pts"><li>早期信号是同样的负荷感觉更重</li><li>处理方式是减量休息，而不是继续加练</li></ul>
+<p class="act"><b>今日可执行</b>如果连续一周所有动作都变重，主动减量 30% 观察。</p>
+<p class="src">依据：运动医学共识　<span class="dt">2027-03-26</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-017</span><span class="seq">Day 161</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>减载周不是偷懒，是计划的一部分</h3>
+<p class="body">周期性地降低训练量，能让累积的疲劳消退、结缔组织恢复，为下一个阶段的强度提升做准备。它通常带来减载后第一周的表现回弹。</p>
+<ul class="pts"><li>每 4 到 8 周安排一次减载是常见做法</li><li>减量幅度通常在三到五成</li></ul>
+<p class="act"><b>今日可执行</b>给自己排一个减载周，把组数降低一半。</p>
+<p class="src">依据：训练周期化研究综述　<span class="dt">2027-02-28</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-018</span><span class="seq">Day 42</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>训练频率应匹配恢复速度，而不是日程偏好</h3>
+<p class="body">恢复速度受年龄、睡眠、营养与训练经验影响。同样的计划，不同人的恢复需求差别很大。依据身体反馈调整频率比照搬模板更合理。</p>
+<ul class="pts"><li>恢复不足时先降频率或降容量</li><li>恢复良好是提高频率的前提</li></ul>
+<p class="act"><b>今日可执行</b>如果每次训练都还没从上次恢复过来，先减少一次训练。</p>
+<p class="src">依据：训练计划设计共识　<span class="dt">2026-11-01</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-019</span><span class="seq">Day 212</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>热量缺口过大，会牺牲肌肉</h3>
+<p class="body">过大的热量缺口会加速肌肉分解，尤其在蛋白质摄入不足与缺少力量刺激时。适度的缺口更有利于保留瘦体重。</p>
+<ul class="pts"><li>缺口越大，肌肉流失风险越高</li><li>减脂期保持力量训练与足量蛋白质</li></ul>
+<p class="act"><b>今日可执行</b>把每日热量缺口控制在温和范围，配合蛋白质达标。</p>
+<p class="src">依据：运动营养学共识　<span class="dt">2027-04-20</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-020</span><span class="seq">Day 222</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>运动后正常吃一餐，比抢窗口期更实际</h3>
+<p class="body">训练后数小时内肌肉对氨基酸的敏感性提高，但窗口期比想象的宽。训练前已进食的人更不必紧张。全天总量与分配才是关键。</p>
+<ul class="pts"><li>窗口期不是 30 分钟的倒计时</li><li>合成敏感性在训练后较长时间内保持升高</li></ul>
+<p class="act"><b>今日可执行</b>按正常节奏安排练后一餐，不必打乱生活。</p>
+<p class="src">依据：ISSN 蛋白质与运动立场声明　<span class="dt">2027-04-30</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-021</span><span class="seq">Day 69</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>水分不足会直接降低力量表现</h3>
+<p class="body">轻度脱水就会影响力量、耐力与认知状态。训练前、中、后保持水分充足，是最基础也最容易被忽略的恢复措施。</p>
+<ul class="pts"><li>口渴时身体已经处于轻度脱水状态</li><li>训练中应主动分次补水</li></ul>
+<p class="act"><b>今日可执行</b>训练前 1 小时喝 300 到 500 毫升水，训练中少量多次。</p>
+<p class="src">依据：运动营养学共识　<span class="dt">2026-11-28</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-022</span><span class="seq">Day 83</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>电解质与水分同样重要</h3>
+<p class="body">大量出汗会同时流失钠、钾等电解质。只补水不补电解质，可能加重疲劳甚至引起肌肉痉挛。长时间或高温环境训练时尤其需要注意。</p>
+<ul class="pts"><li>长时间训练或高温环境下需要补充电解质</li><li>日常短时训练通常不必额外补充</li></ul>
+<p class="act"><b>今日可执行</b>训练超过一小时且出汗较多时，补一份含电解质的饮品。</p>
+<p class="src">依据：运动营养学共识　<span class="dt">2026-12-12</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-023</span><span class="seq">Day 290</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>压力管理与训练恢复直接相关</h3>
+<p class="body">慢性心理压力会通过内分泌途径影响恢复与合成环境。工作压力大的时期，训练量往往需要相应下调。</p>
+<ul class="pts"><li>高压力期身体对训练负荷的耐受下降</li><li>这不是意志力问题，是生理限制</li></ul>
+<p class="act"><b>今日可执行</b>工作压力大的那一周，主动降低训练量。</p>
+<p class="src">依据：内分泌与恢复研究综述　<span class="dt">2027-07-07</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-024</span><span class="seq">Day 274</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>训练前情绪状态会影响表现</h3>
+<p class="body">睡眠不足、焦虑或疲劳状态下，力量输出与协调性都会下降，受伤风险上升。此时降低强度比按计划硬练更明智。</p>
+<ul class="pts"><li>状态差时应调整强度而非完全放弃</li><li>保持训练习惯比完成计划更重要</li></ul>
+<p class="act"><b>今日可执行</b>状态不好时把重量降低两成，完成一个轻量版本。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2027-06-21</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-025</span><span class="seq">Day 1</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>年龄增长会影响恢复速度，但不改变训练原则</h3>
+<p class="body">随年龄增长，肌肉合成反应与恢复速度都会下降，需要更长的恢复时间与更充足的蛋白质。但渐进超负荷、训练量与频率的基本原则不变。</p>
+<ul class="pts"><li>成年人 30 岁后睾酮水平缓慢下降</li><li>恢复时间需要相应延长，训练计划随之调整</li></ul>
+<p class="act"><b>今日可执行</b>把训练频率或单次容量适当下调，观察恢复状况。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2026-09-21</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-026</span><span class="seq">Day 302</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>训练日志是判断恢复的主要依据</h3>
+<p class="body">记录每次训练的重量、次数与主观感受，能帮助识别恢复不足的早期信号。这些数据比模糊的感觉更可靠。</p>
+<ul class="pts"><li>同样的负荷感觉更重，是恢复不足的信号</li><li>连续多天表现下降就该考虑减量</li></ul>
+<p class="act"><b>今日可执行</b>记录本周每次训练的主要动作表现，下周对比。</p>
+<p class="src">依据：训练实践共识　<span class="dt">2027-07-19</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-027</span><span class="seq">Day 133</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>休息日的价值不亚于训练日</h3>
+<p class="body">肌肉的生长与适应发生在恢复期而非训练期。完全没有休息日的安排，会让疲劳持续累积并最终影响进度。</p>
+<ul class="pts"><li>每周至少安排一到两天低强度或休息日</li><li>休息日不是训练计划的中断，而是组成部分</li></ul>
+<p class="act"><b>今日可执行</b>给每周固定安排至少一天不做高强度训练。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2027-01-31</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-028</span><span class="seq">Day 208</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>训练前吃太饱会明显影响表现</h3>
+<p class="body">训练前大量进食会让血液分流到消化道，引起腹胀与不适。训练前 1 到 2 小时安排易消化的食物更合适。</p>
+<ul class="pts"><li>高脂肪高纤维食物消化慢，不适合临近训练</li><li>碳水与适量蛋白质是更合适的选择</li></ul>
+<p class="act"><b>今日可执行</b>把较大的一餐安排在训练前 2 小时以上。</p>
+<p class="src">依据：运动营养学共识　<span class="dt">2027-04-16</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-029</span><span class="seq">Day 35</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>长期大量训练后，需要主动安排休整期</h3>
+<p class="body">除了每周的恢复日与周期性的减载周，训练数个月后安排一次完全脱离训练的休整期，有助于身心恢复与长期坚持。</p>
+<ul class="pts"><li>每年安排一到两次较长的休整期是常见做法</li><li>短期停训带来的损失远小于长期倦怠</li></ul>
+<p class="act"><b>今日可执行</b>在训练计划里预留一次 5 到 7 天的轻松期。</p>
+<p class="src">依据：训练周期化研究综述　<span class="dt">2026-10-25</span></p>
+</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+<div class="meta"><span class="id">RC-030</span><span class="seq">Day 294</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
+<h3>恢复方案要按自己的实际情况排序</h3>
+<p class="body">睡眠、饮食总量、蛋白质、训练量管理是核心变量，补剂与放松手段属于边际优化。把精力放在核心变量上，收益最大。</p>
+<ul class="pts"><li>先做好基础，再谈优化</li><li>不必为次要细节投入过多注意力</li></ul>
+<p class="act"><b>今日可执行</b>检查一下：睡眠、蛋白质、训练量这三项是否都已到位。</p>
+<p class="src">依据：训练实践共识　<span class="dt">2027-07-11</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-001</span><span class="seq">Day 276</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>训练量是增肌最一致的变量</h3>
+<p class="body">ACSM 2026 立场声明在整合 137 篇系统综述后指出，在 30% 到 100% 1RM 的负荷范围内，更高的负荷本身并未稳定带来更多肌肥大，训练量反而是更一致的重要变量。</p>
+<ul class="pts"><li>每肌群每周 10 组以上更有利于增长</li><li>超过 20 到 25 组后，恢复成为限制因素</li></ul>
+<p class="act"><b>今日可执行</b>统计你这周每个肌群的总组数，找出偏少的那一个。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-06-23</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-002</span><span class="seq">Day 155</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>10 组每周不是最低门槛，而是优化方向</h3>
+<p class="body">很多人误读这个数字，以为低于 10 组就不长肌肉。原文表达的是：在已有训练基础上，更高的周训练量更可能进一步增强肌肥大。</p>
+<ul class="pts"><li>低于 10 组同样能带来增长，只是增长空间可能未用尽</li><li>时间有限时，优先保证动作质量与规律性</li></ul>
+<p class="act"><b>今日可执行</b>不必因为达不到 10 组而焦虑，先保证每周稳定训练。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-02-22</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-003</span><span class="seq">Day 296</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>频率的作用是分配训练量</h3>
+<p class="body">ACSM 2026 建议每个肌群每周至少训练 2 次。频率本身不是目的，它的价值在于把同样的训练量分散到多次，降低单次疲劳并提高每次质量。</p>
+<ul class="pts"><li>同一肌群两次训练间隔不少于 48 小时</li><li>频率提高必须伴随单次容量的下调</li></ul>
+<p class="act"><b>今日可执行</b>把某个只练一次的大肌群改成一周两次，单次组数减半。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-07-13</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-004</span><span class="seq">Day 228</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>追求最大力量才需要高负荷</h3>
+<p class="body">ACSM 2026 指出，若目标是最大力量，使用 80% 1RM 以上的负荷、完整幅度、每动作 2 到 3 组、每周至少 2 次，并把重点动作放在训练前段更有利。</p>
+<ul class="pts"><li>增力和增肌需要优化的变量不同</li><li>轻重量并非无效，而是训练特异性不同</li></ul>
+<p class="act"><b>今日可执行</b>明确当前阶段的优先目标，再决定是否要冲大重量。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-05-06</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-005</span><span class="seq">Day 323</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>爆发力训练需要快速向心</h3>
+<p class="body">提升爆发力时常用 30% 到 70% 1RM 的负荷，强调向心阶段快速发力。轻负荷配合最大速度意图，是发展功率的常见方式。</p>
+<ul class="pts"><li>向心阶段的意图速度是关键</li><li>与传统增肌训练的目标与节奏完全不同</li></ul>
+<p class="act"><b>今日可执行</b>如果训练爆发力，把向心阶段当作尽可能快地推出去。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-08-09</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-006</span><span class="seq">Day 80</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>力竭不是必须的，留有余力更可持续</h3>
+<p class="body">ACSM 2026 明确提到普通健身者无需练到完全力竭，安全比冲击极限更重要。留 1 到 2 次余力通常能带来更高的总训练量。</p>
+<ul class="pts"><li>力竭显著增加疲劳与恢复需求</li><li>关键动作偶尔接近力竭即可，不必常态化</li></ul>
+<p class="act"><b>今日可执行</b>这周所有动作都留 1 到 2 次余力。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2026-12-09</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-007</span><span class="seq">Day 308</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>渐进超负荷有五种以上实现方式</h3>
+<p class="body">增加负重只是其中一种。NSCA 提到还可通过增加次数、增加组数、缩短休息、改进动作幅度、放慢离心或提高动作质量来实现渐进。</p>
+<ul class="pts"><li>NSCA 认为增加负重的优先度最低</li><li>初学者适合用双进阶：先加次数，到上限再加重量</li></ul>
+<p class="act"><b>今日可执行</b>本周选一个动作，用加次数的方式实现渐进。</p>
+<p class="src">依据：NSCA 渐进超负荷模型　<span class="dt">2027-07-25</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-008</span><span class="seq">Day 292</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>每组次数区间可以很宽</h3>
+<p class="body">ACSM 2026 指出，在约 30% 到 100% 1RM 的范围内，只要训练量足够且接近力竭，肌肥大效果差异并不稳定。低次数与高次数都可以有效。</p>
+<ul class="pts"><li>5 次与 20 次都能增肌，前提是强度与容量匹配</li><li>高次数对关节负担小，低次数对时间效率高</li></ul>
+<p class="act"><b>今日可执行</b>尝试把某个动作从 8 次改成 15 次，感受差异。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-07-09</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-009</span><span class="seq">Day 101</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>组间休息时长应与动作类型匹配</h3>
+<p class="body">复合动作需要更长的恢复时间，通常 2 到 3 分钟；单关节动作用 60 到 90 秒即可。休息不足会降低后续组的表现与总训练量。</p>
+<ul class="pts"><li>休息是否足够，看下一组能否维持次数</li><li>过短的休息会让总容量明显下降</li></ul>
+<p class="act"><b>今日可执行</b>给大重量复合动作计时 2 分钟休息。</p>
+<p class="src">依据：NSCA 训练指南　<span class="dt">2026-12-30</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-010</span><span class="seq">Day 317</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>动作顺序：复合动作在前，孤立动作在后</h3>
+<p class="body">ACSM 2026 建议把需要重点提升的动作放在训练开始阶段。疲劳状态下做复合动作，重量、技术稳定性都会下降。</p>
+<ul class="pts"><li>孤立动作适合放在后面补充容量</li><li>如果把薄弱部位作为优先级，可以把它排在最前面</li></ul>
+<p class="act"><b>今日可执行</b>检查当前计划，把最重的复合动作放到第一位。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-08-03</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-011</span><span class="seq">Day 315</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>完整幅度比多加重量更有价值</h3>
+<p class="body">肌肥大对拉长位的张力敏感。刻意缩短行程换取重量，会让最有效的部分被跳过。这也是为什么有人重量很大但增长有限。</p>
+<ul class="pts"><li>拉长位的机械张力是重要驱动因素</li><li>完整行程的判定标准是不丢失控制</li></ul>
+<p class="act"><b>今日可执行</b>选一个动作，把重量降一档换成完整行程试试。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-08-01</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-012</span><span class="seq">Day 320</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>离心控制在增肌中是低成本的优化项</h3>
+<p class="body">ACSM 2026 在增肌建议中提到可考虑离心超负荷。即使不做专门的离心训练，仅把回放阶段放慢到 2 到 3 秒，就能提高有效张力。</p>
+<ul class="pts"><li>离心阶段可以承受更大张力</li><li>放慢回放不增加额外风险</li></ul>
+<p class="act"><b>今日可执行</b>这周所有主要动作的回放都默数两秒。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-08-06</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-013</span><span class="seq">Day 32</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>顶峰收缩的价值取决于动作</h3>
+<p class="body">在缩短位停顿能增加该位置的张力时间，对某些动作（如夹胸、弯举、腿屈伸）效果明显；对行程末端张力骤降的动作则作用有限。</p>
+<ul class="pts"><li>缩短位张力低时，顶峰收缩补充有限</li><li>绳索类器械在缩短位保持张力更好</li></ul>
+<p class="act"><b>今日可执行</b>在夹胸或腿屈伸的末端停 1 秒，感受收缩。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2026-10-22</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-014</span><span class="seq">Day 252</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>递减组是提高代谢压力的手段</h3>
+<p class="body">递减组在力竭后立即降低重量继续做，延长了单组的持续时间并增加代谢产物堆积。它适合用在训练末尾，不适合每一个动作。</p>
+<ul class="pts"><li>主要增加代谢压力，而非机械张力</li><li>会增加疲劳，训练量需要相应调整</li></ul>
+<p class="act"><b>今日可执行</b>在最后一个动作的最后一组用一次递减组收尾。</p>
+<p class="src">依据：训练技术研究综述　<span class="dt">2027-05-30</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-015</span><span class="seq">Day 260</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>超级组对拮抗肌群很实用</h3>
+<p class="body">把推与拉、屈与伸的拮抗动作连续进行，能在不增加总时间的前提下提高训练密度。由于两者不共用主要肌群，力量下降有限。</p>
+<ul class="pts"><li>拮抗肌超级组对表现影响较小</li><li>适合时间紧张时使用</li></ul>
+<p class="act"><b>今日可执行</b>把卧推与划船组成超级组，试一次。</p>
+<p class="src">依据：训练技术研究综述　<span class="dt">2027-06-07</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-016</span><span class="seq">Day 140</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>休息暂停适合突破次数瓶颈</h3>
+<p class="body">在一组接近力竭后短暂休息十几秒再继续，能在同一组内累积更多次数。它对神经系统疲劳较大，不适合频繁使用。</p>
+<ul class="pts"><li>适合在大重量复合动作的最后一组使用</li><li>不适合作为每次训练的常规手段</li></ul>
+<p class="act"><b>今日可执行</b>在最后一组力竭后停 15 秒，再做几次。</p>
+<p class="src">依据：训练技术研究综述　<span class="dt">2027-02-07</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-017</span><span class="seq">Day 92</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>预疲劳法的实际效果并不理想</h3>
+<p class="body">先做孤立动作让目标肌疲劳，再做大重量复合动作，理论上能增加目标肌参与。但实践中往往导致复合动作的表现与安全性同时下降。</p>
+<ul class="pts"><li>复合动作表现下降会减少总训练量</li><li>多数情况下不如直接合理安排顺序</li></ul>
+<p class="act"><b>今日可执行</b>如果目前在用预疲劳法，试试改成正常顺序比较效果。</p>
+<p class="src">依据：训练技术研究综述　<span class="dt">2026-12-21</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-018</span><span class="seq">Day 88</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>训练日志是最被低估的工具</h3>
+<p class="body">记录重量、次数与主观感受，才能判断是否真的在渐进、是否进入平台期、恢复是否充足。没有记录，渐进超负荷就无从判断。</p>
+<ul class="pts"><li>记录让进步变得可测量</li><li>也是识别过度训练的主要依据</li></ul>
+<p class="act"><b>今日可执行</b>从今天开始记录主要动作的重量与次数。</p>
+<p class="src">依据：训练实践共识　<span class="dt">2026-12-17</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-019</span><span class="seq">Day 272</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>热身应当分层，而不是直接拉伸</h3>
+<p class="body">完整热身包括升高体温、动态活动与专项递增组。ACSM 2026 强调训练前后做好充分热身与拉伸以降低损伤风险，但顺序与形式同样重要。</p>
+<ul class="pts"><li>5 到 10 分钟一般性热身提高体温</li><li>递增组是最有针对性的专项准备</li></ul>
+<p class="act"><b>今日可执行</b>正式组前安排 2 到 3 组由轻到重的递增。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-06-19</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-020</span><span class="seq">Day 321</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>分化方式取决于你能训练几天</h3>
+<p class="body">全身训练适合每周 2 到 3 天，上下肢分化适合 4 天，推拉腿分化适合 5 到 6 天。没有最优分化，只有与出勤频率匹配的分化。</p>
+<ul class="pts"><li>分化的目的是把训练量合理分配到一周</li><li>出勤不稳定时，全身训练更不容易漏掉肌群</li></ul>
+<p class="act"><b>今日可执行</b>按你实际能保证的天数选择分化方式。</p>
+<p class="src">依据：训练计划设计共识　<span class="dt">2027-08-07</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-021</span><span class="seq">Day 304</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>训练计划不必长期不变，也不必频繁更换</h3>
+<p class="body">长期使用完全相同的动作与顺序会让募集模式固化，但频繁更换又无法判断进步来源。6 到 8 周做一次动作变式轮换是比较实用的节奏。</p>
+<ul class="pts"><li>保留核心复合动作的稳定性</li><li>轮换的是变式与辅助动作</li></ul>
+<p class="act"><b>今日可执行</b>给当前计划标一个结束日期，到期后替换两个动作。</p>
+<p class="src">依据：训练周期化研究综述　<span class="dt">2027-07-21</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-022</span><span class="seq">Day 284</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>周期化不必复杂才有效</h3>
+<p class="body">ACSM 2026 提到普通健身者不必追求复杂的周期化方案，简单、稳定、易坚持的方案效果最好。周期化的价值在于避免长期单一刺激。</p>
+<ul class="pts"><li>复杂的每日波动周期对多数人并非必要</li><li>简单的组数或强度波动就已足够</li></ul>
+<p class="act"><b>今日可执行</b>在计划里加入一个简单的减载周即可，不必设计复杂周期。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-07-01</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-023</span><span class="seq">Day 300</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>复合动作与孤立动作的比例，决定了效率</h3>
+<p class="body">复合动作单位时间内的训练效率更高，能同时覆盖多个肌群；孤立动作用于补齐薄弱部位与增加特定肌群容量。两者各有位置，不可相互替代。</p>
+<ul class="pts"><li>时间有限时优先保证复合动作</li><li>孤立动作用于解决明确的薄弱点</li></ul>
+<p class="act"><b>今日可执行</b>检查计划中孤立动作是否服务于明确目标，而不是凑数。</p>
+<p class="src">依据：训练计划设计共识　<span class="dt">2027-07-17</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-024</span><span class="seq">Day 205</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>训练时间长短不是衡量努力的标准</h3>
+<p class="body">有效的训练与在健身房待多久没有必然联系。把注意力放在动作质量、负荷与容量上，一小时内的高质量训练往往优于两小时的松散训练。</p>
+<ul class="pts"><li>长时间训练容易伴随强度稀释</li><li>训练质量取决于执行而非时长</li></ul>
+<p class="act"><b>今日可执行</b>下次训练控制在 60 分钟内，保持同样的动作与组数。</p>
+<p class="src">依据：训练实践共识　<span class="dt">2027-04-13</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-025</span><span class="seq">Day 319</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>平台期的第一反应应该是检查恢复</h3>
+<p class="body">表现停滞可能来自训练变量需要调整，也可能来自恢复不足。在恢复没有到位的情况下增加训练量，往往让情况更糟。</p>
+<ul class="pts"><li>先排除睡眠、饮食与压力因素</li><li>再考虑调整训练变量</li></ul>
+<p class="act"><b>今日可执行</b>遇到停滞时，先记录一周的睡眠与饮食再决定怎么改。</p>
+<p class="src">依据：训练计划设计共识　<span class="dt">2027-08-05</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-026</span><span class="seq">Day 288</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>动作幅度可以个体化调整</h3>
+<p class="body">没有绝对标准的动作，只有适合个人身体结构的发力模式。持续存在的关节不适，是身体在提示需要调整角度或幅度。</p>
+<ul class="pts"><li>结构差异让合理的动作幅度因人而异</li><li>持续不适比标准更重要</li></ul>
+<p class="act"><b>今日可执行</b>如果某个动作持续引起不适，先调整幅度与角度，而不是硬撑。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2027-07-05</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-027</span><span class="seq">Day 280</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>同一肌群的两次训练之间要留够间隔</h3>
+<p class="body">ACSM 2026 建议同一肌群两次训练间隔不少于 48 小时。间隔不足会压缩修复窗口，让疲劳累积超过适应速度。</p>
+<ul class="pts"><li>48 小时是安全下限</li><li>训练经验与恢复能力会影响实际需要</li></ul>
+<p class="act"><b>今日可执行</b>检查周计划，确认同一肌群没有连续两天高强度训练。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-06-27</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-028</span><span class="seq">Day 175</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>训练强度与训练容量需要权衡</h3>
+<p class="body">在同一周内同时追求极高的强度与极高的容量，通常超出恢复能力。周期化安排中，往往一段时间偏重容量，另一段偏重强度。</p>
+<ul class="pts"><li>两者同时拉满容易导致过度训练</li><li>分阶段侧重是更可持续的做法</li></ul>
+<p class="act"><b>今日可执行</b>如果这周强度冲得很高，就把总组数相应降低。</p>
+<p class="src">依据：训练周期化研究综述　<span class="dt">2027-03-14</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-029</span><span class="seq">Day 312</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>动作的稳定性需求，也影响重量与刺激</h3>
+<p class="body">自由重量需要更多稳定肌参与，器械则把稳定性交给结构。同一肌群用不同稳定性需求的动作训练，刺激的分布并不相同。</p>
+<ul class="pts"><li>稳定性需求高时，目标肌的绝对负荷会降低</li><li>两者结合比单一形式更全面</li></ul>
+<p class="act"><b>今日可执行</b>在计划里同时保留自由重量与器械动作。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2027-07-29</span></p>
+</article><article class="card" data-cat="训练变量" data-mus="全身">
+<div class="meta"><span class="id">PV-030</span><span class="seq">Day 268</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">全身</span></div>
+<h3>最难的是坚持，不是找到完美计划</h3>
+<p class="body">ACSM 2026 反复强调，对尚未形成规律训练习惯的人而言，提升参与度与坚持性可能比设计极其复杂的处方更重要。</p>
+<ul class="pts"><li>规律坚持优于偶尔的高强度训练</li><li>方案应个性化，以提升持续性为基础</li></ul>
+<p class="act"><b>今日可执行</b>把计划调整到你确信能长期执行的强度，而不是最理想的那个。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-06-15</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-001</span><span class="seq">Day 181</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>出汗越多不代表燃烧脂肪越多</h3>
+<p class="body">出汗是体温调节机制，受影响于环境、体脂与个体差异。出汗后的体重下降主要是水分流失，与脂肪消耗没有稳定关系。</p>
+<ul class="pts"><li>补液后体重会迅速恢复</li><li>大量出汗反而带来脱水风险</li></ul>
+<p class="act"><b>今日可执行</b>用心率与自觉用力程度判断训练强度。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-03-20</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-002</span><span class="seq">Day 305</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>裹保鲜膜运动不会增加减脂效果</h3>
+<p class="body">包裹保鲜膜只会减少散热、增加出汗，不会增加脂肪消耗，还可能引起体温过高与皮肤问题。</p>
+<ul class="pts"><li>减少的是散热能力，不是脂肪</li><li>高温环境下运动的风险显著上升</li></ul>
+<p class="act"><b>今日可执行</b>穿正常透气的运动衣物训练。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-07-22</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-003</span><span class="seq">Day 307</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>局部减脂不存在，练哪都不能只瘦哪</h3>
+<p class="body">脂肪分解由神经与内分泌系统全身性调节，通过血液循环完成分配。针对某个部位的训练不会优先消耗该部位脂肪。</p>
+<ul class="pts"><li>这是运动生理学的明确结论</li><li>减脂需要依靠整体热量缺口</li></ul>
+<p class="act"><b>今日可执行</b>把局部塑形的期待改为整体体脂管理。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-07-24</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-004</span><span class="seq">Day 285</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>运动强度越大不一定减脂越快</h3>
+<p class="body">强度提高时脂肪供能比例下降，接近极限时几乎不消耗脂肪。同时过高强度难以持续，总消耗反而可能下降。</p>
+<ul class="pts"><li>减脂的关键是可持续的总消耗与热量缺口</li><li>中等强度更容易长期坚持</li></ul>
+<p class="act"><b>今日可执行</b>选择你能持续 30 分钟以上的强度。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-07-02</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-005</span><span class="seq">Day 301</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>肌肉酸痛不是训练有效的必要条件</h3>
+<p class="body">酸痛与肌肉增长没有稳定的对应关系。它的程度主要受动作是否新鲜、离心负荷大小与个体差异影响。</p>
+<ul class="pts"><li>不酸痛不代表没效果</li><li>酸痛程度不能作为加量的依据</li></ul>
+<p class="act"><b>今日可执行</b>用重量与次数的进步来判断训练是否有效。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-07-18</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-006</span><span class="seq">Day 311</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>运动后肌肉变硬不是长了肌肉</h3>
+<p class="body">运动后肌肉发硬主要与暂时性充血、水肿与肌肉张力升高有关，通常几天内消退。肌肉的实际增长需要数周以上的累积。</p>
+<ul class="pts"><li>短期围度变化多为水分与充血</li><li>长期围度增长来自肌肉横截面积增加</li></ul>
+<p class="act"><b>今日可执行</b>不要用运动后短期的围度变化判断进展。</p>
+<p class="src">依据：运动生理学基础　<span class="dt">2027-07-28</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-007</span><span class="seq">Day 322</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>健身不会让人变矮</h3>
+<p class="body">成年后身高由骨骼决定，不会因训练改变。负重训练对骨密度有正向作用，是保护骨骼健康的手段之一。</p>
+<ul class="pts"><li>ACSM 2026 强调训练有助于保护骨骼、肌肉与关节健康</li><li>视觉上的身高变化多来自体态改善</li></ul>
+<p class="act"><b>今日可执行</b>把负重训练当作骨骼健康的长期投资。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-08-08</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-008</span><span class="seq">Day 218</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>女性练力量不会变成金刚芭比</h3>
+<p class="body">女性睾酮水平远低于男性，肌肉增长速率的绝对值有限。想要显著增肌需要长期高强度训练与充足热量支持，并非轻易发生。</p>
+<ul class="pts"><li>激素环境是肌肉增长的主要限制</li><li>力量训练对女性骨骼与代谢健康收益明确</li></ul>
+<p class="act"><b>今日可执行</b>按训练目标安排负荷，不必刻意使用明显更轻的重量。</p>
+<p class="src">依据：内分泌与运动研究　<span class="dt">2027-04-26</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-009</span><span class="seq">Day 297</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>经期可以运动，且通常有益</h3>
+<p class="body">经期运动并非禁忌，适度活动常有助于缓解不适。个体反应差异较大，可根据自身感受调整强度与形式。</p>
+<ul class="pts"><li>将经期不能运动的说法视为误区</li><li>存在明显不适时应以身体感受为准</li></ul>
+<p class="act"><b>今日可执行</b>经期把强度下调，选择散步或轻量训练。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-07-14</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-010</span><span class="seq">Day 143</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>运动不会伤害健康的心脏</h3>
+<p class="body">规律运动对心血管健康有明确收益。运动中的风险多与已存在的心血管问题、突然的高强度运动或极端环境有关。</p>
+<ul class="pts"><li>长期规律训练者的心脏功能指标通常更好</li><li>长期不运动后突然剧烈运动才是主要风险</li></ul>
+<p class="act"><b>今日可执行</b>长期不运动时，从低强度开始逐步增加。</p>
+<p class="src">依据：公共卫生运动指南　<span class="dt">2027-02-10</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-011</span><span class="seq">Day 191</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>有慢性疾病不代表不能运动</h3>
+<p class="body">多数慢性疾病患者同样需要运动，只是需要根据病情调整方式与强度。适度运动对血糖、血压与血脂管理通常有正向作用。</p>
+<ul class="pts"><li>运动处方需要个体化</li><li>特殊情况应在专业指导下进行</li></ul>
+<p class="act"><b>今日可执行</b>如有慢性病，先咨询医生再安排训练强度。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-03-30</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-012</span><span class="seq">Day 309</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>运动饮料不是必需品</h3>
+<p class="body">运动饮料主要补充糖与电解质，适合长时间或高强度运动。日常短时训练与普通饮食已经足够，额外饮用只会增加糖分摄入。</p>
+<ul class="pts"><li>一小时以内的普通训练通常只需水</li><li>长时间大量出汗时才需要考虑电解质</li></ul>
+<p class="act"><b>今日可执行</b>日常训练只喝水，长时间训练再考虑运动饮料。</p>
+<p class="src">依据：运动营养学共识　<span class="dt">2027-07-26</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-013</span><span class="seq">Day 257</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>蛋白粉不是必需品，也不会伤肾</h3>
+<p class="body">蛋白粉只是方便的蛋白质来源，在健康人群中，适量高蛋白摄入并未被证实损害肾功能。它的价值在于方便，而非特殊功效。</p>
+<ul class="pts"><li>优先从天然食物获取蛋白质</li><li>已有肾脏疾病者需要遵医嘱</li></ul>
+<p class="act"><b>今日可执行</b>把蛋白粉当作补充手段，而非训练的核心。</p>
+<p class="src">依据：ISSN 蛋白质与运动立场声明　<span class="dt">2027-06-04</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-014</span><span class="seq">Day 310</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>吃蛋白粉不会直接长肌肉</h3>
+<p class="body">肌肉增长需要训练刺激与充足营养共同作用。单纯增加蛋白质摄入而缺乏足够训练刺激，多余能量仍会转化为脂肪。</p>
+<ul class="pts"><li>训练刺激是肌肉增长的前提</li><li>蛋白质只是原料，不是信号</li></ul>
+<p class="act"><b>今日可执行</b>确保训练量与渐进到位，再谈蛋白质补充。</p>
+<p class="src">依据：ISSN 蛋白质与运动立场声明　<span class="dt">2027-07-27</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-015</span><span class="seq">Day 289</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>训练后不吃东西不会白白练了</h3>
+<p class="body">训练后营养补充窗口比想象中宽。全天总量与分配合理时，练后延迟进食不会显著影响结果。</p>
+<ul class="pts"><li>窗口期不是 30 分钟的倒计时</li><li>训练前已进食者更不必紧张</li></ul>
+<p class="act"><b>今日可执行</b>按正常节奏安排练后一餐。</p>
+<p class="src">依据：ISSN 蛋白质与运动立场声明　<span class="dt">2027-07-06</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-016</span><span class="seq">Day 13</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>低碳水不会让训练效果更好</h3>
+<p class="body">碳水是力量训练的主要燃料。长期低碳水会降低训练表现与恢复速度，尤其在腿部等高消耗训练中更明显。</p>
+<ul class="pts"><li>碳水摄入量应匹配训练量</li><li>极低碳水在减脂短期有效，但影响训练质量</li></ul>
+<p class="act"><b>今日可执行</b>训练日保证足够碳水，非训练日可适当下调。</p>
+<p class="src">依据：运动营养学共识　<span class="dt">2026-10-03</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-017</span><span class="seq">Day 318</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>没有能局部燃烧脂肪的动作</h3>
+<p class="body">所有动作消耗的能量都进入全身能量池统一分配。腹部动作不会优先消耗腹部脂肪，这一点对大腿、手臂同样成立。</p>
+<ul class="pts"><li>能量分配由全身调节机制决定</li><li>针对性训练改变的是肌肉而非脂肪</li></ul>
+<p class="act"><b>今日可执行</b>把目标设定为整体体脂下降，而非局部。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-08-04</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-018</span><span class="seq">Day 316</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>停止训练后不会立刻失去肌肉</h3>
+<p class="body">停训初期力量与肌肉的下降相对缓慢，部分神经适应会保留。完全停训后肌肉量在前 2 到 3 周下降约 3% 到 5%。</p>
+<ul class="pts"><li>短期中断不必恐慌</li><li>恢复训练后通常能较快回到接近原水平</li></ul>
+<p class="act"><b>今日可执行</b>中断一两周后，按原计划重新开始即可。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-08-02</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-019</span><span class="seq">Day 313</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>减脂期体重不变不代表没有进步</h3>
+<p class="body">同时增肌减脂时，体重可能不变但体成分在改善。腰围、体脂率与力量表现比体重更能反映实际情况。</p>
+<ul class="pts"><li>体重只是体成分的一个粗略指标</li><li>围度与照片记录的参考价值更高</li></ul>
+<p class="act"><b>今日可执行</b>用腰围与训练表现共同判断减脂进展。</p>
+<p class="src">依据：运动营养学共识　<span class="dt">2027-07-30</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-020</span><span class="seq">Day 293</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>有氧不是减脂的唯一手段</h3>
+<p class="body">力量训练与间歇训练同样消耗热量，并能通过增加肌肉量提高基础代谢。减脂的核心始终是热量缺口。</p>
+<ul class="pts"><li>力量训练有助于减脂期保留肌肉</li><li>有氧与力量结合优于单一形式</li></ul>
+<p class="act"><b>今日可执行</b>把力量训练作为减脂计划的固定部分。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-07-10</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-021</span><span class="seq">Day 265</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>有氧必须满 30 分钟才燃脂，是误传</h3>
+<p class="body">脂肪供能从运动的第一分钟起就参与，只是在低强度时供能比例更高。前 30 分钟只消耗糖原的说法，把供能比例与供能启动时间混为一谈。</p>
+<ul class="pts"><li>三大供能系统全程同时工作，比例随强度变化</li><li>决定减脂的是总消耗与热量缺口，不是单次时长</li></ul>
+<p class="act"><b>今日可执行</b>时间紧时做 15 分钟有氧同样有价值，不必因不满 30 分钟而放弃。</p>
+<p class="src">依据：官方健康科普材料　<span class="dt">2027-06-12</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-022</span><span class="seq">Day 66</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>健身三个月不会脱胎换骨</h3>
+<p class="body">肌肉增长的速率有限，即使训练与饮食都到位，明显的外观变化通常需要数月的持续积累。急于求成往往导致放弃。</p>
+<ul class="pts"><li>肌肉增长受生理速率限制</li><li>长期坚持的复利效应远大于短期激进</li></ul>
+<p class="act"><b>今日可执行</b>以季度为单位评估变化，而不是每周称体重。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2026-11-25</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-023</span><span class="seq">Day 314</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>酸痛时继续练同一部位不会练得更好</h3>
+<p class="body">酸痛期间肌肉尚未完成修复，继续高强度刺激会延长恢复期并降低训练质量。等到酸痛明显缓解再安排同一肌群更合理。</p>
+<ul class="pts"><li>恢复不足会拖慢整体进度</li><li>酸痛期间可训练其他肌群</li></ul>
+<p class="act"><b>今日可执行</b>酸痛未退时改为训练其他部位。</p>
+<p class="src">依据：运动生理学共识　<span class="dt">2027-07-31</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-024</span><span class="seq">Day 107</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>热身不会浪费体力</h3>
+<p class="body">充分热身能提高体温与神经激活水平，降低损伤风险并提升训练表现。ACSM 2026 明确强调训练前后做好热身与拉伸的重要性。</p>
+<ul class="pts"><li>热身提高运动效率</li><li>递增组本身就是热身的一部分</li></ul>
+<p class="act"><b>今日可执行</b>正式组前用 5 到 10 分钟完成热身。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-01-05</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-025</span><span class="seq">Day 7</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>体重秤上的数字不能反映全部健康</h3>
+<p class="body">体成分、心肺适能、力量水平与代谢指标同样是健康的重要维度。仅关注体重容易忽略训练带来的真实改善。</p>
+<ul class="pts"><li>肌肉密度高于脂肪，体重不是唯一指标</li><li>腰围与力量进步同样值得关注</li></ul>
+<p class="act"><b>今日可执行</b>记录腰围与力量数据，与体重一起看。</p>
+<p class="src">依据：公共卫生运动指南　<span class="dt">2026-09-27</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-026</span><span class="seq">Day 231</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>补剂不会弥补不规律的训练</h3>
+<p class="body">在训练不规律、饮食不合理的情况下，补剂的作用微乎其微。基础做扎实后，补剂才可能带来边际提升。</p>
+<ul class="pts"><li>训练规律与饮食总量是基础</li><li>补剂属于边际优化项</li></ul>
+<p class="act"><b>今日可执行</b>先把训练频率与饮食稳定下来，再考虑补剂。</p>
+<p class="src">依据：ISSN 相关立场声明　<span class="dt">2027-05-09</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-027</span><span class="seq">Day 26</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>练得越重不一定越好</h3>
+<p class="body">大重量只是在追求最大力量时更符合训练特异性。以增肌为目标时，中等负荷配合足够训练量同样有效，且关节压力更小。</p>
+<ul class="pts"><li>ACSM 2026 指出 30% 到 100% 1RM 都能增肌</li><li>负荷选择应匹配训练目标</li></ul>
+<p class="act"><b>今日可执行</b>检查当前重量是否匹配你的主要目标。</p>
+<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2026-10-16</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-028</span><span class="seq">Day 324</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>健身不需要先减脂再增肌</h3>
+<p class="body">新手在体脂偏高的情况下，同样可以通过规律力量训练同时改善体成分。增肌与减脂并非必须严格分阶段。</p>
+<ul class="pts"><li>新手期的体成分改善通常最明显</li><li>训练与饮食可以同时向正确方向调整</li></ul>
+<p class="act"><b>今日可执行</b>不必等到体脂下降再开始力量训练。</p>
+<p class="src">依据：运动生理学综述　<span class="dt">2027-08-10</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-029</span><span class="seq">Day 325</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>拉伸不会让肌肉变长</h3>
+<p class="body">拉伸改变的是柔韧性与关节活动度感知，不会改变肌肉的解剖长度。它是有价值的活动度工具，但与肌肉形态无关。</p>
+<ul class="pts"><li>柔韧性改善来自神经系统与结缔组织适应</li><li>把拉伸当作形态管理手段会失望</li></ul>
+<p class="act"><b>今日可执行</b>把拉伸定位为活动度维护，而非塑形手段。</p>
+<p class="src">依据：生物力学综述　<span class="dt">2027-08-11</span></p>
+</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+<div class="meta"><span class="id">MY-030</span><span class="seq">Day 199</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
+<h3>健身知识要看去处</h3>
+<p class="body">运动科学领域信息繁杂，同一话题常有看似专业的错误解读。判断内容可信度时，优先看是否引用立场声明、系统综述或同行评议研究。</p>
+<ul class="pts"><li>机构立场声明与系统综述的可信度更高</li><li>把次要因素包装成核心机制的表述要警惕</li></ul>
+<p class="act"><b>今日可执行</b>看到健身内容时，先问一句：它的依据是什么。</p>
+<p class="src">依据：运动科学方法论　<span class="dt">2027-04-07</span></p>
+</article></main>
+<div class="empty" id="empty" style="display:none">没有匹配的条目</div>
+<script>
+var f={cat:'',mus:''};
+function apply(){
+  var n=0;
+  document.querySelectorAll('.card').forEach(function(c){
+    var ok=(!f.cat||c.dataset.cat===f.cat)&&(!f.mus||c.dataset.mus===f.mus);
+    c.style.display=ok?'':'none'; if(ok)n++;
+  });
+  document.getElementById('empty').style.display=n?'none':'block';
+}
+document.querySelectorAll('.chip').forEach(function(b){
+  b.addEventListener('click',function(){
+    var k=b.dataset.k,v=b.dataset.v;
+    if(k==='all'){f.cat='';f.mus='';document.querySelectorAll('.chip').forEach(function(x){x.classList.toggle('on',x.dataset.k==='all')});apply();return;}
+    f[k]=(f[k]===v)?'':v;
+    b.classList.toggle('on',f[k]===v);
+    apply();
+  });
+});
+</script></body></html>

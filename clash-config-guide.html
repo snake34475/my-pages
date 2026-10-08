@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clash 配置解剖 · 以你本机为例</title>
+<style>
+:root{
+  --bg:#0d1117; --panel:#161b22; --panel2:#1c2128; --line:#30363d;
+  --tx:#e6edf3; --tx2:#8b949e; --tx3:#6e7681;
+  --blue:#58a6ff; --green:#3fb950; --amber:#d29922; --red:#f85149;
+  --purple:#bc8cff; --cyan:#39c5cf;
+  --mono:ui-monospace,SFMono-Regular,"Cascadia Mono","JetBrains Mono",Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--bg);color:var(--tx);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:15px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{display:grid;grid-template-columns:250px 1fr;max-width:1400px;margin:0 auto;gap:0}
+nav{position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--panel);
+  border-right:1px solid var(--line);padding:22px 14px}
+nav .brand{font-size:13px;color:var(--tx3);letter-spacing:.08em;margin:0 8px 14px}
+nav .brand b{display:block;color:var(--tx);font-size:16px;letter-spacing:0;margin-top:4px;font-weight:600}
+nav a{display:block;color:var(--tx2);text-decoration:none;font-size:13.5px;padding:6px 10px;
+  border-radius:6px;border-left:2px solid transparent;margin-bottom:1px}
+nav a:hover{color:var(--tx);background:var(--panel2)}
+nav a.on{color:var(--blue);background:var(--panel2);border-left-color:var(--blue)}
+nav a .n{color:var(--tx3);font-family:var(--mono);font-size:11.5px;margin-right:7px}
+main{padding:44px 52px 120px;min-width:0;max-width:940px}
+h1{font-size:30px;line-height:1.3;margin:0 0 10px;font-weight:600;letter-spacing:-.01em}
+.sub{color:var(--tx2);font-size:14px;margin:0 0 8px}
+.meta{color:var(--tx3);font-size:12.5px;font-family:var(--mono);margin-bottom:34px}
+h2{font-size:21px;margin:56px 0 14px;padding-top:14px;border-top:1px solid var(--line);font-weight:600;letter-spacing:-.01em}
+h2 .n{color:var(--tx3);font-family:var(--mono);font-size:15px;margin-right:9px;font-weight:400}
+h3{font-size:16.5px;margin:32px 0 10px;font-weight:600;color:var(--cyan)}
+h4{font-size:14.5px;margin:22px 0 8px;font-weight:600;color:var(--tx)}
+p{margin:11px 0}
+ul,ol{margin:11px 0;padding-left:22px}
+li{margin:5px 0}
+code{font-family:var(--mono);font-size:.875em;background:var(--panel2);
+  padding:2px 6px;border-radius:4px;color:#ffa657;border:1px solid var(--line)}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+  padding:14px 16px;overflow-x:auto;margin:13px 0;font-size:13px;line-height:1.65}
+pre code{background:none;border:none;padding:0;color:#c9d1d9;font-size:13px}
+.k{color:#ff7b72}.s{color:#a5d6ff}.c{color:#6e7681;font-style:italic}.n2{color:#79c0ff}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+th{background:var(--panel2);color:var(--tx);font-weight:600;white-space:nowrap}
+td code{font-size:12.5px;padding:1px 5px}
+tr:nth-child(even) td{background:rgba(28,33,40,.4)}
+.box{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:16px 0;background:var(--panel)}
+.box.warn{border-left:3px solid var(--amber)}
+.box.bad{border-left:3px solid var(--red)}
+.box.good{border-left:3px solid var(--green)}
+.box.info{border-left:3px solid var(--blue)}
+.box .t{font-weight:600;font-size:14px;margin-bottom:6px;display:block}
+.box.warn .t{color:var(--amber)}.box.bad .t{color:var(--red)}
+.box.good .t{color:var(--green)}.box.info .t{color:var(--blue)}
+.box p:last-child,.box ul:last-child{margin-bottom:0}
+.pill{display:inline-block;font-family:var(--mono);font-size:11.5px;padding:1.5px 8px;
+  border-radius:20px;border:1px solid var(--line);color:var(--tx2);background:var(--panel2)}
+.pill.b{color:var(--blue);border-color:#1f4d7a}
+.pill.g{color:var(--green);border-color:#1c4a26}
+.pill.a{color:var(--amber);border-color:#5c4a12}
+.pill.r{color:var(--red);border-color:#6e2a27}
+.pill.p{color:var(--purple);border-color:#4a3a6e}
+.flow{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+  padding:18px;margin:16px 0;font-family:var(--mono);font-size:12.5px;
+  line-height:2;color:var(--tx2);overflow-x:auto;white-space:pre}
+.flow b{color:var(--blue);font-weight:400}
+.flow i{color:var(--green);font-style:normal}
+.flow u{color:var(--amber);text-decoration:none}
+.flow s{color:var(--tx3);text-decoration:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:14px 0}
+@media(max-width:900px){
+  .wrap{grid-template-columns:1fr}
+  nav{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line)}
+  nav a{display:inline-block;margin-right:5px}
+  main{padding:26px 20px 90px}
+  .grid2{grid-template-columns:1fr}
+}
+footer{margin-top:70px;padding-top:18px;border-top:1px solid var(--line);
+  color:var(--tx3);font-size:12.5px;font-family:var(--mono)}
+a.lnk{color:var(--blue);text-decoration:none;border-bottom:1px solid #1f4d7a}
+a.lnk:hover{border-bottom-color:var(--blue)}
+mark{background:rgba(210,153,34,.18);color:var(--amber);padding:1px 4px;border-radius:3px}
+del{color:var(--tx3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <div class="brand">配置解剖<b>Clash / mihomo</b></div>
+  <a href="#s0"><span class="n">00</span>你的实况</a>
+  <a href="#s1"><span class="n">01</span>配置文件分几层</a>
+  <a href="#s2"><span class="n">02</span>全局字段逐条</a>
+  <a href="#s3"><span class="n">03</span>proxies 节点</a>
+  <a href="#s4"><span class="n">04</span>proxy-groups 策略组</a>
+  <a href="#s5"><span class="n">05</span>rules 分流规则</a>
+  <a href="#s6"><span class="n">06</span>DNS 专题</a>
+  <a href="#s7"><span class="n">07</span>订阅导入机制</a>
+  <a href="#s8"><span class="n">08</span>官方文档地图</a>
+  <a href="#s9"><span class="n">09</span>学习路径规划</a>
+  <a href="#s10"><span class="n">10</span>体检与建议</a>
+  <a href="#a"><span class="n">A</span>概念地基:协议分层</a>
+  <a href="#b"><span class="n">B</span>网络体系:VPN/代理/专线</a>
+</nav>
+
+<main>
+
+<h1>Clash 配置解剖</h1>
+<p class="sub">以你本机正在运行的 Clash Verge Rev 为样本,逐字段讲解 · 对照 mihomo 官方文档</p>
+<p class="meta">生成于 2026-09-28 · 样本目录 <code>%APPDATA%\io.github.clash-verge-rev.clash-verge-rev\</code> · 内核 verge-mihomo</p>
+
+<h2 id="s0"><span class="n">00</span>你的实况:先搞清楚哪个文件说了算</h2>
+
+<p>你这个目录里躺着一堆 yaml,职责完全不同。多数人看配置看到头晕,就是因为把这些文件混为一谈。先把地图摊开:</p>
+
+<table>
+<thead><tr><th>文件 / 目录</th><th>规模</th><th>是什么</th><th>谁在写</th></tr></thead>
+<tbody>
+<tr><td><code>profiles.yaml</code></td><td>~2.5 KB</td><td>订阅清单(索引)。记录有几份订阅、当前用哪份、流量用了多少</td><td>Verge 客户端</td></tr>
+<tr><td><code>profiles/</code></td><td>目录</td><td>每份订阅的<b>原始 yaml</b>,外加 5 个「增强槽」文件</td><td>订阅下载 + 你手改</td></tr>
+<tr><td><code>profiles/profileA.yaml</code></td><td>上万行 / 数百 KB</td><td><b>机场A</b> 订阅原文(当前启用)。SS + VMess 节点,近万条规则</td><td>机场下发</td></tr>
+<tr><td><code>profiles/profileB.yaml</code></td><td>236 行</td><td><b>机场B</b> 订阅原文 ← <mark>你贴的那段配置就来自这里</mark></td><td>机场下发</td></tr>
+<tr><td><code>profiles/profileC.yaml</code></td><td>2.2 KB</td><td>某公开仓库的免费直链节点(单个 hysteria,免费)</td><td>公开仓库</td></tr>
+<tr><td><code>profiles/{uid}.yaml / .js</code></td><td>54～96 B</td><td>每个订阅配的 5 个增强槽:<code>merge</code> / <code>script</code> / <code>rules</code> / <code>proxies</code> / <code>groups</code></td><td>你(目前全是空模板)</td></tr>
+<tr><td><mark>clash-verge.yaml</mark></td><td>10395 行 / 0.5 MB</td><td><b>最终合成结果。</b>Verge 把订阅 + 增强槽算完写在这里,内核真正读的是它</td><td>Verge 自动生成</td></tr>
+<tr><td><code>config.yaml</code></td><td>31 行</td><td>内核启动骨架(含 tun 段)。Verge 拆出来的一部分</td><td>Verge 自动生成</td></tr>
+<tr><td><code>dns_config.yaml</code></td><td>53 行</td><td>Verge 界面上「DNS 覆盖」的内容 —— <mark>当前开关是关的,不生效</mark></td><td>Verge 界面</td></tr>
+<tr><td><code>verge.yaml</code></td><td>87 行</td><td>客户端自身设置:主题、端口偏好、TUN 开关、DNS 开关</td><td>Verge 界面</td></tr>
+</tbody>
+</table>
+
+<div class="box bad">
+<span class="t">第一个要记住的结论</span>
+<p>你手上那份「订阅配置」里的 <code>mixed-port</code>、<code>external-controller</code>、<code>mode</code> 这些头部字段,<b>只是机场作者的建议值,不是最终生效值</b>。Verge 会把它们全部覆盖掉,重新生成 <code>clash-verge.yaml</code>。真正跑起来的是什么,以 <code>clash-verge.yaml</code> 为准。</p>
+</div>
+
+<h3>一个实证:订阅原值 vs 实际生效值</h3>
+
+<table>
+<thead><tr><th>字段</th><th>机场B 订阅里写的</th><th>实际生效(机场A 合成后)</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td><code>mixed-port</code></td><td>7890</td><td><b>7897</b></td><td>Verge 在 <code>verge.yaml</code> 里设了 <code>verge_mixed_port: 7897</code>,覆盖订阅</td></tr>
+<tr><td><code>allow-lan</code></td><td><code>false</code></td><td><code>false</code></td><td>一致</td></tr>
+<tr><td><code>bind-address</code></td><td><code>'*'</code></td><td>不存在</td><td><code>allow-lan: false</code> 时该字段无意义,Verge 直接不写</td></tr>
+<tr><td><code>mode</code></td><td><code>rule</code></td><td><code>rule</code></td><td>一致</td></tr>
+<tr><td><code>log-level</code></td><td><code>info</code></td><td><code>info</code></td><td>一致</td></tr>
+<tr><td><code>external-controller</code></td><td><code>'127.0.0.1:9090'</code></td><td><code>''</code> + Windows 命名管道</td><td>Verge 改用 named pipe 通信,比 TCP 端口更安全</td></tr>
+<tr><td><code>unified-delay</code></td><td><code>true</code></td><td><code>true</code></td><td>一致</td></tr>
+<tr><td><code>tcp-concurrent</code></td><td><code>true</code></td><td>不存在</td><td>订阅里有、Verge 合成后丢了 —— 见第 2 章末尾</td></tr>
+</tbody>
+</table>
+
+<h2 id="s1"><span class="n">01</span>配置文件分几层:一条数据的旅程</h2>
+
+<p>搞懂这张流水线,后面所有的疑问都会自动化解。Verge 的配置不是「一个文件」,而是一条加工链:</p>
+
+<div class="flow">  机场服务器
+      │  HTTPS 拉取
+      ▼
+<b>profiles/{uid}.yaml</b>  ← 订阅原文(proxies / proxy-groups / rules 都在里面)
+      │
+      ├─▶ <u>Merge.yaml</u>      深度合并:改字段、加字段
+      ├─▶ <u>Script.js</u>       脚本处理:用 JS 任意改 config 对象
+      ├─▶ <u>rules.yaml</u>      prepend / append / delete 规则
+      ├─▶ <u>proxies.yaml</u>    增删节点
+      └─▶ <u>groups.yaml</u>     增删策略组
+      │
+      ▼
+<b>clash-verge.yaml</b>  ← Verge 生成的最终文件(0.5 MB,内核真正读的)
+      │  +  config.yaml(骨架/tun)
+      ▼
+<i>verge-mihomo 内核进程</i>
+      │
+      ├─▶ 本地代理端口 7897(mixed-port)
+      ├─▶ 系统代理 / TUN 虚拟网卡 Mihomo
+      └─▶ 控制接口:Windows 命名管道</div>
+
+<p>关键点:<b>订阅可以整体替换,你的自定义不会丢</b>。因为你的改动写在「增强槽」里,而槽位独立于订阅文件存在。订阅更新时只覆盖 <code>profiles/{uid}.yaml</code>,槽位文件岿然不动。</p>
+
+<div class="box info">
+<span class="t">为什么要在意这个结构</span>
+<p>很多人改配置的方式是「打开订阅文件直接改」—— 下次机场更新订阅,改动全被冲掉。正确姿势是写进 Merge 或 rules 槽位。第 7 章会给你现成的写法。</p>
+</div>
+
+<h2 id="s2"><span class="n">02</span>全局字段逐条讲解</h2>
+
+<p>先把你贴的那段拆开。这些是整个代理程序的行为开关,不涉及具体节点。</p>
+
+<table>
+<thead><tr><th>字段</th><th>你的值</th><th>含义</th></tr></thead>
+<tbody>
+<tr>
+<td><code>mixed-port</code></td><td>7890 → 实际 7897</td>
+<td>「混合端口」。同一个端口同时说 HTTP 代理和 SOCKS5 代理两种协议,程序用哪个都行。老配置会分成 <code>port</code>(HTTP)和 <code>socks-port</code>(SOCKS5)两个,现在没必要了。</td>
+</tr>
+<tr>
+<td><code>allow-lan</code></td><td><code>false</code></td>
+<td>是否允许<b>局域网其他设备</b>连你这个代理。开 <code>true</code> 后手机、平板可以填你电脑 IP 来上网,但同时把代理暴露到了内网 —— 公共 WiFi 下别开。</td>
+</tr>
+<tr>
+<td><code>bind-address</code></td><td><code>'*'</code></td>
+<td>配合上面那个开关用的:允许从哪个地址访问。<code>'*'</code> = 所有网卡;也可填单个 IP 如 <code>192.168.31.31</code> 或 IPv6 <code>[aaaa::1]</code>。<code>allow-lan: false</code> 时它形同虚设。</td>
+</tr>
+<tr>
+<td><code>mode</code></td><td><code>rule</code></td>
+<td>运行模式,三选一:<br>
+<span class="pill b">rule</span> 按规则分流(默认,推荐)<br>
+<span class="pill">global</span> 全部流量走一个代理,规则失效<br>
+<span class="pill">direct</span> 全部直连,等于关了代理</td>
+</tr>
+<tr>
+<td><code>log-level</code></td><td><code>info</code></td>
+<td>内核日志级别,从少到多:<code>silent</code> → <code>error</code> → <code>warning</code> → <code>info</code> → <code>debug</code>。排查问题时临时开 <code>debug</code>,平时 <code>info</code> 足够,<code>debug</code> 会疯狂写盘。</td>
+</tr>
+<tr>
+<td><code>external-controller</code></td><td><code>'127.0.0.1:9090'</code></td>
+<td>「外部控制器」= 一个 RESTful API 端口。Clash 的各种图形面板(Yacd、MetaCubeXD)、手机遥控都是连它。填 <code>0.0.0.0:9090</code> 会让同网段所有人都能控你的代理,<b>只填 127.0.0.1</b>。</td>
+</tr>
+<tr>
+<td><code>secret</code></td><td><code>set-your-secret</code></td>
+<td>上面那个 API 的访问密钥。可以理解成代理的「管理密码」。⚠️ 你的值是默认占位符,等于没设。</td>
+</tr>
+<tr>
+<td><code>unified-delay</code></td><td><code>true</code></td>
+<td>「统一延迟」。默认测延迟的方式,不同协议测出的数字没法横向比 —— 有的含握手时间,有的不含。开启后统一按真实 RTT 计算,延迟面板里的数字才公平可比。</td>
+</tr>
+<tr>
+<td><code>tcp-concurrent</code></td><td><code>true</code></td>
+<td>「TCP 并发连接」。一个域名可能解析出多个 IP(比如 CDN),开启后内核<b>同时向所有 IP 发起连接,用最先成功的那个</b>,掐掉抖动的那个。对首包速度有实在的改善。</td>
+</tr>
+<tr>
+<td><code>ipv6</code></td><td><code>true</code></td>
+<td>内核是否接受 IPv6 流量。⚠️ 你家宽带若 IPv6 不通,开着只会让解析多绕一圈。</td>
+</tr>
+<tr>
+<td><code>profile.store-selected</code></td><td><code>true</code></td>
+<td>记住你在策略组里手动选的节点,重启后不变回默认。(来自你的 Merge 槽,是 Verge 的默认模板)</td>
+</tr>
+</tbody>
+</table>
+
+<div class="box warn">
+<span class="t">你这份配置里有个字段丢了</span>
+<p><code>tcp-concurrent: true</code> 在 机场B 订阅里有,但在 Verge 生成的 <code>clash-verge.yaml</code> 里<b>消失了</b>。原因是最终生效的是 机场A 那份订阅,而 机场A 的头部没写这一项。</p>
+<p>想稳定拥有它,正确做法是在 Merge 槽里写明(见第 7 章),而不是指望某份订阅替你带上。</p>
+</div>
+
+<h3>还有几个你迟早会碰到的全局字段</h3>
+<table>
+<thead><tr><th>字段</th><th>作用</th><th>什么时候改</th></tr></thead>
+<tbody>
+<tr><td><code>find-process-mode</code></td><td><code>always</code> 强制匹配进程 / <code>strict</code> 智能判断(默认) / <code>off</code> 不匹配</td><td>想用「某程序走代理」这类进程规则时才需要。默认 <code>strict</code> 足够,<code>off</code> 能省点 CPU</td></tr>
+<tr><td><code>geodata-mode</code></td><td><code>true</code> 用 <code>.dat</code> 格式的 geoip / <code>false</code>(默认)用 <code>.mmdb</code></td><td>一般不用动。你的目录里两种文件都有</td></tr>
+<tr><td><code>geodata-loader</code></td><td><code>memconservative</code>(默认,省内存)/ <code>standard</code></td><td><b>你这种情况别动</b>,默认就是省内存的档位</td></tr>
+<tr><td><code>geo-auto-update</code></td><td>是否自动更新 geo 数据库</td><td>配合 <code>geo-update-interval</code>(小时)用</td></tr>
+<tr><td><code>interface-name</code></td><td>指定走哪块网卡出站</td><td>多网卡(有线+无线+虚拟网卡)环境才用得上</td></tr>
+<tr><td><code>lan-allowed-ips</code></td><td>允许连入的 IP 段,默认全放行</td><td>开了 <code>allow-lan</code> 又想限流时用</td></tr>
+</tbody>
+</table>
+
+<h2 id="s3"><span class="n">03</span>proxies:节点是什么样子的</h2>
+
+<p><code>proxies</code> 是一个列表,每个元素就是一台「能帮你翻墙的服务器」。你的机场A订阅里有几十个节点。下面是你订阅里真实存在的两种,密码已打码:</p>
+
+<h3>样本 A:Shadowsocks 节点(你订阅里的主力)</h3>
+<pre><code><span class="c"># profiles/profileA.yaml 第 35 行(单行流式写法)</span>
+- {name: <span class="s">🇭🇰 香港-A01</span>, server: <span class="s">hk01.node.example.com</span>,
+   port: <span class="n2">19272</span>, type: <span class="s">ss</span>, cipher: <span class="s">aes-256-gcm</span>,
+   password: <span class="k">***打码***</span>, udp: <span class="n2">true</span>}</code></pre>
+
+<table>
+<thead><tr><th>字段</th><th>含义</th></tr></thead>
+<tbody>
+<tr><td><code>name</code></td><td>节点显示名,<b>必须唯一</b>。策略组的 <code>proxies</code> 列表就是靠这个名字引用的 → 所以改名会导致策略组引用失效</td></tr>
+<tr><td><code>type</code></td><td>协议类型。<code>ss</code> = Shadowsocks</td></tr>
+<tr><td><code>server</code> / <code>port</code></td><td>服务器地址 / 端口</td></tr>
+<tr><td><code>cipher</code></td><td>加密方式。SS 专属字段</td></tr>
+<tr><td><code>password</code></td><td>密码。SS 专属字段</td></tr>
+<tr><td><code>udp</code></td><td>是否允许 UDP 走这个节点。<b>默认 <code>false</code></b>。不开的话游戏、QUIC、部分视频通话会走不了代理</td></tr>
+</tbody>
+</table>
+
+<h3>样本 B:VMess 节点(带 WebSocket 伪装)</h3>
+<pre><code><span class="c"># profiles/profileA.yaml 第 53 行</span>
+- {name: <span class="s">🇭🇰 香港-A02 | IEPL</span>, server: <span class="s">hk10.node.example.com</span>,
+   port: <span class="n2">13483</span>, type: <span class="s">vmess</span>, uuid: <span class="k">***打码***</span>, alterId: <span class="n2">1</span>,
+   cipher: <span class="s">auto</span>, tls: <span class="n2">false</span>, skip-cert-verify: <span class="n2">false</span>,
+   network: <span class="s">ws</span>,
+   ws-opts: {path: <span class="s">/</span>, headers: {Host: <span class="s">cdn.example.com</span>}},
+   udp: <span class="n2">true</span>}</code></pre>
+
+<table>
+<thead><tr><th>字段</th><th>含义</th></tr></thead>
+<tbody>
+<tr><td><code>uuid</code></td><td>VMess/VLESS 的用户身份标识,相当于用户名+密码合体</td></tr>
+<tr><td><code>alterId</code></td><td>旧版 VMess 的额外 ID。现代服务端基本都用 0 或 1</td></tr>
+<tr><td><code>cipher</code></td><td>VMess 的加密方式,<code>auto</code> = 自动协商</td></tr>
+<tr><td><code>network</code></td><td>传输层:可填 <code>ws</code>(WebSocket)、<code>grpc</code>、<code>h2</code>、<code>http</code>。不填则走裸 TCP</td></tr>
+<tr><td><code>ws-opts.path</code></td><td>WebSocket 路径</td></tr>
+<tr><td><code>ws-opts.headers.Host</code></td><td>伪装请求的 Host 头 —— 让流量看起来像在访问某个正常网站,这是「伪装」的核心</td></tr>
+<tr><td><code>tls</code> / <code>sni</code> / <code>skip-cert-verify</code></td><td>是否启用 TLS / TLS 的域名 / 是否跳过证书校验</td></tr>
+</tbody>
+</table>
+
+<div class="box warn">
+<span class="t">节点名里的 x0.01 / x0.8 / x1.5 / x2 不是配置字段</span>
+<p>那是机场的<b>流量计费倍率</b>。用一次「x2」节点,后台按 2 倍扣流量;「x0.01」几乎不扣,所以标着「下载专用」—— 适合 BT、大文件。这纯粹是名字里的文字,内核不认识它。</p>
+</div>
+
+<h3>你的另一份订阅用了完全不同的协议</h3>
+<p>那份公开免费订阅(<code>profileC.yaml</code>)只有一个免费节点,协议是 <code>hysteria</code> —— 基于 QUIC/UDP 的新一代协议,自带带宽参数:</p>
+<pre><code>proxies:
+  - name: <span class="s">https://github.com/example/free-nodes</span>
+    type: <span class="s">hysteria</span>
+    server: <span class="s">198.51.100.20</span>
+    port: <span class="n2">23556</span>
+    sni: <span class="s">bing.com</span>
+    skip-cert-verify: <span class="n2">true</span>
+    alpn: [<span class="s">h3</span>]
+    protocol: <span class="s">udp</span>
+    up: <span class="s">"11 Mbps"</span>      <span class="c"># 客户端上行带宽声明</span>
+    down: <span class="s">"55 Mbps"</span>    <span class="c"># 客户端下行带宽声明</span></code></pre>
+<p><code>up</code>/<code>down</code> 是 Hysteria 的强制参数 —— 它需要知道你的实际带宽才能做好拥塞控制。填错会明显掉速。</p>
+
+<h3>mihomo 支持的协议清单(你目前只用了 3 种)</h3>
+<p>传统类:<code>ss</code> · <code>ssr</code> · <code>vmess</code> · <code>vless</code> · <code>trojan</code> · <code>snell</code> · <code>http</code> · <code>socks5</code><br>
+新一代:<code>hysteria</code> · <code>hysteria2</code> · <code>tuic</code> · <code>anytls</code> · <code>mieru</code> · <code>shadowquic</code> · <code>sudoku</code><br>
+隧道类:<code>wireguard</code> · <code>tailscale</code> · <code>zerotier</code> · <code>ssh</code> · <code>openvpn</code></p>
+<p>所有节点共享的通用字段:<code>name</code> / <code>type</code> / <code>server</code> / <code>port</code> 必填,另有 <code>udp</code> / <code>tfo</code> / <code>mptcp</code> / <code>interface-name</code> / <code>dialer-proxy</code>(链式前置代理) / <code>ip-version</code>。</p>
+
+<h2 id="s4"><span class="n">04</span>proxy-groups:策略组,流量的分拣台</h2>
+
+<p>如果 <code>proxies</code> 是「可用的门」,<code>proxy-groups</code> 就是「哪个房间走哪扇门」的调度台。规则命中后不直接指向节点,而是指向一个策略组。</p>
+
+<p>你的机场A订阅定义了 <b>11 个策略组</b>,逻辑相当清晰:</p>
+
+<table>
+<thead><tr><th>策略组</th><th>类型</th><th>成员数</th><th>它的职责</th></tr></thead>
+<tbody>
+<tr><td><code>🔰 选择节点</code></td><td><span class="pill b">select</span></td><td>47</td><td>总闸。所有需要代理的规则最终都指向它</td></tr>
+<tr><td><code>🌏 爱奇艺&amp;哔哩哔哩</code></td><td><span class="pill b">select</span></td><td>13</td><td>国内视频站,默认直连,可手动切香港解锁番剧</td></tr>
+<tr><td><code>📺 动画疯</code></td><td><span class="pill b">select</span></td><td>3</td><td>巴哈姆特动画疯,只有台湾节点能看</td></tr>
+<tr><td><code>🎮 Steam 登录/下载</code></td><td><span class="pill b">select</span></td><td>5</td><td>下载走直连,登录走代理 —— 中国大陆常见需求</td></tr>
+<tr><td><code>🎮 Steam 商店/社区</code></td><td><span class="pill b">select</span></td><td>5</td><td>商店社区被墙,必须代理</td></tr>
+<tr><td><code>🌩️ Cloudflare</code></td><td><span class="pill b">select</span></td><td>2</td><td>CF 站点单独调度</td></tr>
+<tr><td><code>☁️ OneDrive</code></td><td><span class="pill b">select</span></td><td>35</td><td>OneDrive 在国内时通时不通,给了大量备选</td></tr>
+<tr><td><code>🎓学术网站</code></td><td><span class="pill b">select</span></td><td>2</td><td>知网等学术站</td></tr>
+<tr><td><code>🇨🇳 国内网站</code></td><td><span class="pill b">select</span></td><td>2</td><td>国内流量直连出口</td></tr>
+<tr><td><code>🛑 拦截广告</code></td><td><span class="pill b">select</span></td><td>3</td><td>配合 REJECT 做广告拦截</td></tr>
+<tr><td><code>🐟 漏网之鱼</code></td><td><span class="pill b">select</span></td><td>2</td><td>兜底:没被任何规则命中的流量走这里</td></tr>
+</tbody>
+</table>
+
+<h3>四种类型,只有第一种你需要手动点</h3>
+<table>
+<thead><tr><th>类型</th><th>怎么选节点</th><th>适用场景</th></tr></thead>
+<tbody>
+<tr><td><span class="pill b">select</span></td><td><b>你手动选</b></td><td>需要人工决策的,比如「看港剧切香港节点」</td></tr>
+<tr><td><span class="pill a">url-test</span></td><td>自动选延迟最低的</td><td>追求速度,不挑地区。加 <code>tolerance</code> 避免频繁切换</td></tr>
+<tr><td><span class="pill g">fallback</span></td><td>按顺序,第一个挂了自动换下一个</td><td>追求可用性,不追求速度。机场B 那份订阅就用了它</td></tr>
+<tr><td><span class="pill p">load-balance</span></td><td>按策略把连接分摊到多个节点</td><td>单节点带宽不够时堆带宽</td></tr>
+</tbody>
+</table>
+
+<h3>策略组的完整字段</h3>
+<pre><code>proxy-groups:
+  - name: <span class="s">🔰 选择节点</span>
+    type: <span class="s">select</span>
+    proxies:                      <span class="c"># 引用节点名或别的策略组名</span>
+      - <span class="s">🇭🇰 香港-A01</span>
+      - <span class="s">🇯🇵 日本W01 | IEPL</span>
+      - <span class="n2">DIRECT</span>                    <span class="c"># 内置:直连</span>
+      - <span class="n2">REJECT</span>                    <span class="c"># 内置:拒绝连接</span>
+    url: <span class="s">'https://www.gstatic.com/generate_204'</span>   <span class="c"># 健康检查地址</span>
+    interval: <span class="n2">300</span>               <span class="c"># 每 300 秒测一次</span>
+    lazy: <span class="n2">true</span>                  <span class="c"># 懒测:当前没在用就不测,省资源</span>
+    tolerance: <span class="n2">50</span>               <span class="c"># 延迟差小于 50ms 不切节点(url-test 用)</span>
+    timeout: <span class="n2">5000</span>              <span class="c"># 单次测速超时(毫秒)</span>
+    disable-udp: <span class="n2">false</span>          <span class="c"># 是否对本组禁用 UDP</span>
+    filter: <span class="s">"(?i)港|hk|hongkong"</span>      <span class="c"># 从 provider 里按名字筛节点</span>
+    exclude-filter: <span class="s">"美|日"</span>            <span class="c"># 反向排除</span>
+    icon: <span class="s">https://example.com/hk.png</span>  <span class="c"># 面板显示图标</span></code></pre>
+
+<div class="box info">
+<span class="t">三个内置值,写在 proxies 列表里当普通成员用</span>
+<ul>
+<li><code>DIRECT</code> —— 直连,不走代理</li>
+<li><code>REJECT</code> —— 拒绝,连接被丢弃(广告拦截靠它)</li>
+<li><code>GLOBAL</code> —— 内置的全局组,<code>mode: global</code> 时用它</li>
+</ul>
+</div>
+
+<h3>成员还能从哪来(不只是一个一个列)</h3>
+<ul>
+<li><code>proxies</code> —— 显式列出节点名 / 其他策略组名</li>
+<li><code>use</code> —— 引用 <code>proxy-providers</code>(订阅提供者)的名字,把整个订阅的节点拉进来</li>
+<li><code>include-all-proxies: true</code> —— 自动包含所有节点,不用手写</li>
+<li><code>include-all-providers: true</code> —— 自动包含所有 provider</li>
+<li><code>filter</code> / <code>exclude-filter</code> / <code>exclude-type</code> —— 对上面自动包含的结果做筛选</li>
+</ul>
+<p><b>为什么重要:</b>订阅节点会变(机场加机器、删机器)。用 <code>include-all-proxies</code> + <code>filter</code>,机场怎么变你的组都自动跟上,不用改配置。</p>
+
+<h2 id="s5"><span class="n">05</span>rules:分流规则,整份配置的核心</h2>
+
+<p>规则决定了「这个连接该走哪扇门」。它是<b>一个列表,从上往下逐条匹配,命中第一条就停</b>。顺序错了,整份配置的效果就全错。</p>
+
+<p>你的合成配置里有 <b>近万条规则</b>(579～10395 行),结构是这样的:</p>
+
+<div class="flow"><s>第 579 行  ↓ 开始</s>
+<span class="c">── 精编区(~200 条):手工维护的高频站点 ──</span>
+DOMAIN,<span class="s">app.biliapi.net</span>,🌏 爱奇艺&amp;哔哩哔哩
+DOMAIN-SUFFIX,<span class="s">bilibili.com</span>,🌏 爱奇艺&amp;哔哩哔哩
+DOMAIN-SUFFIX,<span class="s">bahamut.com.tw</span>,📺 动画疯
+DOMAIN-KEYWORD,<span class="s">steampipe</span>,<span class="n2">DIRECT</span>
+DOMAIN-SUFFIX,<span class="s">steamcommunity.com</span>,🎮 Steam 商店/社区
+   …
+<span class="c">── 巨量区(~9600 条):批量导入的 IP 段 ──</span>
+IP-CIDR,<span class="s">162.125.82.0/23</span>,🔰 选择节点,<span class="n2">no-resolve</span>
+IP-CIDR,<span class="s">173.252.73.0/24</span>,🔰 选择节点,<span class="n2">no-resolve</span>
+   …
+<span class="c">── 收尾兜底 ──</span>
+GEOIP,<span class="s">CN</span>,🇨🇳 国内网站          <span class="s">第 10393 行</span>
+DOMAIN-KEYWORD,<span class="s">.</span>,🐟 漏网之鱼       <span class="s">第 10394 行</span>
+<span class="k">MATCH</span>,🐟 漏网之鱼             <span class="s">第 10395 行 ← 最后一道网</span></div>
+
+<h3>规则语法的三段式</h3>
+<pre><code>  <span class="k">规则类型</span>  ,  <span class="s">匹配内容</span>  ,  <span class="n2">目标策略</span>  ,  [附加参数]
+  DOMAIN-SUFFIX , google.com , 🔰 选择节点 , no-resolve</code></pre>
+
+<h3>规则类型速查(按你的配置里用到的优先)</h3>
+<table>
+<thead><tr><th>类型</th><th>匹配逻辑</th><th>例子</th></tr></thead>
+<tbody>
+<tr><td><code>DOMAIN</code></td><td><b>完整域名</b>完全相等</td><td><code>DOMAIN,app.biliapi.net,🌏…</code></td></tr>
+<tr><td><code>DOMAIN-SUFFIX</code></td><td>域名<b>后缀</b>。匹配 <code>google.com</code> 及其所有子域</td><td><code>DOMAIN-SUFFIX,bilibili.com,…</code></td></tr>
+<tr><td><code>DOMAIN-KEYWORD</code></td><td>域名中含某<b>关键字</b>就命中(粒度最粗)</td><td><code>DOMAIN-KEYWORD,steamcontent,DIRECT</code></td></tr>
+<tr><td><code>IP-CIDR</code> / <code>IP-CIDR6</code></td><td>目标 IP 落在网段内(两者<b>完全等价</b>,后者只是别名)</td><td><code>IP-CIDR,10.0.0.0/8,DIRECT,no-resolve</code></td></tr>
+<tr><td><code>GEOIP</code></td><td>目标 IP 的归属国家</td><td><code>GEOIP,CN,🇨🇳 国内网站</code></td></tr>
+<tr><td><code>GEOSITE</code></td><td>匹配 geosite 数据库里的域名集合</td><td><code>GEOSITE,youtube,🔰 选择节点</code></td></tr>
+<tr><td><code>RULE-SET</code></td><td>引用 <code>rule-providers</code> 定义的规则集(可远程更新)</td><td><code>RULE-SET,reject,🛑 拦截广告</code></td></tr>
+<tr><td><code>PROCESS-NAME</code></td><td>按发起连接的程序名匹配</td><td><code>PROCESS-NAME,chrome.exe,🔰 选择节点</code></td></tr>
+<tr><td><code>DST-PORT</code> / <code>SRC-PORT</code></td><td>目标端口 / 来源端口,支持范围</td><td><code>DST-PORT,123,DIRECT</code></td></tr>
+<tr><td><code>NETWORK</code></td><td>只匹配 <code>tcp</code> 或 <code>udp</code></td><td><code>NETWORK,udp,DIRECT</code></td></tr>
+<tr><td><code>AND</code>/<code>OR</code>/<code>NOT</code></td><td>逻辑组合,注意双层括号</td><td><code>AND,((DOMAIN,baidu.com),(NETWORK,UDP)),DIRECT</code></td></tr>
+<tr><td><code>MATCH</code></td><td><b>无条件匹配一切</b>,永远放最后</td><td><code>MATCH,🐟 漏网之鱼</code></td></tr>
+</tbody>
+</table>
+
+<h3>no-resolve 到底是什么(高频疑问)</h3>
+<p>IP 类规则(IP-CIDR、GEOIP)要判断「目标 IP 属不属于这个网段」,但代理拿到的通常只是<b>域名</b>。于是内核必须<b>先做一次 DNS 解析</b>拿到 IP —— 这一步会引入延迟,还可能把域名提前暴露给本地 DNS。</p>
+<p><code>no-resolve</code> 就是告诉内核:<b>这条规则别为了它去解析 DNS</b>。解析不出来就跳过这条、继续往下走。</p>
+
+<div class="box warn">
+<span class="t">no-resolve 有个坑</span>
+<p>官方文档写明:<b>如果更早的规则已经触发过 DNS 解析,那么结果会被缓存,后面的 no-resolve 规则照样能匹配到。</b>也就是说 no-resolve 只能阻止「主动去解析」,拦不住「已经解析过的结果」。它不是隐私开关。</p>
+</div>
+
+<h3>三份订阅的规则风格对比</h3>
+<table>
+<thead><tr><th></th><th>机场A(你在用的)</th><th>机场B</th><th>公开节点项目</th></tr></thead>
+<tbody>
+<tr><td>规则条数</td><td>9817 条</td><td>约 180 条</td><td>1 条</td></tr>
+<tr><td>风格</td><td>IP-CIDR 巨量大列表,精细化</td><td>域名关键字为主,粗粒度</td><td>只有 <code>MATCH</code> 兜底</td></tr>
+<tr><td>策略组</td><td>11 个,分工明确</td><td>9 个</td><td>无,直接指向节点</td></tr>
+<tr><td>特点</td><td>命中准,但文件大</td><td>写法简单易懂,学习友好</td><td>极简,适合临时救急</td></tr>
+</tbody>
+</table>
+
+<p>机场B 那种写法值得单独看一眼,它暴露了关键字规则的副作用:</p>
+<pre><code><span class="c"># 机场B 的规则节选</span>
+- <span class="s">'DOMAIN-KEYWORD,google,机场B'</span>     <span class="c"># 含 "google" 的一切都代理</span>
+- <span class="s">'DOMAIN-SUFFIX,cn,DIRECT'</span>                  <span class="c"># 所有 .cn 直连</span>
+- <span class="s">'DOMAIN-KEYWORD,-cn,DIRECT'</span>                <span class="c"># 域名里有 "-cn" 也直连</span>
+- <span class="s">'DOMAIN-KEYWORD,.,🐟 漏网之鱼'</span>              <span class="c"># 带点的域名都兜底 → 等价于 MATCH</span>
+- <span class="s">'MATCH,机场B'</span></code></pre>
+<p><code>DOMAIN-KEYWORD,google</code> 会把 <code>google-analytics.com</code>、<code>googleadservices.com</code> 这些统计/广告域名一并送进代理 —— 不一定是你想要的。<code>DOMAIN-KEYWORD,.</code> 那条则是冗余的,因为紧接着的 <code>MATCH</code> 已经兜住一切。</p>
+
+<h2 id="s6"><span class="n">06</span>DNS 专题:你问的「里面的 dns 是什么意思」</h2>
+
+<p>这是整份配置里最反直觉的部分。一句话先给结论:</p>
+
+<div class="box info">
+<span class="t">为什么代理软件要自己管 DNS</span>
+<p>正常上网时,DNS 解析由操作系统完成。但在代理场景下这会出问题:你访问 <code>youtube.com</code>,如果系统先把它解析成真实 IP,再把这个 IP 交给代理 —— 那这次解析<b>已经暴露给了本地 DNS 服务器</b>(可能被污染、被记录)。</p>
+<p>所以 Clash 把解析权收上来自己管:由内核决定「这个域名用哪个 DNS 解析、要不要走代理去解析」。这就是 <code>dns:</code> 段存在的意义。</p>
+</div>
+
+<h3>核心概念:enhanced-mode 的两种模式</h3>
+<table>
+<thead><tr><th></th><th><span class="pill g">fake-ip</span>(你在用)</th><th><span class="pill a">redir-host</span></th></tr></thead>
+<tbody>
+<tr><td>返回给程序什么</td><td>一个<b>假 IP</b>(取自 <code>198.18.0.1/16</code>),同时记下域名↔假IP 的映射</td><td>真实的解析结果</td></tr>
+<tr><td>后续怎么工作</td><td>程序连假 IP → 内核查映射得知真实域名 → 按域名匹配规则 → 再真正解析</td><td>拿着真实 IP 去匹配 IP 规则</td></tr>
+<tr><td>速度</td><td><b>快</b>,省掉一次真实解析的等待</td><td>慢,依赖真实 DNS 质量</td></tr>
+<tr><td>规则匹配精度</td><td>高 —— 因为能拿到域名,可以精确按域名分流</td><td>只能靠 IP,域名规则要靠解析</td></tr>
+<tr><td>代价</td><td>部分程序对假 IP 不适应(局域网设备发现、P2P、部分游戏),需要靠 <code>fake-ip-filter</code> 放行</td><td>可能有 DNS 污染、解析慢</td></tr>
+<tr><td>典型搭配</td><td>TUN 模式</td><td>系统代理模式</td></tr>
+</tbody>
+</table>
+
+<h3>你的 <code>dns_config.yaml</code> 逐字段拆解</h3>
+<pre><code>dns:
+  enable: <span class="n2">true</span>                    <span class="c"># 总开关:内核自己管 DNS</span>
+  listen: <span class="s">:53</span>                     <span class="c"># 对外开一个 DNS 服务,监听 53 端口</span>
+  enhanced-mode: <span class="s">fake-ip</span>          <span class="c"># 用假 IP 模式</span>
+  fake-ip-range: <span class="s">198.18.0.1/16</span>    <span class="c"># 假 IP 从哪一段里取</span>
+  fake-ip-filter-mode: <span class="s">blacklist</span>  <span class="c"># 下面列表是黑名单:命中则给真 IP</span>
+  prefer-h3: <span class="n2">false</span>               <span class="c"># DoH 不走 HTTP/3</span>
+  respect-rules: <span class="n2">false</span>           <span class="c"># DNS 连接不遵守路由规则</span>
+  use-hosts: <span class="n2">false</span>               <span class="c"># 不回应本文件的 hosts</span>
+  use-system-hosts: <span class="n2">false</span>        <span class="c"># 不读系统 hosts</span>
+  fake-ip-filter:                 <span class="c"># ↓ 这些域名不给假 IP,返回真实地址</span>
+    - <span class="s">'*.lan'</span>                     <span class="c"># 局域网</span>
+    - <span class="s">'*.local'</span>
+    - <span class="s">'*.arpa'</span>
+    - <span class="s">'*.msftncsi.com'</span>            <span class="c"># Windows 联网状态检测,给假 IP 会误判"无网络"</span>
+    - <span class="s">www.msftconnecttest.com</span>
+    - <span class="s">time.*.com</span> <span class="s">ntp.*.com</span>        <span class="c"># 时间同步</span>
+    - <span class="s">localhost.ptlogin2.qq.com</span>   <span class="c"># QQ 快速登录</span>
+    - <span class="s">+.market.xiaomi.com</span>
+  default-nameserver:             <span class="c"># 【引导 DNS】只用来解析"下面那些 DNS 服务器"的域名</span>
+    - <span class="s">system</span> <span class="s">223.6.6.6</span> <span class="s">8.8.8.8</span> <span class="s">2400:3200::1</span>
+  nameserver:                     <span class="c"># 【主 DNS】默认用它们解析域名</span>
+    - <span class="s">8.8.8.8</span>
+    - <span class="s">https://doh.pub/dns-query</span>        <span class="c"># 腾讯 DoH</span>
+    - <span class="s">https://dns.alidns.com/dns-query</span> <span class="c"># 阿里 DoH</span>
+  fallback: []                    <span class="c"># 【后备 DNS】空着 = 不用</span>
+  nameserver-policy: {}           <span class="c"># 【分域策略】空着</span>
+  proxy-server-nameserver:        <span class="c"># 【节点专用 DNS】只解析代理服务器自身的域名</span>
+    - <span class="s">https://doh.pub/dns-query</span>
+    - <span class="s">tls://223.5.5.5</span>
+  direct-nameserver: []           <span class="c"># 【直连专用 DNS】空着</span>
+  fallback-filter:
+    geoip: <span class="n2">true</span>                  <span class="c"># 用 IP 归属地判断是否被污染</span>
+    geoip-code: <span class="s">CN</span>               <span class="c"># 非中国 IP 视为污染</span>
+    ipcidr: [<span class="s">240.0.0.0/4</span>, <span class="s">0.0.0.0/32</span>]  <span class="c"># 这些网段的结果视为污染</span>
+    domain: [<span class="s">+.google.com</span>, <span class="s">+.facebook.com</span>, <span class="s">+.youtube.com</span>]
+hosts: {}</code></pre>
+
+<h3>四层 DNS 的分工(最容易搞混的地方)</h3>
+<table>
+<thead><tr><th>字段</th><th>管什么</th><th>打个比方</th></tr></thead>
+<tbody>
+<tr><td><code>default-nameserver</code></td><td>解析「DNS 服务器本身」的域名,且<b>必须填 IP</b></td><td>先得有电,才能开灯</td></tr>
+<tr><td><code>nameserver</code></td><td>日常解析的主力</td><td>主路</td></tr>
+<tr><td><code>fallback</code></td><td>主路结果可疑时用的备选(一般填境外 DNS)</td><td>怀疑被劫持时走的备用线路</td></tr>
+<tr><td><code>nameserver-policy</code></td><td>指定某类域名<**只用**某个 DNS>,<b>优先级最高</b></td><td>专线</td></tr>
+<tr><td><code>proxy-server-nameserver</code></td><td><b>只</b>解析代理节点自己的域名</td><td>防止"要先连上代理才能解析代理地址"的死循环</td></tr>
+<tr><td><code>direct-nameserver</code></td><td><b>只</b>给直连流量用的 DNS</td><td>国内站走国内 DNS,拿到最优 CDN</td></tr>
+</tbody>
+</table>
+
+<div class="box bad">
+<span class="t">你这份 DNS 配置目前根本没生效</span>
+<p>你在 <code>verge.yaml</code> 里的开关状态是:</p>
+<pre style="margin:8px 0"><code>enable_dns_settings: <span class="k">false</span>
+profile_dns_settings:
+  profileB: {enabled: <span class="k">false</span>}
+  profileA: {enabled: <span class="k">false</span>}</code></pre>
+<p>三个 <code>false</code> 意味着:<b><code>dns_config.yaml</code> 里那一大段精心写的配置,内核压根没读</b>。实际生效的是 机场A 订阅里自带的 DNS 段(<code>clash-verge.yaml</code> 第 36～58 行),而那一段只有 <code>default-nameserver</code> 和 <code>nameserver</code>,没有 <code>fake-ip-filter</code>、没有 <code>proxy-server-nameserver</code>。</p>
+<p>两条路选一条:要么在 Verge 界面把 DNS 设置开关打开、让这份配置生效;要么删掉它别再维护。现在的状态是「维护了一份没人读的文件」。</p>
+</div>
+
+<h3>实际生效的那份 DNS 里,有一行值得注意</h3>
+<pre><code><span class="c"># clash-verge.yaml 第 57-58 行(来自 机场A 订阅)</span>
+nameserver-policy:
+  <span class="s">+.xxxxx-1.xyz</span>: <span class="s">tcp://44ecbd9...fyi:8080</span></code></pre>
+<p>这是在为机场自己的节点域名指定一个专属 DNS。<b>这不是异常,而是机场的常规自保手段</b> —— 节点域名如果被墙污染,整个订阅就废了,所以它指定一个私有通道先把自家域名解析出来。你不用动它。</p>
+
+<h3>fake-ip-filter 里那几个域名为什么必须放行</h3>
+<ul>
+<li><code>*.msftncsi.com</code> / <code>www.msftconnecttest.com</code> —— Windows 用它们判断「有没有网」。给了假 IP,系统会认为网络不通,托盘图标弹感叹号</li>
+<li><code>*.lan</code> / <code>*.local</code> —— 局域网设备(打印机、NAS)必须拿真实地址才找得到</li>
+<li><code>time.*.com</code> / <code>ntp.*.com</code> —— 时间同步不能走假 IP</li>
+<li><code>localhost.ptlogin2.qq.com</code> —— QQ 的本地快速登录通道</li>
+</ul>
+<p><b>规律:</b>凡是「需要拿到真实 IP 才能工作」的东西(局域网、系统探测、P2P、部分游戏),就加进 fake-ip-filter。</p>
+
+<h2 id="s7"><span class="n">07</span>订阅导入机制:Verge 的 profile 体系</h2>
+
+<p>「导入订阅」在 Verge 里不只是下载一个 yaml,而是建立一套五槽位的加工体系。</p>
+
+<h3>你现在的订阅清单</h3>
+<table>
+<thead><tr><th>订阅</th><th>类型</th><th>更新间隔</th><th>状态</th></tr></thead>
+<tbody>
+<tr><td>机场A</td><td>remote</td><td>1440 分钟(1 天)</td><td><b>当前启用</b>。已用 ## GB / 300 GB,到期 20XX-XX-XX</td></tr>
+<tr><td>机场B</td><td>remote</td><td>1440 分钟</td><td>备用。已用 ## GB / 1 TB,到期 20XX-XX-XX</td></tr>
+<tr><td>config.yaml(公开节点项目)</td><td>remote</td><td>手动</td><td>免费公开节点,单个 hysteria</td></tr>
+</tbody>
+</table>
+
+<h3>每个订阅的五个增强槽</h3>
+<table>
+<thead><tr><th>槽位</th><th>文件</th><th>干什么</th><th>你的状态</th></tr></thead>
+<tbody>
+<tr><td><span class="pill b">Merge</span></td><td><code>{uid}.yaml</code></td><td>深度合并配置。直接写 <code>mixed-port: 7897</code> 就能覆盖/新增字段</td><td><span class="pill">空</span></td></tr>
+<tr><td><span class="pill p">Script</span></td><td><code>{uid}.js</code></td><td>用 JS 函数任意改造配置对象,能力最强</td><td><span class="pill">空模板</span></td></tr>
+<tr><td><span class="pill a">Rules</span></td><td><code>{uid}.yaml</code></td><td>对规则做 <code>prepend</code> / <code>append</code> / <code>delete</code></td><td><span class="pill">三个空数组</span></td></tr>
+<tr><td><span class="pill g">Proxies</span></td><td><code>{uid}.yaml</code></td><td>增删节点</td><td><span class="pill">空</span></td></tr>
+<tr><td><span class="pill">Groups</span></td><td><code>{uid}.yaml</code></td><td>增删策略组</td><td><span class="pill">空</span></td></tr>
+</tbody>
+</table>
+
+<p>你的 Merge 槽现在是 Verge 的默认模板:</p>
+<pre><code><span class="c"># profiles/Merge.yaml</span>
+profile:
+  store-selected: <span class="n2">true</span></code></pre>
+<pre><code><span class="c"># profiles/Script.js —— 什么都没做的模板</span>
+function main(config, profileName) {
+  <span class="k">return</span> config;
+}</code></pre>
+
+<h3>实战:三个你最可能用得上的写法</h3>
+
+<h4>① 在 Merge 槽里锁定全局字段(解决 tcp-concurrent 丢失)</h4>
+<pre><code><span class="c"># 打开 profiles/profileA-merge.yaml(机场A 的 Merge 槽),写入:</span>
+tcp-concurrent: <span class="n2">true</span>
+unified-delay: <span class="n2">true</span>
+find-process-mode: <span class="s">strict</span>
+ipv6: <span class="n2">false</span>
+profile:
+  store-selected: <span class="n2">true</span></code></pre>
+<p>无论订阅怎么更新,这些值都是这个。这是稳定配置的正道。</p>
+
+<h4>② 在 Rules 槽里插自己的规则(比如让某公司域名直连)</h4>
+<pre><code><span class="c"># profiles/profileA-rules.yaml(机场A 的 Rules 槽)</span>
+prepend:                          <span class="c"># 插到所有规则最前面 → 优先级最高</span>
+  - <span class="s">DOMAIN-SUFFIX,internal.corp.com,DIRECT</span>
+  - <span class="s">DOMAIN-SUFFIX,mycompany.cn,DIRECT</span>
+  - <span class="s">IP-CIDR,10.0.0.0/8,DIRECT,no-resolve</span>
+append:                           <span class="c"># 插到最后</span>
+  - <span class="s">DOMAIN-KEYWORD,openai,🔰 选择节点</span>
+delete: []</code></pre>
+<p><b>为什么用 prepend:</b>规则从上往下匹配,把自定义规则插到最前面,才不会被订阅里 近万条规则抢先生效。</p>
+
+<h4>③ 用 Script 槽做条件处理</h4>
+<pre><code><span class="c"># profiles/s1bOipKer6Hh.js</span>
+function main(config, profileName) {
+  <span class="c">// 删掉名称里含"免费"的节点,避免误用低速线路</span>
+  config.proxies = config.proxies.filter(p =&gt; !p.name.includes(<span class="s">'免费'</span>));
+  <span class="c">// 强制关闭 IPv6 解析</span>
+  config.ipv6 = <span class="k">false</span>;
+  <span class="k">return</span> config;
+}</code></pre>
+
+<div class="box good">
+<span class="t">为什么这套设计是好的</span>
+<p>订阅是「别人给你的」,随时会变;槽位是「你自己的」,永远不动。二者分离,既能吃到机场的更新,又能保住你的定制。改订阅文件本身是下策 —— 下次更新就没了。</p>
+</div>
+
+<h3>导入方式有三种</h3>
+<ul>
+<li><b>订阅链接导入</b> —— 最常用,填 URL 即可</li>
+<li><b>订阅链接配置</b> —— 可配 User-Agent、跳过证书校验等。若报 <code>client error (Connect)</code>,换这个方式并勾选「允许无效证书」重试</li>
+<li><b>URL Schemes</b> —— 点击 <code>clash://install-config?url=...</code> 形式的链接直接导入</li>
+</ul>
+<p>另外还有「本地配置」:新建或拖拽自己的 yaml 文件进去,不走网络。</p>
+
+<h2 id="s8"><span class="n">08</span>官方文档地图(以及一个重要事实)</h2>
+
+<div class="box bad">
+<span class="t">先纠正一个普遍误解:原版 Clash 已经不存在了</span>
+<p>很多老教程指向 <code>github.com/dreamacro/clash</code> 或 Clash for Windows。我实际访问验证过:<br>
+<b><code>https://github.com/dreamacro/clash</code> 返回 Page not found(404)</b> —— 原仓库已被作者删除,官方 wiki 随之消失。Clash for Windows 的作者也已删库。</p>
+<p>所以「Clash 官方文档」在今天是一个<b>不存在的对象</b>。当下的事实标准是 <b>mihomo</b>(MetaCubeX 维护,原名 Clash.Meta,是原 Clash 的超集)。你的 Clash Verge Rev 内置的正是 mihomo 内核 —— Verge 自己的文档里写的是「内置 Clash.Meta(mihomo) 内核」。</p>
+</div>
+
+<h3>真正该收藏的两份文档</h3>
+<table>
+<thead><tr><th>文档</th><th>地址</th><th>管什么</th></tr></thead>
+<tbody>
+<tr><td><b>mihomo 内核文档</b><br>(事实上的官方文档)</td><td><a class="lnk" href="https://wiki.metacubex.one/" target="_blank">wiki.metacubex.one</a></td><td><b>所有配置字段的权威定义。</b>配置写法、规则语法、协议参数,全在这</td></tr>
+<tr><td><b>Clash Verge Rev 文档</b></td><td><a class="lnk" href="https://www.clashverge.dev/" target="_blank">www.clashverge.dev</a></td><td>客户端用法:订阅导入、Merge/Script、自定义规则、TUN 模式、常见问题</td></tr>
+</tbody>
+</table>
+
+<h3>按主题直达(mihomo 文档)</h3>
+<table>
+<thead><tr><th>你关心的</th><th>文档页面</th><th>关键内容</th></tr></thead>
+<tbody>
+<tr><td>全局字段</td><td><a class="lnk" href="https://wiki.metacubex.one/config/general/" target="_blank">/config/general/</a></td><td><code>allow-lan</code>、<code>bind-address</code>、<code>mode</code>、<code>log-level</code>、<code>unified-delay</code>、<code>tcp-concurrent</code>、<code>find-process-mode</code></td></tr>
+<tr><td>端口</td><td><a class="lnk" href="https://wiki.metacubex.one/config/inbound/port/" target="_blank">/config/inbound/port/</a></td><td><code>mixed-port</code> 等<b>（注意:全局配置页里没有它，在这里）</b></td></tr>
+<tr><td>DNS</td><td><a class="lnk" href="https://wiki.metacubex.one/config/dns/" target="_blank">/config/dns/</a></td><td><code>enhanced-mode</code>、<code>fake-ip-filter</code>、四层 nameserver、附加参数</td></tr>
+<tr><td>分流规则</td><td><a class="lnk" href="https://wiki.metacubex.one/config/rules/" target="_blank">/config/rules/</a></td><td>全部规则类型、<code>no-resolve</code> 的坑、逻辑规则语法</td></tr>
+<tr><td>策略组</td><td><a class="lnk" href="https://wiki.metacubex.one/config/proxy-groups/" target="_blank">/config/proxy-groups/</a></td><td>四种类型、<code>filter</code> 语法、<code>include-all-proxies</code></td></tr>
+<tr><td>代理协议</td><td><a class="lnk" href="https://wiki.metacubex.one/config/proxies/" target="_blank">/config/proxies/</a></td><td>通用字段 + 20 多种协议的专属参数</td></tr>
+</tbody>
+</table>
+
+<div class="box warn">
+<span class="t">对照阅读时注意两个「文档与现实不一致」的点</span>
+<ul>
+<li><b><code>mixed-port</code> 不在「全局配置」页里</b>,它归在「入站 → 代理端口」下。找不到别慌。</li>
+<li><b>文档里写 <code>enhanced-mode</code> 默认是 <code>redir-host</code></b>,但机场订阅几乎都显式设成 <code>fake-ip</code>。别以为不写就是 fake-ip。</li>
+</ul>
+</div>
+
+<h3>「对比讲解」:原版 Clash 文档 vs mihomo 文档</h3>
+<table>
+<thead><tr><th></th><th>原版 Clash(dreamacro)</th><th>mihomo(MetaCubeX)</th></tr></thead>
+<tbody>
+<tr><td>仓库现状</td><td><b>已删除,404</b></td><td>活跃维护</td></tr>
+<tr><td>文档形态</td><td>GitHub wiki,已随仓库消失</td><td>独立文档站 wiki.metacubex.one</td></tr>
+<tr><td>配置兼容性</td><td>基础字段</td><td><b>完全兼容原 Clash 写法</b>,并大幅扩展</td></tr>
+<tr><td>独有能力</td><td>—</td><td><code>GEOSITE</code>、<code>RULE-SET</code>、<code>rule-providers</code>、TUN、<code>fake-ip-filter-mode: rule</code>、逻辑规则 AND/OR/NOT、20+ 协议</td></tr>
+<tr><td>实际影响</td><td>老教程里的配置片段<b>大多仍能用</b></td><td>新特性只能查 mihomo 文档</td></tr>
+</tbody>
+</table>
+<p>结论很实用:<b>网上看到的老 Clash 教程基本还能照抄,但想确认某个字段的准确定义,只查 mihomo 文档。</b></p>
+
+<h2 id="s9"><span class="n">09</span>学习路径规划</h2>
+
+<p>你自评「技术不算深,但愿意动手试」,而且每天时间有限。所以这条路径按<b>能用 → 能改 → 能设计</b>三段设计,每段都有明确的验证点和停止线,不需要啃完文档。</p>
+
+<h3>阶段一 · 看懂(目标:不写一行配置)</h3>
+<table>
+<thead><tr><th>做什么</th><th>在哪做</th><th>验收标准</th></tr></thead>
+<tbody>
+<tr><td>认清 5 份文件各自是谁</td><td>第 0 章的表格</td><td>能说出「改哪份会被订阅更新冲掉」</td></tr>
+<tr><td>打开 Verge 的「代理」页,数清 11 个策略组</td><td>Clash Verge 界面</td><td>能解释 <code>🔰 选择节点</code> 和 <code>🐟 漏网之鱼</code> 的分工</td></tr>
+<tr><td>打开「连接」页,看实时流量命中哪条规则</td><td>Clash Verge 界面</td><td>随便访问一个网站,能指认出它命中的规则行</td></tr>
+<tr><td>把 9 个全局字段背下来</td><td>第 2 章表格</td><td>别人问 <code>unified-delay</code> 是什么能答上来</td></tr>
+</tbody>
+</table>
+<p><span class="pill g">停止线</span> 这一阶段不要碰任何 yaml 文件。<b>只在界面里点。</b></p>
+
+<h3>阶段二 · 能改(目标:改一处且不被冲掉)</h3>
+<table>
+<thead><tr><th>做什么</th><th>动手位置</th><th>验收标准</th></tr></thead>
+<tbody>
+<tr><td>在 Merge 槽写死 <code>tcp-concurrent: true</code> 和 <code>ipv6: false</code></td><td><code>profiles/profileA-merge.yaml</code></td><td>更新订阅后,值仍在</td></tr>
+<tr><td>在 Rules 槽 prepend 两条自己的直连规则</td><td><code>profiles/profileA-rules.yaml</code></td><td>访问该域名时「连接」页显示 DIRECT</td></tr>
+<tr><td>把 DNS 开关的决策做掉(开或删)</td><td>Verge 界面 / <code>dns_config.yaml</code></td><td>不再维护一份没人读的文件</td></tr>
+<tr><td>改掉没设置的 <code>secret</code></td><td>Merge 槽</td><td>面板里 API 需要密钥才能连</td></tr>
+</tbody>
+</table>
+<p><span class="pill a">注意</span> 每次改完,先看 <code>clash-verge.yaml</code> 有没有正确合成,再看「连接」页是否生效。<b>改完不重启内核 = 没改。</b></p>
+
+<h3>阶段三 · 能选(目标:理解节点与协议)</h3>
+<table>
+<thead><tr><th>做什么</th><th>读什么</th><th>验收标准</th></tr></thead>
+<tbody>
+<tr><td>读懂一个 SS 节点和一个 VMess 节点的每个字段</td><td>第 3 章</td><td>能解释 <code>ws-opts.headers.Host</code> 是干嘛的</td></tr>
+<tr><td>理解「x0.01 / x2」是计费倍率不是配置</td><td>第 3 章提示框</td><td>下载大文件时知道该选哪个</td></tr>
+<tr><td>用 <code>fallback</code> 类型自建一个自动切换组</td><td><a class="lnk" href="https://wiki.metacubex.one/config/proxy-groups/" target="_blank">策略组文档</a></td><td>组里第一个节点断线时自动切到第二个</td></tr>
+<tr><td>对比三家机场的节点质量</td><td>Verge 延迟测试</td><td>能说出每家的优势地区</td></tr>
+</tbody>
+</table>
+
+<h3>阶段四 · 能设计(目标:DNS 与规则进阶)</h3>
+<table>
+<thead><tr><th>做什么</th><th>读什么</th><th>验收标准</th></tr></thead>
+<tbody>
+<tr><td>搞懂 fake-ip 的完整链路</td><td><a class="lnk" href="https://wiki.metacubex.one/config/dns/" target="_blank">DNS 文档</a> + 第 6 章</td><td>能解释为什么 <code>*.msftncsi.com</code> 必须放行</td></tr>
+<tr><td>配置 <code>nameserver-policy</code> 分域解析</td><td>DNS 文档</td><td>国内域名走国内 DNS,国外走境外</td></tr>
+<tr><td>用 <code>rule-providers</code> 替代 9817 条内联规则</td><td>规则文档</td><td>规则集可远程自动更新,配置文件瘦身</td></tr>
+<tr><td>试一次 <code>PROCESS-NAME</code> 进程分流</td><td>规则文档</td><td>指定某程序走代理/直连</td></tr>
+</tbody>
+</table>
+
+<h3>时间安排建议</h3>
+<ul>
+<li><b>阶段一</b>:一个晚上,只在界面里逛,不读文档</li>
+<li><b>阶段二</b>:一个晚上,改完立刻验证 —— 这一阶段收益最大,直接解决你配置里现存的几个问题</li>
+<li><b>阶段三</b>:碎片时间,用到时再查</li>
+<li><b>阶段四</b>:不用特意学。等真正遇到「DNS 泄漏」「规则不生效」这类问题时再来</li>
+</ul>
+
+<div class="box info">
+<span class="t">一条更省事的捷径</span>
+<p>你的机器只有 16 GB 板载内存。与其在 Clash 上钻研调优,不如把「稳定可用」作为目标:<b>只做阶段二</b>(锁定几个关键字段 + 自己的规则),剩下的交给机场的默认配置。<br>真正值得你花时间的,是把三套规则互相打架的订阅精简到一套。</p>
+</div>
+
+<h2 id="s10"><span class="n">10</span>体检:你这份配置的 8 个发现</h2>
+
+<p>基于实际读到的文件,按严重程度排序:</p>
+
+<table>
+<thead><tr><th>#</th><th>发现</th><th>影响</th><th>建议</th></tr></thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>enable_dns_settings: false</code>,但 <code>dns_config.yaml</code> 维护了 53 行完整配置</td>
+<td><span class="pill a">中</span> 你的 DNS 定制<b>完全没生效</b>,实际用的是订阅自带的简化 DNS 段</td>
+<td>二选一:界面打开 DNS 开关让它生效,或删掉该文件停止维护</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>secret: set-your-secret</code> 是默认占位符</td>
+<td><span class="pill a">中</span> 若哪天把 <code>external-controller</code> 改成对外监听,任何人可接管你的代理</td>
+<td>在 Merge 槽设一个真密钥</td>
+</tr>
+<tr>
+<td>3</td>
+<td>三份订阅并存,规则体系互相冲突</td>
+<td><span class="pill a">中</span> 机场A 用 近万条精细规则,机场B 用粗粒度关键字规则 —— 语义完全不同</td>
+<td>定一套主用,其余留作应急备用,不要同时启用</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>ipv6: true</code>,但 DNS 段无 IPv6 精细配置</td>
+<td><span class="pill">低</span> 若宽带 IPv6 不通,解析会多绕一圈</td>
+<td>网络确认不支持 IPv6 时,在 Merge 槽设 <code>ipv6: false</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td>规则末尾 <code>DOMAIN-KEYWORD,.,🐟 漏网之鱼</code></td>
+<td><span class="pill">低</span> 冗余 —— 下一条 <code>MATCH</code> 已兜住一切</td>
+<td>无害,可不管</td>
+</tr>
+<tr>
+<td>6</td>
+<td>近万条规则硬编码在配置里</td>
+<td><span class="pill">低</span> 文件 0.5 MB,每次更新全量替换</td>
+<td>进阶可用 <code>rule-providers</code> 外置,不必着急</td>
+</tr>
+<tr>
+<td>7</td>
+<td>五个增强槽全部是空模板</td>
+<td><span class="pill">低</span> 你目前所有定制都无处安放,一旦手改订阅就会被冲掉</td>
+<td>用起来 —— 这是 Verge 最有价值的功能</td>
+</tr>
+<tr>
+<td>8</td>
+<td>TUN 模式当前关闭,走的是系统代理</td>
+<td><span class="pill g">常态</span> <code>tun.enable: false</code>,<code>enable_system_proxy: false</code></td>
+<td>现状合理。命令行工具/游戏需要接管时再考虑 TUN(注意占用会比系统代理高)</td>
+</tr>
+</tbody>
+</table>
+
+<div class="box good">
+<span class="t">总体评价</span>
+<p>这份配置<b>能用,而且结构不差</b> —— 机场A 的策略组划分相当清晰(按用途分 11 组,而不是无脑一大堆),这是好机场的标志。真正的问题集中在两处:一是 DNS 那份「写了不生效」的文件,二是增强槽完全没用起来导致配置无法沉淀。</p>
+<p>先做第 1 项和第 7 项,收益最直接。</p>
+</div>
+
+<h2 id="a"><span class="n">A</span>概念地基:协议分层与常见误区</h2>
+
+<p>这一章回答的是「为什么我看不懂配置」。根源通常只有一个:<mark>把三个不同层次的东西当成了同一层</mark>。先建立骨架,后面所有细节自动归位。</p>
+
+<h3>A1 · 先分清「协议」这个词的四个层次</h3>
+
+<p>你说「只知道 HTTP 和 WebSocket」—— 其实这两个就不在同一层。网络里「协议」是个被滥用的词,至少要分成四类:</p>
+
+<table>
+<thead><tr><th>层次</th><th>代表</th><th>管什么</th></tr></thead>
+<tbody>
+<tr><td><b>传输层协议</b></td><td><code>TCP</code> · <code>UDP</code></td><td>数据怎么在网络上搬运。TCP 可靠有握手,UDP 快但不管丢包</td></tr>
+<tr><td><b>应用层协议</b></td><td><code>HTTP</code> · <code>WebSocket</code> · <code>gRPC</code> · <code>QUIC</code></td><td>数据的表达格式。浏览器说 HTTP,实时推送用 WebSocket</td></tr>
+<tr><td><b>代理协议</b>(隧道协议)</td><td><code>SS</code> · <code>SSR</code> · <code>VMess</code> · <code>VLESS</code> · <code>Trojan</code> · <code>Hysteria2</code></td><td>客户端与服务端之间约定的<b>握手 + 认证 + 加密封装</b>方式。你配置里的 <code>type</code> 就是它</td></tr>
+<tr><td><b>VPN 协议</b></td><td><code>WireGuard</code> · <code>OpenVPN</code> · <code>IPsec</code></td><td>在网络层建隧道,系统里出现一块虚拟网卡</td></tr>
+</tbody>
+</table>
+
+<div class="box warn">
+<span class="t">澄清:SS / VMess 不是 VPN 协议</span>
+<p>你的直觉「它们应该不是网络协议,是 VPN 协议」—— 前半句对,后半句不对。<b>它们是「代理协议」,不是 VPN 协议。</b>两者机制完全不同:</p>
+<table style="margin:10px 0">
+<thead><tr><th></th><th>VPN</th><th>代理(SS/VMess)</th></tr></thead>
+<tbody>
+<tr><td>工作层次</td><td>网络层,接管整个网络栈</td><td>应用层,由程序主动把流量交出去</td></tr>
+<tr><td>流量范围</td><td>全部流量自动进去,你没法挑</td><td>只转发你指定的流量(通过 socks/http 接口进)</td></tr>
+<tr><td>系统表现</td><td>多一块虚拟网卡</td><td>默认什么都不变,程序要知道代理地址才走</td></tr>
+</tbody>
+</table>
+<p>之所以大家混着叫,是因为效果像。<b>Clash 的 TUN 模式</b>就是用虚拟网卡把代理「伪装」成 VPN 的效果 —— 但底层机制仍是代理转发,不是真正的加密隧道。这也是为什么开 TUN 后不支持代理的程序(游戏、命令行)也能走代理了。</p>
+</div>
+
+<h3>A2 · 你那个 server 域名:没有加密,但确实「多级」</h3>
+
+<p>你猜的方向完全正确。我实际做了 DNS 查询,你的节点域名是这么一条链:</p>
+
+<div class="flow">  <b>hk01.node.example.com</b>
+        │  CNAME 别名
+        ▼
+  <b>gtm-hk.node-example.com</b>
+        │  A 记录
+        ▼
+  <b>203.0.113.10</b>   <s>→ 查询结果:中国移动 · 广东广州</s></div>
+
+<p>逐段解读:</p>
+<ul>
+<li><code>.xyz</code> —— <b>真实存在的顶级域</b>(我查到了它的 NS 记录 <code>a.nic.xyz</code> 等)。机场爱用这种冷门 TLD:注册便宜、不在常见封禁名单里</li>
+<li><code>xxxxx</code> —— 疑似机场的线路/账号编号</li>
+<li><code>gtm-hk</code> —— <b>关键线索</b>。GTM = Global Traffic Manager(全局流量管理),说明这个域名背后挂着<b>智能调度</b></li>
+<li><code>t.x.n.8.8.w.6.3.b</code> —— 随机化前缀,目的是打散域名模式,避免被批量特征识别</li>
+<li><code>entry</code> —— 字面意思「入口」,印证了下一段的发现</li>
+<li><code>hk01-ae5</code> —— 香港 01 号机</li>
+</ul>
+
+<p>该域名的权威 NS 是 <code>vip7.alidns.com</code> —— <b>机场把域名托管在阿里云 DNS 上</b>,用它的 GTM 做解析调度。整条链完全自洽。</p>
+
+<div class="box good">
+<span class="t">这就是「为什么 server 填域名而不是 IP」的实证答案</span>
+<ul>
+<li><b>智能调度</b> —— 不同地区/运营商的用户解析到不同入口 IP,自动选最优线路</li>
+<li><b>容灾</b> —— 某个入口挂了,改一条 GTM 记录就行</li>
+<li><b>抗封</b> —— IP 被封时换解析记录,<b>你客户端里的配置一个字都不用改</b></li>
+</ul>
+<p>如果机场让你填死 IP,那它每换一次机器,所有人都要重新导入订阅。</p>
+</div>
+
+<div class="box bad">
+<span class="t">但有个必须说清的事实:域名本身没有加密</span>
+<p>我刚才就是用明文 <code>nslookup</code> 查到整条链的 —— 任何人拿这个域名去查,都能查到它指向哪。<b>DNS 查询默认是明文的。</b></p>
+<p>你被加密的是<b>连接建立之后的传输内容</b>。而且如果用 TLS,握手时还会明文暴露 <code>sni</code> 字段(见 A9)。</p>
+<p>所以准确表述是:<b>域名不加密,内容加密;你的 ISP 知道你在连哪台机器,但不知道你传了什么。</b>(DNS 层面的隐私要靠 DoH/DoT,也就是第 6 章那套东西)</p>
+</div>
+
+<h3>A3 · 「节点名写香港,IP 却在中国移动广州」是怎么回事</h3>
+
+<p>这个发现值得单独说,因为它解释了节点名里的一个缩写。你订阅里大量节点带着 <code>| IEPL</code> 后缀:</p>
+<ul>
+<li><b>IEPL</b> = International Ethernet Private Line(国际以太网专线)</li>
+<li>链路是:你 → <b>国内中转入口</b>(广州移动,延迟低、不易被干扰)→ 机场内部专线 → <b>香港出口</b></li>
+</ul>
+<p>所以你解析到的那个 IP 是<b>入口</b>,不是出口。这也正是域名里那个 <code>entry</code> 的含义。带 <code>IEPL</code> 的节点通常比直连的贵(成本高),但晚高峰更稳 —— 你的订阅里 <code>| IEPL</code> 节点确实占了多数,这是好线路的标志。</p>
+
+<h3>A4 · type 有哪几种,区别是什么</h3>
+
+<p>你问「type 有哪几种」。先看主流的,按出现时间排:</p>
+
+<table>
+<thead><tr><th>type</th><th>自带加密</th><th>UDP</th><th>抗识别</th><th>特点</th></tr></thead>
+<tbody>
+<tr><td><code>ss</code></td><td>✅ <code>cipher</code></td><td>需服务端开</td><td><span class="pill r">弱</span></td><td>最简洁最快,生态最广。但无伪装,易被主动探测识别</td></tr>
+<tr><td><code>ssr</code></td><td>✅ <code>cipher</code> + 协议混淆</td><td>需服务端开</td><td><span class="pill r">弱</span></td><td>SS 的非官方分支,已基本淘汰,现在很少见</td></tr>
+<tr><td><code>vmess</code></td><td>✅ <code>cipher</code></td><td>✅</td><td><span class="pill a">中</span></td><td>V2Ray 早期协议。<b>最大特点是传输层可插拔</b>(见 A6)</td></tr>
+<tr><td><code>vless</code></td><td>❌ 不加密,靠 TLS/Reality</td><td>✅</td><td><span class="pill g">强</span></td><td>V2Ray 后期协议,去掉了自带加密所以更轻快。配 Reality 时极难识别</td></tr>
+<tr><td><code>trojan</code></td><td>强制 TLS</td><td>✅</td><td><span class="pill g">强</span></td><td>直接伪装成正常 HTTPS 流量,原理上最优雅</td></tr>
+<tr><td><code>hysteria2</code></td><td>QUIC 自带</td><td>强制</td><td><span class="pill g">强</span></td><td>基于 QUIC。<b>弱网/高丢包环境性能最好</b>,但 UDP 可能被运营商限速</td></tr>
+<tr><td><code>tuic</code></td><td>QUIC 自带</td><td>强制</td><td><span class="pill g">强</span></td><td>与 hysteria2 同代,思路相近</td></tr>
+<tr><td><code>snell</code></td><td>✅</td><td>✅</td><td><span class="pill a">中</span></td><td>Surge 私有协议,主要 macOS/Surge 生态用</td></tr>
+</tbody>
+</table>
+
+<div class="box info">
+<span class="t">一条贯穿演变的暗线:从「加密」到「伪装」</span>
+<ul>
+<li><b>第一代只关心加密</b>(SS):我做出来你解不开就行 —— 结果被「主动探测」破了:防火墙连上你的服务器发个请求,SS 直接返回错误,立刻暴露</li>
+<li><b>第二代加混淆</b>(SSR、obfs):让流量长得不像自己 —— 被机器学习流量分类识别</li>
+<li><b>第三代伪装成真实东西</b>(VMess + ws + CDN、Trojan):<b>我的流量就是正常的网页流量</b> —— 需要配合一个真实网站做掩护</li>
+<li><b>第四代借壳</b>(Reality):直接<b>借用真实网站的 TLS 握手</b>,连 <code>sni</code> 都是真的。探测者连上来会看到那个真实网站的内容,无法区分</li>
+</ul>
+<p>所以「哪个 type 最好」的答案是:<b>看你的网络环境封什么</b>。网络宽松时 SS 最快;严的时候要上 VLESS+Reality 或 Hysteria2。</p>
+</div>
+
+<h3>A5 · cipher 分哪几种</h3>
+
+<p><code>cipher</code> 是<b>加密算法</b>,Shadowsocks 系协议专有。mihomo 支持 40 多种,但实际只需记住三档:</p>
+
+<table>
+<thead><tr><th>档位</th><th>代表取值</th><th>评价</th></tr></thead>
+<tbody>
+<tr><td><span class="pill r">不要用</span></td><td><code>rc4-md5</code> · <code>aes-256-cfb</code> · <code>aes-256-ctr</code> · <code>chacha20</code>(非 AEAD) · <code>none</code></td><td>算法本身弱,或属于「流加密」<b>没有完整性校验</b> —— 能被主动探测和篡改。<code>rc4-md5</code> 已被攻破</td></tr>
+<tr><td><span class="pill g">经典可用</span></td><td><code>aes-128-gcm</code> · <code>aes-256-gcm</code> · <code>chacha20-ietf-poly1305</code> · <code>xchacha20-ietf-poly1305</code></td><td><b>AEAD 类</b>,带完整性校验。兼容性最好,是当前主流。<mark>你的订阅用的 <code>aes-256-gcm</code> 就在这一档 ✓</mark></td></tr>
+<tr><td><span class="pill b">最新最强</span></td><td><code>2022-blake3-aes-128-gcm</code> · <code>2022-blake3-aes-256-gcm</code> · <code>2022-blake3-chacha20-poly1305</code></td><td>Shadowsocks 2022 新一代协议,具备<b>抗重放 + 抗主动探测</b>。代价:密码必须是 Base64 格式的密钥,且要服务端支持</td></tr>
+</tbody>
+</table>
+
+<h4>怎么选</h4>
+<ul>
+<li><b>你的 CPU 有 AES-NI 硬件加速</b>(i7-8565U 有)→ 选 <code>aes-*</code> 系,性能更好</li>
+<li><b>手机 / ARM / 功耗敏感</b> → 选 <code>chacha20</code> 系(纯软件实现下更快)</li>
+<li><b>服务端支持的话</b> → 选 SS2022</li>
+</ul>
+
+<div class="box bad">
+<span class="t">但这条你基本动不了</span>
+<p><code>cipher</code> 必须<b>与服务端完全一致</b>。你在客户端单方面改成别的值,结果是<b>直接连不上</b>。所以这一项对你来说是「知道就好」,不是你该改的。</p>
+</div>
+
+<h3>A6 · udp 是什么意思,设成 true 会怎样</h3>
+
+<p>UDP 是和 TCP 并列的<b>传输层协议</b>。核心区别一句话:</p>
+<table>
+<thead><tr><th></th><th>TCP</th><th>UDP</th></tr></thead>
+<tbody>
+<tr><td>建连接</td><td>要三次握手</td><td>不握手,直接发</td></tr>
+<tr><td>丢包</td><td>自动重传,保证到达</td><td>丢了就丢了,不重传</td></tr>
+<tr><td>顺序</td><td>保证不乱序</td><td>不保证</td></tr>
+<tr><td>速度</td><td>慢一点但可靠</td><td>快,牺牲可靠性</td></tr>
+<tr><td>谁在用</td><td>网页(HTTP/HTTPS)、下载、SSH</td><td><b>DNS 查询 · QUIC/HTTP/3 · 在线游戏 · 语音视频通话 · BT</b></td></tr>
+</tbody>
+</table>
+
+<p>代理配置里的 <code>udp</code> 字段问的是:<b>允许 UDP 流量经过这个节点吗?</b></p>
+
+<h4>设成 true 之后会怎么样</h4>
+<ul>
+<li><b>好的方面</b> —— 游戏联机、Discord/Teams 语音、走 QUIC 的网站(不少 Google/YouTube 流量走 HTTP/3 即 QUIC)都能正常走代理了</li>
+<li><b>代价</b> —— UDP 转发需要<b>服务端也开启 UDP relay</b>,客户端开了服务端没开等于白开;另外 UDP 流量会计入你的流量消耗</li>
+<li><b>不设(默认 false)</b> —— UDP 流量不走这个节点。而官方有个明确行为:<b>如果当前规则指向的节点不支持 UDP,内核会继续向下匹配规则</b>,而不是直接失败</li>
+</ul>
+
+<p><span class="pill a">判断标准</span>只要你还玩游戏、用语音软件,就应该用带 <code>udp: true</code> 的节点。你的订阅里节点基本都写了 <code>udp: true</code>,这点是好的。</p>
+
+<h3>A7 · 为什么 VMess 有 network,Shadowsocks 没有</h3>
+
+<p>这是<b>设计哲学</b>的差别,不是能力差别。SS 也能伪装,只是换了个地方写。</p>
+
+<table>
+<thead><tr><th></th><th>VMess / VLESS / Trojan</th><th>Shadowsocks</th></tr></thead>
+<tbody>
+<tr><td>协议本体定义</td><td>只定义<b>握手 + 认证</b>,不管怎么运输</td><td>定义了<b>完整的加密封装格式</b></td></tr>
+<tr><td>运输方式</td><td><b>可插拔</b> —— <code>network</code> 字段任选 ws/grpc/h2</td><td><b>固定</b> —— 直接跑在 TCP/UDP 上,没有这个字段</td></tr>
+<tr><td>想伪装成网页怎么办</td><td>改 <code>network: ws</code> + <code>ws-opts</code></td><td>挂一个 <b>plugin</b>(插件)</td></tr>
+</tbody>
+</table>
+
+<h4>SS 的伪装长这样 —— 注意字段位置完全不同</h4>
+<pre><code><span class="c"># SS 的做法:用 plugin 挂伪装层</span>
+- name: my-ss
+  type: ss
+  server: example.com
+  cipher: aes-256-gcm
+  plugin: <span class="s">v2ray-plugin</span>          <span class="c"># ← 伪装能力在这里</span>
+  plugin-opts:
+    mode: <span class="s">websocket</span>              <span class="c"># 伪装成 WebSocket</span>
+    tls: <span class="n2">true</span>                    <span class="c"># 再套 TLS</span>
+    host: <span class="s">bing.com</span>              <span class="c"># 伪装目标域名</span>
+    path: <span class="s">/</span>                    <span class="c"># ← 这就是 VMess 里 ws-opts.path 的位置</span>
+
+<span class="c"># 老一点的混淆方式</span>
+  plugin: <span class="s">obfs</span>
+  plugin-opts:
+    mode: <span class="s">tls</span>
+    host: <span class="s">bing.com</span></code></pre>
+
+<p>mihomo 支持的 SS 插件共有 7 种:<code>obfs</code> · <code>v2ray-plugin</code> · <code>gost-plugin</code> · <code>shadow-tls</code> · <code>restls</code> · <code>kcptun</code> · <code>jls</code>。其中 <code>shadow-tls</code>、<code>restls</code>、<code>jls</code> 属于新一代 TLS 伪装方案,需要配合 <code>client-fingerprint</code> 使用。</p>
+
+<div class="box good">
+<span class="t">所以你那两个问题的答案是同一个</span>
+<p><b>「为什么 VMess 有 network、SS 没有」</b> → 因为 VMess 把传输层做成了可配置字段,SS 把伪装做成了外部插件。<br>
+<b>「为什么 ws-opts.path 和 Host 只有 VMess 这么写」</b> → 因为那是<b>传输层的参数</b>,只有支持可插拔传输层的协议才有。SS 的等价物是 <code>plugin-opts.path</code> 和 <code>plugin-opts.host</code>。</p>
+<p>功能上两者等价 —— 都是让流量看起来像在访问 <code>bing.com</code>。</p>
+</div>
+
+<h3>A8 · 传输层是干什么的,为什么需要它</h3>
+
+<p>官方文档给了四个作用,前两个是核心:</p>
+<ol>
+<li><b>流量伪装</b> —— 把代理流量包成普通 HTTP / WebSocket / gRPC,绕开<b>深度包检测(DPI)</b></li>
+<li><b>穿透 CDN</b> —— ws/grpc/h2 可以走 CDN 中转。<b>你的真实服务器 IP 就藏在 Cloudflare 后面</b>,被封 IP 也影响不到你</li>
+<li><b>适配网络环境</b> —— UDP 受限的校园网/公司网里,只能选 TCP 系</li>
+<li><b>性能调优</b> —— 多路复用、连接复用、缓冲区</li>
+</ol>
+
+<h4>network 可选值</h4>
+<table>
+<thead><tr><th>值</th><th>配置块</th><th>含义</th><th>什么时候用</th></tr></thead>
+<tbody>
+<tr><td>不填 / <code>tcp</code></td><td>—</td><td>裸 TCP,最快但特征最明显</td><td>网络环境宽松</td></tr>
+<tr><td><code>ws</code></td><td><code>ws-opts</code></td><td>包成 WebSocket,像网页的长连接</td><td><b>最常用</b>,走 CDN 抗 DPI</td></tr>
+<tr><td><code>grpc</code></td><td><code>grpc-opts</code></td><td>基于 gRPC,<b>多路复用好</b></td><td>官方推荐做复用</td></tr>
+<tr><td><code>h2</code></td><td><code>h2-opts</code></td><td>HTTP/2 ⚠️ <b>mihomo 的 H2 不支持多路复用</b></td><td>较少用</td></tr>
+<tr><td><code>http</code></td><td><code>http-opts</code></td><td>伪装成普通 HTTP 请求</td><td>特殊场景</td></tr>
+<tr><td><code>mkcp</code></td><td><code>mkcp-opts</code></td><td>UDP 加速 ⚠️ <b>仅 VMess</b></td><td>丢包极严重的网络</td></tr>
+<tr><td><code>mekya</code></td><td><code>mekya-opts</code></td><td>⚠️ <b>仅 VMess</b></td><td>少见</td></tr>
+<tr><td><code>xhttp</code></td><td><code>xhttp-opts</code></td><td>⚠️ <b>仅 VLESS</b></td><td>较新</td></tr>
+</tbody>
+</table>
+
+<h4>ws-opts 的字段(你配置里出现过的那种)</h4>
+<ul>
+<li><code>path</code> —— 请求路径。你配置里是 <code>/</code>,还有一个用了 <code>/tutorial/iphone13.m3u8</code>(伪装成视频流,更逼真)</li>
+<li><code>headers.Host</code> —— 伪装的目标域名。这是整层伪装的灵魂:服务器看到你以为你在访问 <code>cdn.example.com</code></li>
+<li><code>max-early-data</code> —— Early Data 首包长度阈值,减少一次往返</li>
+<li><code>v2ray-http-upgrade</code> —— 使用 HTTP Upgrade 握手(某些 CDN 场景需要)</li>
+</ul>
+
+<h4>grpc-opts 的字段</h4>
+<ul>
+<li><code>grpc-service-name</code> —— 服务名(必须与服务端一致)</li>
+<li><code>ping-interval</code> —— 心跳间隔,默认关闭</li>
+<li><code>max-connections</code> / <code>min-streams</code> / <code>max-streams</code> —— 复用控制。⚠️ <b>三者互相冲突</b>,<code>max-streams</code> 不能和另外两个同时用</li>
+</ul>
+
+<h3>A9 · 用 TCP 有什么风险</h3>
+
+<p>风险不在 TCP 本身 —— TCP 很好。问题在于<b>裸 TCP 上的代理流量特征太明显</b>,能被逐层识别:</p>
+
+<table>
+<thead><tr><th>#</th><th>被识别的点</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><b>SNI 明文</b></td><td>TLS 握手的 ClientHello 里,<code>sni</code> 是明文的。中间设备直接看到你要访问哪个域名(除非用 ECH)</td></tr>
+<tr><td>2</td><td><b>TLS 指纹</b></td><td>不同软件发的 ClientHello 特征不同(密码套件顺序、扩展顺序)。Go 程序写的 TLS 和 Chrome 写的长得不一样,<b>一眼能认出来</b></td></tr>
+<tr><td>3</td><td><b>主动探测</b></td><td>防火墙主动连你的服务器,发个正常请求看它怎么回应。老 SS 会直接返回错误 → 暴露「这是个代理」</td></tr>
+<tr><td>4</td><td><b>TLS-in-TLS 检测</b></td><td>你的代理流量套了 TLS,里面又是访问网站的 TLS。两层 TLS 的包长分布有独特特征</td></tr>
+<tr><td>5</td><td><b>流量时序特征</b></td><td>包的大小、发送间隔、上下行比例,都能做机器学习分类</td></tr>
+</tbody>
+</table>
+
+<p>对应的解法,前面 A4 已经讲过主线(加密 → 混淆 → 伪装 → 借壳)。这里补两个具体手段:</p>
+<ul>
+<li><b>让 TLS 指纹像浏览器</b> —— <code>client-fingerprint: chrome</code>,让 mihomo 的握手和 Chrome 一模一样。你的配置里没有这一项,因为机场的 SS 节点用不上</li>
+<li><b>Reality</b> —— 直接借用真实网站的握手,探测者连上来看到的是那个真实网站</li>
+</ul>
+
+<h3>A10 · tls / sni / skip-cert-verify 有什么用</h3>
+
+<table>
+<thead><tr><th>字段</th><th>作用</th></tr></thead>
+<tbody>
+<tr>
+<td><code>tls: true</code></td>
+<td>给代理流量再套一层标准 TLS 加密。<code>trojan</code> 协议强制开启,<code>hysteria2</code> 自带</td>
+</tr>
+<tr>
+<td><code>sni</code><br>(VMess/VLESS 里叫 <code>servername</code>)</td>
+<td>TLS 握手时声明「我要访问哪个域名」。四个作用:<br>
+① 决定服务端返回哪张证书<br>
+② 证书校验以哪个域名为准<br>
+③ CDN 共享 IP 场景下路由到哪个站<br>
+④ 在 Reality / ShadowTLS / Restls 等伪装方案里,<b>sni 就是伪装目标</b><br>
+留空则默认用 <code>server</code> 的值</td>
+</tr>
+<tr>
+<td><code>skip-cert-verify: true</code></td>
+<td><b>跳过证书校验。</b>⚠️ 见下方警告框</td>
+</tr>
+<tr>
+<td><code>fingerprint</code></td>
+<td><b>证书 SHA256 指纹</b>。这是 <code>skip-cert-verify</code> 的<b>安全替代品</b> —— 不依赖证书链信任体系,直接比对指纹确认对端身份</td>
+</tr>
+<tr>
+<td><code>client-fingerprint</code></td>
+<td><b>客户端 uTLS 指纹</b>。可选 <code>chrome</code> / <code>firefox</code> / <code>safari</code> / <code>ios</code> / <code>android</code> / <code>edge</code> / <code>random</code>。作用是<b>伪装自己是谁</b></td>
+</tr>
+</tbody>
+</table>
+
+<div class="box info">
+<span class="t">这两个 fingerprint 别搞混</span>
+<p><code>fingerprint</code> 校验<b>对方是谁</b>(我是来连对的人的);<code>client-fingerprint</code> 伪装<b>自己是谁</b>(我看起来像 Chrome)。一个防守,一个伪装。</p>
+</div>
+
+<div class="box bad">
+<span class="t">skip-cert-verify: true 的真实风险(你的配置里就有一个)</span>
+<p>开启后<b>完全不检查证书链、域名、有效期</b>。后果:</p>
+<ul>
+<li>客户端无法确认对端身份 —— 你不知道自己在跟谁通信</li>
+<li><b>无法防御中间人攻击(MITM)</b>。攻击者用一张自签证书就能劫持你的连接,而你的客户端不会有任何报错</li>
+</ul>
+<p>官方口径:仅在临时调试、自签证书测试环境下可接受。</p>
+<p><b>那份公开免费节点就写了 <code>skip-cert-verify: true</code></b>(因为它是自签证书)。免费公开节点 + 跳过证书校验 = 中间人在技术上完全可行。<br>
+<span class="pill r">建议</span>该节点只用来应急查资料,<b>不要登录任何账号</b>。</p>
+</div>
+
+<h3>A11 · 浏览器说「不安全」、感觉「被监视」,跟这些有关系吗</h3>
+
+<p>要拆成三件完全不同的事,混在一起会白费功夫:</p>
+
+<h4>(1) 地址栏显示「不安全」</h4>
+<p>= 你访问的网站用的是 <b>HTTP 明文</b>,或它的 HTTPS 证书有问题。<br>
+<b>这与代理完全无关</b>,是那个网站自己的配置。你去翻 Clash 配置是找错方向了。</p>
+
+<h4>(2) HTTPS 证书警告页(「您的连接不是私密连接」)</h4>
+<p>可能原因:证书过期、证书域名与访问域名不匹配、自签证书。<br>
+<b>这跟 <code>skip-cert-verify</code> 无关</b> —— 那个字段管的是「你的客户端要不要校验代理服务器」,不是「浏览器要不要校验网站」。两者是独立的两段 TLS。</p>
+<p>但有一种情况值得警惕:<b>某个网站平时正常,一开代理就报证书错误</b> → 那说明节点可能在做 TLS 中间人,或者节点的 CDN 配置有问题。这时候应该换节点。</p>
+
+<h4>(3) 「被监视」的感觉 —— 这部分有真实基础</h4>
+<ul>
+<li><b>DNS 查询是明文的</b>(除非用 DoH/DoT):你的宽带运营商能看到你解析了哪些域名</li>
+<li><b>SNI 是明文的</b>(除非用 ECH):即使内容加密,运营商也知道你在访问哪个网站</li>
+<li>更严重的场景:<code>skip-cert-verify: true</code> + 恶意节点 → 节点持有者可以中间人你的流量,那时<b>真的会被看光</b></li>
+</ul>
+<p>准确的结论是:<b>在普通代理模式下,ISP 能看到「你去了哪」,看不到「你在那做了什么」。</b></p>
+<p>这也是代理和 VPN 的一个重要差别:<b>VPN 把 DNS 也收进隧道</b>,而代理模式下 DNS 可能仍然走本地。</p>
+
+<h4>怎么改善</h4>
+<ol>
+<li>开启 fake-ip + DoH/DoT —— <b>你已经配了 DoH,但开关关着</b>(见第 6 章和第 10 章第 1 条)</li>
+<li>尽量不用 <code>skip-cert-verify: true</code>,改用 <code>fingerprint</code></li>
+<li>免费公开节点不登录敏感账号</li>
+<li>真要高隐私,那是 VPN + Tor 的领域,不是代理能解决的</li>
+</ol>
+
+<h3>A12 · 一台 VPS 能部署多个节点吗</h3>
+
+<p><b>能,而且机场基本都这么干。</b>一台 VPS 可以:</p>
+<ul>
+<li>同一协议跑多个端口(每个端口 = 配置里的一个「节点」)</li>
+<li>多个协议共存 —— ss 一个端口、vmess+ws 一个端口、hysteria2 一个端口</li>
+<li>多用户各自独立配置</li>
+</ul>
+
+<div class="box bad">
+<span class="t">但必须理解这个限制,否则会白折腾</span>
+<p><b>同一台 VPS 上的所有节点,共享同一份带宽和同一个 IP。</b></p>
+<ul>
+<li>❌ 「10 个节点」≠「10 倍带宽」—— 带宽是物理的,一个节点跑满其他都得等</li>
+<li>❌ 那个 IP 被封,这台机器上的<b>所有节点一起失效</b></li>
+<li>✅ 真正的冗余来自<b>多台 VPS + 多个地区 + 多个 IP 段</b></li>
+</ul>
+</div>
+
+<h4>那机场为什么给一台机器配多种 type?</h4>
+<p>为了应对<b>不同的封锁策略</b>,不是为了提速:</p>
+<ul>
+<li>有的网络环境封 SS 但不封 VMess + ws</li>
+<li>有的环境封 UDP —— 那 hysteria2 / tuic 就全废了,只能退回 TCP 系</li>
+<li>有的环境对特定端口不友好(非 443 端口常被掐)</li>
+</ul>
+<p>所以多协议 = <b>多套备用方案</b>。这是「可用性冗余」,不是「带宽冗余」。</p>
+
+<div class="box good">
+<span class="t">你自己一台 VPS 的建议</span>
+<ul>
+<li>一个主协议 + 一个备用端口,足够了。推荐 <b>VLESS + Reality</b>(抗识别最强)或 <b>Hysteria2</b>(弱网性能最好)</li>
+<li><b>不必堆协议</b> —— 你是单人使用,「抗封锁多样性」的意义不大</li>
+<li>把精力花在<b>选对协议 + 配好 TLS 伪装</b>上,比堆五个协议有用得多</li>
+</ul>
+</div>
+
+<h3>A13 · 路由器故障时 QQ 能上、网页打不开,跟 UDP 有关系吗</h3>
+
+<p><b>有间接关系,但根源通常不是 UDP。</b>先说为什么 QQ 能上:</p>
+
+<table>
+<thead><tr><th></th><th>QQ</th><th>浏览器</th></tr></thead>
+<tbody>
+<tr><td>怎么找到服务器</td><td><b>客户端内置服务器 IP 列表并会缓存</b>,直接连 IP</td><td>你输入域名 → <b>必须先做 DNS 解析</b> → 才知道连哪</td></tr>
+<tr><td>DNS 挂掉时</td><td><span class="pill g">照常工作</span></td><td><span class="pill r">全部打不开</span></td></tr>
+</tbody>
+</table>
+
+<p>所以「<b>QQ 能用、网页全废</b>」这个组合,是 <b>DNS 故障的经典特征</b>。</p>
+
+<h4>UDP 在其中的角色</h4>
+<p>DNS 查询默认走 <b>UDP 53 端口</b>。路由器故障如果破坏了 UDP 转发(NAT 表、连接跟踪、防火墙规则),DNS 就失败,于是网页全废。</p>
+<p>所以链路是通的:<b>UDP 异常 → DNS 失败 → 网页打不开</b>。但把锅单独扣给 UDP 会误判 —— 准确说法是「跟 DNS 有关,而 DNS 恰好依赖 UDP」。</p>
+
+<h4>其他可能原因(按实际概率排)</h4>
+<ol>
+<li><b>DNS 服务器故障</b> —— 最常见。路由器上的 DNS 转发进程挂了</li>
+<li><b>MTU 不匹配</b> —— 网页要传大包(大 HTML、HTTPS 握手),QQ 用的小包。MTU 不对会导致大包被丢,表现为「QQ 能上,网页卡死或白屏」</li>
+<li><b>NAT / 连接跟踪表满</b> —— 路由器会话表溢出,新连接建不上,但 QQ 的已有连接还活着</li>
+<li><b>路由器 TCP 处理异常</b> —— 有状态检测的设备对新建 TCP 连接处理出错</li>
+</ol>
+
+<h4>怎么判定(下次故障时照做)</h4>
+<pre><code><span class="c">nslookup www.baidu.com</span>            <span class="c"># 能解析 → DNS 没问题,往 MTU 方向查</span>
+<span class="c">nslookup www.baidu.com 8.8.8.8</span>    <span class="c"># 换公共 DNS 能解析 → 路由器的 DNS 有问题</span>
+<span class="c">ping -f -l 1472 8.8.8.8</span>          <span class="c"># 测 MTU;提示"需要拆分"则 MTU 偏大</span></code></pre>
+
+<p><b>修复手段:</b></p>
+<ul>
+<li>手动把 DNS 设为 <code>223.5.5.5</code> / <code>8.8.8.8</code>(绕开路由器 DNS 转发)</li>
+<li>调低 MTU(常见值 <code>1480</code> / <code>1452</code>)</li>
+<li>重启路由器清空 NAT 表</li>
+</ul>
+
+<div class="box good">
+<span class="t">给你留一个判断口诀</span>
+<p><b>QQ 能上、网页打不开 → 先怀疑 DNS,再怀疑 MTU。</b><br>
+如果连 QQ 也上不了、但局域网设备之间互通 → 那是 WAN 侧或 PPPoE 断了,跟 UDP 无关。</p>
+</div>
+
+<h2 id="b"><span class="n">B</span>网络体系:VPN、代理、专线与流量可见性</h2>
+
+<p>附录 A 解决的是「配置文件里的字段是什么意思」。这一章往下挖一层,回答的是<b>「这套东西在整个网络里处于什么位置、谁看得见什么」</b>。八个问题看着散,实际上都可以归到三根主轴上:</p>
+
+<table>
+<thead><tr><th>主轴</th><th>决定什么</th><th>涉及问题</th></tr></thead>
+<tbody>
+<tr><td><b>介入层次</b></td><td>VPN / 代理 / TUN 各自在网络栈的哪一层动手</td><td>问题 1、2</td></tr>
+<tr><td><b>控制点</b></td><td>DNS 与专线决定了「找谁、怎么过去」</td><td>问题 3、4、5</td></tr>
+<tr><td><b>可见性</b></td><td>加解密的终点在哪,决定谁能看到什么</td><td>问题 6、7、8</td></tr>
+</tbody>
+</table>
+
+<div class="box info">
+<span class="t">一句话抓住第三根主轴(后面反复用到)</span>
+<p>判断「谁能看到什么」,只看一件事:<b>加解密的终点在哪台机器上</b>。</p>
+<ul>
+<li>HTTPS 的终点在网站 → 路由器看不到,<b>网站能看到</b></li>
+<li>DoH 的终点在 DoH 服务商 → 路由器看不到,<b>DoH 服务商能看到</b>(信任只是转移了)</li>
+<li>代理的终点在代理服务器 → 路由器看不到,<b>代理服务商能看到</b>(它知道你的真实目标)</li>
+</ul>
+<p>所以「用代理更安全」要加限定:<b>你不是让谁都看不见,而是把信任从 ISP 转移给了代理服务商。</b></p>
+</div>
+
+<h3>B0 · 先把名词摆正:这些词各自在哪一层</h3>
+
+<p>「梯子」「VPN」「代理」在日常口语里被混用,但技术上它们不是一类东西。先上总表:</p>
+
+<table>
+<thead><tr><th>名词</th><th>工作层次</th><th>有虚拟网卡</th><th>改系统路由表</th><th>需要应用配合</th><th>代表</th></tr></thead>
+<tbody>
+<tr><td>VPN</td><td><b>网络层 L3</b>(TAP 则在 L2)</td><td>✅</td><td>✅</td><td>❌ 不需要</td><td>OpenVPN、WireGuard、IPSec</td></tr>
+<tr><td>代理</td><td><b>应用层 L7</b></td><td>❌</td><td>❌</td><td>✅ 需要</td><td>SOCKS5、HTTP CONNECT</td></tr>
+<tr><td>Clash 系统代理模式</td><td>应用层</td><td>❌</td><td>❌</td><td>✅ 需要</td><td>Verge「系统代理」开关</td></tr>
+<tr><td>Clash TUN 模式</td><td><b>网络层(伪装)</b></td><td>✅</td><td>✅</td><td>❌ 不需要</td><td><code>tun.enable: true</code></td></tr>
+<tr><td>公司内网代理</td><td>应用层</td><td>❌</td><td>❌</td><td>✅ 需要</td><td>Squid、PAC 脚本</td></tr>
+<tr><td><b>「梯子」</b></td><td colspan="2"><b>不是技术名词</b></td><td colspan="3">俗称,泛指「能访问墙外的东西」。实现上可能是 VPN 协议、可能是代理协议、也可能两者组合</td></tr>
+</tbody>
+</table>
+
+<div class="box warn">
+<span class="t">先把一个误会清掉</span>
+<p>你之前问过「SS 和 SSR 应该不是网络协议,应该是 VPN 协议吧」——<b>两个都不是</b>。</p>
+<ul>
+<li><b>SS / SSR / VMess / VLESS / Trojan 是「代理协议」</b>,工作在应用层</li>
+<li>它们的共同点是:定义了一套「客户端把请求交给它、它替你转发」的格式,<b>不碰内核路由</b></li>
+<li>它们<b>不是 VPN 协议</b>(VPN 协议是 OpenVPN / WireGuard / IPSec 这一类,要在网络层建隧道)</li>
+<li>它们也<b>不是传输协议</b>(那是 TCP/UDP/QUIC 的事)</li>
+</ul>
+<p>所以准确的说法是:<b>「翻墙工具」通常 = 一个代理协议的客户端 + 可选的一层 TUN 伪装。</b></p>
+</div>
+
+<h3>B1 · VPN 与代理的本质区别:差在「介入层次」</h3>
+
+<p>你原来的判断是对的,这里把它讲透。两者的差别不是「强度」,而是<b>在协议栈的哪一层动手</b>。一层之差,带来下面所有差异。</p>
+
+<h4>数据包走的路,完全不同</h4>
+
+<div class="flow"><b>VPN(网络层拦截)</b>
+应用 → 系统 TCP/IP 栈 → 查路由表 → <i>[虚拟网卡]</i> → VPN 客户端加密 → 物理网卡 → 公网 → VPN 服务器解密 → 目标
+                                  <u>↑ 路由表把 0.0.0.0/0 指向这里,应用完全不知道</u>
+
+<b>代理(应用层转交)</b>
+应用 → <i>[SOCKS5 / HTTP 接口 127.0.0.1:7897]</i> → 代理客户端 → 物理网卡 → 公网 → 代理服务器 → 目标
+        <u>↑ 应用必须主动把连接交给这个端口,不交就不走</u></div>
+
+<h4>为什么 VPN 需要虚拟网卡,代理不需要</h4>
+<p><b>VPN 的目标是「接管所有流量」</b>——包括那些不配合的应用、系统服务、后台更新。要在网络层拦住它们,唯一的办法是插一块网卡,然后把默认路由指过去:内核一查路由表,「目标不在本地 → 走 VPN 网卡」,包就自然落进 VPN 客户端手里。</p>
+<p><b>代理的目标是「转交一个连接」</b>——应用连本地端口,代理进程接管这条连接,替它去连真目标。「接管」发生在应用层,不需要碰内核路由,所以不用网卡。</p>
+
+<h4>差异全表</h4>
+<table>
+<thead><tr><th>维度</th><th>VPN</th><th>代理</th></tr></thead>
+<tbody>
+<tr><td>介入层</td><td>网络层 L3</td><td>应用层 L7</td></tr>
+<tr><td>虚拟网卡</td><td>必须有</td><td>没有</td></tr>
+<tr><td>改系统路由表</td><td>改</td><td>不改</td></tr>
+<tr><td>应用是否需要知道</td><td><b>不需要(透明)</b></td><td><b>需要</b>(否则流量不走)</td></tr>
+<tr><td>UDP / ICMP</td><td>天然支持(连 ping 都走)</td><td>SOCKS5 支持 UDP;HTTP 代理不支持;ping 永远不走</td></tr>
+<tr><td>覆盖范围</td><td>整台机器(含系统服务、命令行)</td><td>只有「愿意走代理」的应用</td></tr>
+<tr><td>能否进内网网段</td><td>能(这是 VPN 的本职)</td><td>不能,除非代理服务器自己转发</td></tr>
+<tr><td>典型协议</td><td>OpenVPN / WireGuard / IPSec</td><td>SOCKS5 / HTTP / SS / VMess / VLESS</td></tr>
+</tbody>
+</table>
+
+<h4>那 Clash 的 TUN 到底是什么</h4>
+<p>你原来的说法很准确,补一个更机械的描述:</p>
+<div class="box good">
+<span class="t">TUN = 「把代理提升到网络层」的手法</span>
+<p>mihomo 自己建一块 TUN 网卡、写路由表,把内核送上来的 IP 包<b>解析还原成 TCP/UDP 流</b>,然后交给它<b>原本的代理逻辑</b>去分流、去转发。</p>
+<p>所以对外表现像 VPN(全流量、无需应用配合),内部仍然是「<b>转发 + 代理</b>」,不是 VPN 那种端到端的加密隧道。</p>
+<p>再补一个容易混的点:<b>TUN 处理 L3(IP 包),TAP 处理 L2(以太帧)</b>。TAP 能传非 IP 协议(用于桥接),OpenVPN 两种都支持,Clash 只用 TUN。</p>
+</div>
+
+<h3>B2 · 梯子 / 系统代理 / TUN / 公司内网代理:四个词的正确定位</h3>
+
+<p>这四样东西经常被放在一起说,但它们解决的<b>根本是不同的问题</b>。分两组看:</p>
+
+<h4>第一组:系统代理 vs TUN —— 同一件事的两种实现</h4>
+<p>两者都是「让本机流量走 Clash」,区别在手段。</p>
+
+<table>
+<thead><tr><th>维度</th><th>系统代理模式</th><th>TUN 模式</th></tr></thead>
+<tbody>
+<tr><td>改了什么</td><td>注册表里的 <code>WinINET</code> 代理设置</td><td>建虚拟网卡 + 改路由表 + 劫持 DNS</td></tr>
+<tr><td>覆盖谁</td><td>读系统代理的应用(浏览器、部分桌面软件)</td><td><b>所有走 IP 栈的流量</b></td></tr>
+<tr><td>UDP</td><td>❌ 不支持</td><td>✅ 支持</td></tr>
+<tr><td><code>ping</code> / ICMP</td><td>❌ 不走</td><td>✅ 走</td></tr>
+<tr><td>命令行工具</td><td>多数不读(<code>curl</code>、<code>git</code> 默认不读)</td><td>全部覆盖</td></tr>
+<tr><td>要管理员权限</td><td>不需要</td><td><b>需要</b></td></tr>
+<tr><td>与其它 VPN 冲突</td><td><b>无</b>(不碰路由表)</td><td><b>有</b>(抢默认路由)</td></tr>
+<tr><td>性能</td><td>略好</td><td>多一层 TUN 栈开销</td></tr>
+<tr><td>典型故障</td><td>「某些软件就是不走代理」</td><td>「开完全局断网 / 公司 VPN 掉了」</td></tr>
+</tbody>
+</table>
+
+<p><span class="pill b">结论</span> 日常浏览用<b>系统代理</b>就够,又快又不会惹事。<b>只有</b>当你需要「命令行也走代理」「游戏/语音的 UDP 走代理」「某些顽固应用必须走代理」时,才值得上 TUN。</p>
+
+<h4>第二组:公司内网代理 vs 梯子 —— 目的正好相反</h4>
+<table>
+<thead><tr><th></th><th>公司内网代理</th><th>梯子</th></tr></thead>
+<tbody>
+<tr><td>主要目的</td><td><b>审计、缓存、访问控制</b>(谁上了什么、限制访问)</td><td><b>让你访问墙外</b>(加密 + 伪装)</td></tr>
+<tr><td>加密隧道</td><td>通常没有(它是「出网的口子」)</td><td>核心就是加密隧道</td></tr>
+<tr><td>在公司网络中的状态</td><td>官方部署、可能强制</td><td><b>通常被禁止</b>(因为你绕过了公司审计)</td></tr>
+<tr><td>信任方向</td><td>让公司<b>看得见</b>你</td><td>让公司/ISP <b>看不见</b>你在访问什么</td></tr>
+</tbody>
+</table>
+
+<div class="box warn">
+<span class="t">这里有个容易踩的坑</span>
+<p>很多人以为「我在公司用梯子,就安全了」。要注意两点:</p>
+<ul>
+<li>公司网络里通常装了<b>终端管控软件</b>(如零信任客户端 aTrust 这类)。它工作在<b>你的设备上</b>,不依赖网络层的可见性 —— 你在设备上干什么它都可能记录,跟你走不走代理无关</li>
+<li>绕过公司网络管控本身可能<b>违反公司制度</b>,这跟技术能不能做到是两件事</li>
+</ul>
+</div>
+
+<h3>B3 · TUN 为什么会打坏公司 OpenVPN</h3>
+
+<p>这是你实际问题里最有价值的一个。先说结论:<b>这是一场「路由表争夺战」,外加驱动层和 DNS 层的连带损伤。</b>不是 Clash「坏了」,而是两个都自称「默认出口」的程序在同一台机器上打架。</p>
+
+<h4>冲突机制,分四层</h4>
+
+<h4>第一层:路由表 —— 谁写得更具体、谁后写,谁赢</h4>
+<p>OpenVPN 连上后会创建虚拟网卡并写路由,两种模式:</p>
+<ul>
+<li><b>全局模式</b>:写 <code>0.0.0.0/0 → VPN 网关</code>,所有流量进隧道</li>
+<li><b>分裂隧道(split tunnel)</b>:只写内网网段,如 <code>10.8.0.0/24 → VPN</code>、<code>172.16.0.0/12 → VPN</code></li>
+</ul>
+<p>Clash TUN 开 <code>auto-route: true</code> 时,官方文档的说明是「<b>自动设置全局路由,可以自动将全局流量路由进入 tun 网卡</b>」。它实现的方式很讲究——用 <code>0.0.0.0/1</code> + <code>128.0.0.0/1</code> 这对「半默认路由」,两条合起来覆盖全部 IPv4。</p>
+<div class="box info">
+<span class="t">为什么用两条 /1 而不是一条 /0</span>
+<p>因为路由表按 <b>最长前缀匹配优先</b>:<code>/1</code> 比 <code>/0</code> 更「具体」,所以能<b>盖过</b>任何已存在的 <code>/0</code> 默认路由,而不用去删它。同一前缀时才比 metric(跃点数),小的优先。</p>
+<p>这是有意设计的「抢路但不破坏」手法——但副作用是:<b>它会盖掉公司 VPN 的全局默认路由。</b></p>
+</div>
+<p><b>三种结局:</b></p>
+<table>
+<thead><tr><th>组合</th><th>结果</th></tr></thead>
+<tbody>
+<tr><td>公司 VPN 是分裂隧道,Clash 加 <code>/1</code></td><td><span class="pill g">基本可用</span> 内网 <code>10.8.0.0/24</code> 比 <code>/1</code> 更具体,仍走 VPN;其余走 Clash</td></tr>
+<tr><td>公司 VPN 是全局模式,Clash 加 <code>/1</code></td><td><span class="pill r">内网断</span> Clash 的 <code>/1</code> 比 <code>/0</code> 更具体,把公司隧道<b>架空</b></td></tr>
+<tr><td>先开 Clash 再加公司 VPN(全局)</td><td><span class="pill r">可能环路</span> 包进 Clash TUN → 出站又匹配 VPN 默认路由 → 进 VPN 隧道 → 又匹配 Clash → <b>死循环(全断网)</b></td></tr>
+</tbody>
+</table>
+<p>这就解释了你可能遇到的「<b>先开 A 后开 B 能行,反过来就不行</b>」——本质是<b>谁后写路由谁生效</b>,以及写出来的组合是否自洽。</p>
+
+<h4>第二层:DNS 劫持 —— 内网域名被掐断</h4>
+<p>Clash TUN 会开 <code>dns-hijack</code>,把发往任何地址的 <b>53 端口查询全部截获</b>,交给自己的 DNS 模块。问题在于:</p>
+<ul>
+<li>公司内网 DNS(比如 <code>10.8.0.1</code>)会解析<b>只在内网存在</b>的域名(如 <code>git.corp.local</code>)</li>
+<li>被劫持后,这些查询被送进 Clash 的 DNS → 拿去问公网 DNS → 查不到</li>
+<li>表现:<b>能 ping 通内网 IP,但用域名访问内网系统全部失败</b></li>
+</ul>
+
+<h4>第三层:虚拟网卡驱动与接口绑定</h4>
+<p>这一层才是「为什么要重装」的答案。</p>
+<ul>
+<li>Windows 上 Clash TUN 用 <b>wintun</b> 驱动创建适配器(名字通常是 <code>Mihomo</code> 或 <code>Meta</code>)</li>
+<li>OpenVPN 老版本用 <b>tap-windows6</b>,新版本(2.5+)<b>也用 wintun</b> —— 同源驱动,更容易互相干扰</li>
+<li>麻烦点:
+  <ul>
+    <li>适配器名 / <b>接口索引(ifIndex)</b>会因驱动重载或重启而重排 → OpenVPN 的 <code>dev</code> 绑定漂移</li>
+    <li>Clash 每次开关 TUN 都创建/销毁适配器 → 可能顶着 OpenVPN 的绑定</li>
+    <li>路由表里留下<b>指向已消失接口的残留路由</b> → 包被送进黑洞</li>
+    <li><code>strict-route</code> 在 Windows 上还会加防火墙规则,阻断多宿主 DNS 解析(文档明确提到可能影响 VirtualBox 这类应用)</li>
+  </ul>
+</li>
+</ul>
+
+<h4>第四层:为什么「重装才恢复」</h4>
+<p>因为坏的不是一个点,而是<b>三处叠加</b>:适配器名被顶掉 + OpenVPN 服务注册的驱动状态异常 + 路由表残留。用户层的「重启 Clash Service」只能触发路由重排,<b>看着像好了,下次再开又坏</b>。</p>
+
+<div class="box bad">
+<span class="t">干净恢复的顺序(别跳步)</span>
+<ol>
+<li>关闭 Clash 的 TUN</li>
+<li>完全退出 Clash(连内核一起退,不是最小化)</li>
+<li>管理员执行 <code>route print</code>,对比看残留路由是否还在</li>
+<li>禁用再启用网络适配器(或重启)</li>
+<li>重连公司 OpenVPN</li>
+</ol>
+<p>若走到这一步还不行,再考虑重装 OpenVPN 客户端。<b>先别急着重装</b> —— 十有八九是路由残留。</p>
+</div>
+
+<h4>正确的共存姿势(按推荐度排)</h4>
+<table>
+<thead><tr><th>方案</th><th>做法</th><th>代价 / 适用</th></tr></thead>
+<tbody>
+<tr><td><b>① 二选一(最稳)</b></td><td>用公司 VPN 时,把 Clash 切到<b>系统代理模式</b></td><td>系统代理不碰路由表,零冲突。代价:只有浏览器走代理,<b>通常够用</b></td></tr>
+<tr><td><b>② TUN 里排除公司网段</b></td><td>给 Clash 加直连规则 + 排除路由(见下)</td><td>避免与内网网段抢路,但<b>解决不了「双默认路由」</b>的问题</td></tr>
+<tr><td><b>③ 锁死 OpenVPN 的路由</b></td><td>在 .ovpn 里加 <code>route-nopull</code>,改成手动只加内网路由</td><td><b>最干净的分工</b>:公司 VPN 只管内网,其余交给 Clash。需要能改配置</td></tr>
+<tr><td>④ 调接口 metric</td><td>让内网接口跃点数更小(更优先)</td><td>容易顾此失彼,不推荐</td></tr>
+<tr><td>⑤ 换启动顺序</td><td>先开公司 VPN 再开 Clash TUN</td><td>碰运气,不作为方案</td></tr>
+</tbody>
+</table>
+
+<pre><code><span class="c"># 方案 ② 的配置骨架</span>
+<span class="n2">tun</span>:
+  <span class="n2">enable</span>: <span class="k">true</span>
+  <span class="n2">auto-route</span>: <span class="k">true</span>
+  <span class="n2">route-exclude-address</span>:        <span class="c"># 这些网段不进 TUN</span>
+    - 10.8.0.0/24
+    - 172.16.0.0/12
+<span class="n2">rules</span>:
+  - IP-CIDR,10.8.0.0/24,DIRECT,no-resolve
+  - DOMAIN-SUFFIX,corp.internal,DIRECT</code></pre>
+
+<div class="box warn">
+<span class="t">还有个反直觉的点</span>
+<p>Clash Verge 的 <b>服务模式(Service Mode)</b>用系统服务跑 TUN,权限更高、适配器更稳 —— 但它<b>同时会更彻底地改路由表</b>。所以如果目标是「和公司 VPN 共存」,开服务模式<b>冲突概率不降反升</b>。它解决的是「TUN 建不起来」,不是「TUN 和别人打架」。</p>
+</div>
+
+<h3>B4 · 域名解析:nslookup、NS 记录、GTM 与智能调度</h3>
+
+<h4>「明文 nslookup」是什么意思</h4>
+<p><code>nslookup</code> 是最原始的 DNS 查询工具。它做的事情是:向 DNS 服务器发一个 <b>UDP 53 端口的明文查询包</b>,问「某域名的 A 记录是什么」,服务器明文回答。</p>
+<p>「明文」指两件事都不加密:<b>你问的是哪个域名</b>,以及<b>回答的 IP 是多少</b>。路径上任何一台设备(你的路由器、ISP 的 DNS)都看得见。</p>
+<p>这也是为什么「我用 nslookup 就能查到」——它本来就没有任何加密,任何人都能查。想加密得用 <b>DoH / DoT</b>(DNS over HTTPS / TLS)。</p>
+
+<h4>NS 记录是什么</h4>
+<p>NS(Name Server)记录回答的是:「<b>这个域名由哪台服务器负责解析(权威服务器)</b>」。</p>
+<p>DNS 是分层的:根 → 顶级域(<code>.com</code> / <code>.cn</code> / <code>.xyz</code>)→ 二级域 → …… 每一层都用 NS 记录指向下一层。查你那个域名的 NS,会看到指向 <code>vip7.alidns.com</code> 这类阿里云 DNS —— <b>这说明这个域名托管在阿里云,而不是「域名被加密了」</b>。</p>
+
+<h4>完整解析链条(拿你那个域名走一遍)</h4>
+<div class="flow">客户端问:hk01.node.example.com 的 IP 是多少?
+  <b>↓</b> 本地递归 DNS(没有缓存)
+根服务器      → 「去问 .xyz 的 NS」
+.xyz 权威    → 「去问该二级域的 NS」
+权威 NS       → 返回 <i>CNAME: gtm-hk.node-example.com</i>
+  <b>↓</b> 再查 gtm-hk.node-example.com
+权威 NS       → 返回 <i>A 记录: 203.0.113.10</i></div>
+<p><code>gtm-hk</code> 这个前缀里的 <b>GTM</b>,就是下一个问题的答案。</p>
+
+<h4>GTM 为什么能解释「server 不填 IP」</h4>
+<p>GTM = Global Traffic Manager,本质是一个<b>「会思考的权威 DNS 服务器」</b>。阿里云官方文档把它讲得很明确,三个关键点:</p>
+<ol>
+<li>GTM 工作在 <b>DNS 层</b>,通过 DNS 返回一个 IP。<b>它不是代理,不是网关,也不是应用接入服务,看不到客户端与服务之间的网络流量。</b></li>
+<li>你查域名时,它<b>不是查表返回固定 IP</b>,而是走一条<b>评估链</b>。</li>
+<li>因为决策是<b>每次查询实时做</b>的,所以能自动容灾、就近接入。</li>
+</ol>
+
+<div class="flow"><b>GTM 的五步评估链</b>
+① <b>查询到达</b>   → 判断你是谁(按 DNS 请求的来源 IP,识别地理位置 + 运营商)
+② <b>健康过滤</b>   → 把不健康的地址摘掉(多地点 ping / TCP / HTTP 探测)
+③ <b>选择范围</b>   → 按策略(就近 / 权重 / 轮询 / 顺序)选出地址池
+④ <b>选出地址</b>   → 池内按算法挑一个 IP
+⑤ <b>返回答案</b>   → 把 IP 给你</div>
+
+<p>于是「不填 IP」的四个好处都有了机制解释:</p>
+<table>
+<thead><tr><th>好处</th><th>实现机制</th></tr></thead>
+<tbody>
+<tr><td>方便换服务器</td><td>改 DNS 记录即可,<b>客户端配置一个字都不用动</b></td></tr>
+<tr><td>自动容灾</td><td>健康检查发现故障 → 摘除地址 → 你自然拿到别的 IP</td></tr>
+<tr><td>就近接入</td><td>按查询来源归属选入口:广东的解析到广东,北京的解析到北京</td></tr>
+<tr><td>抗封</td><td>IP 被封或被污染 → 换记录,无需通知任何用户</td></tr>
+</tbody>
+</table>
+
+<h4>智能调度的两种「就近」</h4>
+<table>
+<thead><tr><th>类型</th><th>依据</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td><b>静态就近</b></td><td>预设拓扑规则:客户端属于哪个国家 / 洲 / 运营商 / ASN</td><td>规则固定,按「谁归谁管」分配</td></tr>
+<tr><td><b>动态就近</b></td><td>实测到客户端的网络性能(时延 / 丢包 / 跳数)</td><td>只在特定模式下可用,<b>且是基于 DNS 请求来源探测,不是探你的实时链路</b></td></tr>
+</tbody>
+</table>
+
+<div class="box warn">
+<span class="t">一个容易忽略的真相:切换不是瞬时的</span>
+<p>GTM 改了答案,但<b>你和中间递归 DNS 还缓存着旧答案</b>,要等 <b>TTL 过期</b>才会用新的。所以抗封场景会用很短的 TTL(60~300 秒),而普通网站常用 3600 秒。</p>
+<p>换句话说:<b>「换 IP 无感」说的是「你不用改配置」,不是「立刻生效」。</b></p>
+</div>
+
+<h4>代价(要说的另一面)</h4>
+<ul>
+<li>DNS 查询本身是<b>明文</b>的 —— 谁在查、查什么,路径上可见(除非用 DoH/DoT)</li>
+<li>域名持有方(机场)能看到「有人查了这个域名」,虽然不知道具体是谁</li>
+<li>多一跳解析,多几十毫秒</li>
+</ul>
+
+<h3>B5 · IEPL 国际以太网专线:为什么贵,以及「合法」的边界</h3>
+
+<h4>是什么</h4>
+<p>IEPL = International Ethernet Private Line,国际以太网专线。运营商提供的<b>点对点二层专线</b>:你在广州的机房和香港的机房之间,拉一条「看起来像一根直连网线」的通路。</p>
+<p>三个关键特征:</p>
+<ul>
+<li><b>不过公网</b> —— 不经过普通互联网路由,走运营商自建的国际传输网</li>
+<li><b>独占带宽</b> —— 买 10M 就是 10M,不与别人抢</li>
+<li><b>点对点二层</b> —— 像一根拉长的网线(Ethernet),是「通路」不是「上网服务」</li>
+</ul>
+<p>顺带区分几个常在订阅里看到的词:</p>
+<table>
+<thead><tr><th>术语</th><th>全称 / 含义</th><th>关系</th></tr></thead>
+<tbody>
+<tr><td><b>IPLC</b></td><td>International Private Leased Circuit</td><td>更老、更贵,传统上是 TDM/SDH 电路</td></tr>
+<tr><td><b>IEPL</b></td><td>International Ethernet Private Line</td><td>IPLC 的以太网版本,更灵活</td></tr>
+<tr><td><b>MPLS VPN</b></td><td>共享骨干上的逻辑隔离</td><td>比 IEPL 便宜,隔离性略弱</td></tr>
+<tr><td><b>SD-WAN</b></td><td>软件定义广域网,用公网 + 优化调度</td><td>这几年主流,成本低得多</td></tr>
+</tbody>
+</table>
+<p><b>价格层级(贵 → 便宜):IPLC &gt; IEPL &gt; MPLS VPN &gt; SD-WAN &gt; 普通国际公网优化。</b></p>
+
+<h4>为什么贵</h4>
+<table>
+<thead><tr><th>成本来源</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>独占带宽</td><td>不是共享,1M 就是 1M 的资源被占住</td></tr>
+<tr><td>跨境光缆资源稀缺</td><td>国际海缆容量有限,热门方向(香港 / 日本 / 新加坡 / 美国)尤其紧张</td></tr>
+<tr><td>需要国际出入口局资质</td><td>中国只有三大运营商持有国际通信出入口局牌照</td></tr>
+<tr><td>SLA 保障</td><td>承诺可用率、时延、丢包率</td></tr>
+<tr><td>企业级属性</td><td>带固定 IP、二层通道、可审计可追溯</td></tr>
+</tbody>
+</table>
+
+<h4>合规性:必须分两层说,别混</h4>
+
+<div class="box good">
+<span class="t">第一层:IEPL 这个产品本身 = 合法</span>
+<p>中国电信、中国联通、中国移动持有国家颁发的<b>国际通信出入口局牌照</b>。IEPL 是它们正常的商业产品。企业正常签约使用,完全合规。</p>
+</div>
+
+<div class="box bad">
+<span class="t">第二层:谁在用、怎么用 = 决定是否合规</span>
+<p>监管要求(工信部 + 各地通信管理局)对国际专线实行<b>实名审批制</b>:</p>
+<ul>
+<li><b>主体</b>:必须是依法注册的<b>企业法人</b>,<b>个人不能申请</b>(个体工商户也不行)</li>
+<li><b>用途</b>:必须真实且正当(跨境电商、跨国协同办公、ERP 数据同步等)</li>
+<li><b>「三不原则」</b>——申请时须承诺:
+  <ol>
+    <li><b>不转租</b>:仅供本企业(含母子公司)内部使用,不得转租 / 分销给第三方</li>
+    <li><b>不提供公网接入</b>:不得利用该线路为外部人员提供「翻墙」或公网接入服务</li>
+    <li><b>不用于非法内容</b>:严禁传输违法违规内容</li>
+  </ol>
+</li>
+</ul>
+</div>
+
+<p><b>所以,对你那个问题的直接回答是:「使用专线 ≠ 合法合规 ≠ 已报备。」</b></p>
+<p>理由:</p>
+<ul>
+<li><b>线路合法不等于使用方式合法。</b>专线是合法产品,但机场把<b>企业专线转售给个人</b>用于跨境访问,这个转售和使用环节本身就违反了「不转租、不提供公网接入」的承诺</li>
+<li>你作为终端用户,用的是<b>被转租出来的企业专线</b>,且用途(跨境访问)不属于「企业内网办公」</li>
+<li><b>「报备」是运营商对企业客户做的实名审批,跟你个人无关</b> —— 不会因为你用了这条线路就获得合法身份</li>
+<li>机场宣传的「IEPL 专线、稳定不掉线」讲的是<b>技术质量</b>,不是<b>合规身份</b>。这两件事经常被故意混在一起说</li>
+</ul>
+
+<div class="box info">
+<span class="t">法律依据与风险分布(客观陈述)</span>
+<ul>
+<li>相关法规:<b>《网络安全法》《数据安全法》《国际通信设施管理规定》</b>;工信部多次发文清理「未经许可的 VPN、SD-WAN 等跨境连接服务」</li>
+<li><b>非法经营罪</b>的追诉标准涉及「租用国际专线、私设转接设备,擅自经营国际电信业务或者涉港澳台电信业务进行营利活动」,并有明确的数额门槛(如经营去话业务数额 100 万元以上等情形)</li>
+<li>也就是说:<b>「经营者」(机场)的风险远大于「使用者」</b>;但使用者仍可能面临行政处罚</li>
+</ul>
+</div>
+
+<p><b>一句话总结:</b>IEPL 是合法的基础电信产品,但把企业专线转售给个人用于跨境访问是违规的。专线的「合法」属于<b>运营商与企业客户之间</b>的关系,<b>不传导到你身上</b>。</p>
+
+<div class="box warn">
+<span class="t">本节只做事实陈述</span>
+<p>上面讲的是「这件事在法律上处于什么位置」,不构成任何操作建议,也不涉及规避方式。</p>
+</div>
+
+<h3>B6 · 链路解构:你 → 广州 → 专线 → 香港 → 目标</h3>
+
+<p>把这句行业黑话拆成可验证的一段一段。</p>
+
+<table>
+<thead><tr><th>段</th><th>路径</th><th>走什么网</th><th>特征</th></tr></thead>
+<tbody>
+<tr><td><b>①</b></td><td>你家 → 广州入口</td><td><b>普通公网</b></td><td>国内段,延迟低(十几 ms),但可能被 QoS / 干扰</td></tr>
+<tr><td><b>②</b></td><td>广州机房 ↔ 香港机房</td><td><b>IEPL 专线</b>(不过公网)</td><td>稳定、低丢包。这段是「机场花钱买的服务」</td></tr>
+<tr><td><b>③</b></td><td>香港服务器 → 境外网站</td><td>当地国际带宽</td><td>香港出口访问全球</td></tr>
+</tbody>
+</table>
+
+<h4>广州这台的角色:入口(Entry),不是出口</h4>
+<p>你的问题问得很准,但要拆开<b>「能力」和「职责」</b>两件事:</p>
+<ul>
+<li><b>能力上</b>:广州这台是台正常的服务器,它能路由到的地方它都能到(包括境外)。不是「没有能力」</li>
+<li><b>职责上</b>:在这条链路里,它的角色被配置成<b>中转(Relay)</b>。你客户端配置里的 <code>server</code> 填的是这个入口域名,你的加密流量先到广州,广州再交给香港。<b>整条链路的跨境出口是香港。</b></li>
+</ul>
+
+<p>所以更精确的表述<b>不是</b>「广州连接香港再跨境」,而是:</p>
+<div class="flow">你 --<i>(普通公网,已加密)</i>--> 广州入口 --<i>(IEPL 专线)</i>--> 香港出口 --<i>(当地网络)</i>--> 目标站
+   段①                                    段②                              段③
+   <u>这一段加密后,旁观者只看到「你在访问广州」</u>   <u>机场的专线</u>      <u>真正从香港出海</u></div>
+
+<p><b>跨境这个动作发生在哪?</b> 发生在 <b>③</b>,也就是「香港 → 目标站」这一跳。广州只是把包<b>接过去</b>,香港才是真正「出海」的那台。这就是行业里说的<b>「入口」与「落地」分离</b>:</p>
+
+<table>
+<thead><tr><th>角色</th><th>职责</th><th>决定了什么</th></tr></thead>
+<tbody>
+<tr><td><b>入口 Entry</b></td><td>你连的那个点,负责稳定接收</td><td>你的第一跳延迟、是否易被干扰</td></tr>
+<tr><td><b>中转 Relay</b></td><td>中间跳,负责跨境运输</td><td>链路的稳定性与抗封锁能力</td></tr>
+<tr><td><b>落地 Exit / Landing</b></td><td>真正访问目标站的点</td><td><b>目标网站看到的 IP 归属</b></td></tr>
+</tbody>
+</table>
+
+<div class="box good">
+<span class="t">这下把附录 A 那个疑问也补全了</span>
+<p>A3 提到「节点名写香港,IP 却在广州移动」。现在有了完整解释:</p>
+<p><b>那个 IP 是「入口」,不是「落地」。节点名标注的是「落地」。</b></p>
+<p>你节点名里的 <code>IEPL</code> 就是在说「段②是专线」,<code>hk01</code> 是在说「落地在香港」,<code>entry</code> 这个词干脆就写在域名里 —— <code>...entry.xxxxx-1.xyz</code>。三个信息完全自洽。</p>
+</div>
+
+<h4>为什么不直连香港,要绕这一下</h4>
+<table>
+<thead><tr><th>方案</th><th>路径</th><th>优 / 劣</th></tr></thead>
+<tbody>
+<tr><td>直连香港</td><td>你 → 香港</td><td>✅ 少一跳,理论延迟最低<br>❌ 这段是<b>普通国际公网</b>:可能被 QoS 限速(尤其 UDP / 大流量)、丢包、IP 被针对性干扰。晚高峰尤其明显</td></tr>
+<tr><td>广州中转</td><td>你 → 广州 → 香港</td><td>✅ 段①是国内段,延迟低且稳定<br>✅ 段②走专线,<b>避开「公网国际段」这个最不稳定的环节</b><br>✅ 段①被干扰就换入口 IP(GTM 抗封)<br>❌ 多一跳,多几毫秒</td></tr>
+</tbody>
+</table>
+<p><b>结论:这不是「绕远」,而是用「国内段 + 专线段」替换掉「公网国际段」。</b>你付出的几毫秒,换来的是稳定性和抗封锁能力。</p>
+
+<h4>其他常见链路形态(以后看订阅可以对号入座)</h4>
+<table>
+<thead><tr><th>形态</th><th>链路</th><th>特征</th></tr></thead>
+<tbody>
+<tr><td>直连</td><td>你 → 境外机</td><td>便宜、延迟低但不稳,易被干扰</td></tr>
+<tr><td>单跳中转</td><td>你 → 国内中转 → 境外落地</td><td>最常见</td></tr>
+<tr><td>多入口中转</td><td>你 → 就近入口(GTM) → 专线 → 落地</td><td>好机场的标志,你订阅里的 IEPL 就属这类</td></tr>
+<tr><td>隧道穿透</td><td>你 → CDN / 云 → 落地</td><td>走大厂 IP 段,抗封但延迟高</td></tr>
+</tbody>
+</table>
+<p><b>看订阅时的辨认口诀</b>:节点名带 <code>IEPL</code>/<code>IPLC</code> → 段②是专线;带 <code>中转</code> 或城市名(广州/上海/深圳) → 有国内入口;名字里的地区(HK/JP/SG/US) → <b>落地</b>在哪,也就是目标站看到的你是哪里人。</p>
+
+<h3>B7 · TCP 的风险,与检测 / 伪装的攻防全谱</h3>
+
+<p>先纠正一个前提:<b>说「TCP 有风险」不准确。</b>准确说法是——</p>
+<div class="box info">
+<span class="t">问题的核心</span>
+<p><b>TCP 本身没问题。问题是「你看起来像什么」。</b></p>
+<p>DPI 不看你「用了什么协议」,它看你「长得像什么」。所以下面讲的都是<b>特征(fingerprint)</b>问题。</p>
+</div>
+
+<h4>四个可识别的特征</h4>
+
+<h4>① SNI 明文</h4>
+<p>TLS 握手第一步,客户端发 <code>ClientHello</code>,里面有 <b>SNI</b>(我要访问哪个域名)—— 这个字段在标准 TLS 1.2 / 1.3 里是<b>明文</b>。</p>
+<p>为什么必须明文?因为在加密建立之前,服务器得知道该给你哪张证书(一台服务器可能托管几百个域名)。</p>
+<p><b>后果:ISP 能看见你访问哪个域名,哪怕内容全程加密。</b>解法是 ECH(Encrypted Client Hello),把 SNI 也加密 —— 但需要浏览器和网站双方支持,目前普及度不高。</p>
+
+<h4>② TLS 指纹不像浏览器(JA3 / JA4)</h4>
+<p><code>ClientHello</code> 里有一堆参数:TLS 版本、支持的加密套件列表、扩展的类型和顺序、椭圆曲线……</p>
+<p>不同软件(Chrome / Firefox / OpenSSL / 代理客户端)发出的组合<b>各不相同且相对固定</b> —— 这就是 TLS 指纹。代理客户端如果用某个库的默认握手,指纹会<b>明显不同于任何浏览器</b>。</p>
+<p><b>后果:DPI 一看就知道「这不是浏览器,是个代理库」——根本不需要解密。</b>解法是 <code>client-fingerprint</code>,让代理模仿 Chrome / Firefox 的握手参数。</p>
+
+<h4>③ 主动探测(Active Probing)</h4>
+<p>光看不够,还可以「敲门」。做法:检测系统发现某个可疑 IP,就<b>主动向它发一个连接</b>,看它怎么回应:</p>
+<table>
+<thead><tr><th>被探测对象</th><th>回应</th><th>结果</th></tr></thead>
+<tbody>
+<tr><td>真的 HTTPS 服务器</td><td>正常 TLS 响应 + 一张合法证书</td><td>判定为正常网站</td></tr>
+<tr><td>裸的代理服务器</td><td>异常响应 / 拒绝 / 暴露协议特征</td><td><b>暴露</b></td></tr>
+</tbody>
+</table>
+<p><b>这一步是致命的</b>,因为纯被动分析只能「猜」,主动探测能「确认」。这也是为什么「让代理服务器背后真的有一个网站」如此重要。</p>
+
+<h4>④ TLS-in-TLS 包长特征</h4>
+<p>当代理协议本身跑在 TLS 里,而它承载的流量<b>也是 TLS</b>(你去访问 HTTPS 网站)时,就出现「TLS 套 TLS」。</p>
+<p>特征:外层 TLS 记录的大小会<b>精确地</b>等于内层 TLS 握手包的大小(加上少量固定开销)。正常 HTTPS 的记录大小是连续变化的,TLS-in-TLS 会出现<b>异常规整</b>的分布。</p>
+<p>用包长分布 + 时序做统计(甚至机器学习),能识别出来。解法是 <b>填充(padding)</b>、分片、限制早期数据大小(<code>max-early-data</code>)。</p>
+
+<h4>检测手段全景(按层)</h4>
+<table>
+<thead><tr><th>层</th><th>手段</th><th>能看到什么</th></tr></thead>
+<tbody>
+<tr><td>L3</td><td>IP 黑名单 / IP 段封锁</td><td>目标 IP</td></tr>
+<tr><td>L3</td><td>DNS 污染 / 投毒</td><td>域名 → 返回假 IP</td></tr>
+<tr><td>L4</td><td>端口封锁、连接特征</td><td>端口、连接数</td></tr>
+<tr><td>L7</td><td><b>SNI 关键词过滤</b></td><td>域名(明文)</td></tr>
+<tr><td>L7</td><td><b>协议指纹</b>(JA3/JA4、握手字节序列)</td><td>是什么客户端</td></tr>
+<tr><td>L7</td><td><b>包长 / 时序分析 + 机器学习</b></td><td>是什么应用(甚至在看什么视频)</td></tr>
+<tr><td>主动</td><td><b>主动探测</b></td><td>确认是不是代理</td></tr>
+<tr><td>旁路</td><td>流量镜像 + IDS 集群</td><td>全量分析(成本高)</td></tr>
+</tbody>
+</table>
+<p class="sub">注:DPI 的特点是<b>分析副本,原始包继续转发</b>,所以对吞吐影响小、但实现成本高。它也是目前最有效的识别手段。</p>
+
+<h4>伪装手段全景(对应解决哪一层)</h4>
+<table>
+<thead><tr><th>手段</th><th>伪装成什么</th><th>解决</th></tr></thead>
+<tbody>
+<tr><td>WebSocket / gRPC / h2</td><td>正常 Web 流量</td><td>协议指纹(本来就跑在 TLS 里的 HTTP,看起来就是 HTTPS)</td></tr>
+<tr><td>真域名 + 真证书</td><td>一个正常网站</td><td>SNI 检查</td></tr>
+<tr><td><code>client-fingerprint</code></td><td>浏览器(Chrome / Firefox)</td><td>JA3 / JA4 指纹</td></tr>
+<tr><td>填充 / 分片 / <code>max-early-data</code></td><td>消除 TLS-in-TLS 特征</td><td>包长分析</td></tr>
+<tr><td><b>Reality</b></td><td><b>借用真实网站的握手</b></td><td>SNI + 指纹 + 主动探测(<b>一次解决三个</b>)</td></tr>
+<tr><td>ECH</td><td>隐藏 SNI</td><td>SNI 明文</td></tr>
+<tr><td>DoH / DoT</td><td>隐藏 DNS</td><td>DNS 明文</td></tr>
+<tr><td>域前置 Domain Fronting</td><td>借大厂 CDN 域名</td><td>SNI(部分云已禁用)</td></tr>
+<tr><td>Hysteria2(QUIC)</td><td>仿 QUIC 视频流</td><td>流量分类</td></tr>
+<tr><td><del><code>skip-cert-verify</code></del></td><td>——</td><td><b>不解决任何问题,只降低安全性</b></td></tr>
+</tbody>
+</table>
+
+<h4>Reality 的原理(最能说明「攻防」的一个例子)</h4>
+<p>普通 TLS 代理的做法是<b>自己造一张证书</b> —— 需要域名、需要配置,而且证书指纹可疑、颁发者可疑,主动探测一来很容易识破。</p>
+<p>Reality 的做法是<b>不自己签名,去「借」一个真实网站的握手</b>:</p>
+<div class="flow">① 客户端(已预置目标网站信息)发起 TLS 握手
+     一开始伪装成要访问 <i>www.microsoft.com</i>
+② 代理服务器<b>不自己回应</b> —— 它把这次握手 <b>转发给真正的 microsoft.com</b>
+③ 真实站点回应,带出 <i>真实证书</i>
+④ 代理把真实证书<b>原样转发回客户端</b>
+⑤ 客户端一看:证书是 microsoft.com 的,合法有效 <i>✓</i></div>
+<p>三个关键后果:</p>
+<ul>
+<li>代理服务器<b>没有自己的证书</b> → 无法通过证书特征识别它</li>
+<li>主动探测打过来 → 探测者看到的也是 microsoft.com 的真实响应 → <b>看起来就是个正常网站</b></li>
+<li>只有持有正确「暗号」(预置密钥 / proxy 参数)的客户端,代理才会切换到真实服务</li>
+</ul>
+<div class="box good">
+<span class="t">一句话总结 Reality</span>
+<p>它让代理服务器<b>在所有人眼里(除了你)都是一个真网站</b>。这就是「借真实网站握手」的含义,也是它目前被视为抗识别最强方案的原因。</p>
+</div>
+
+<h3>B8 · 路由器能看到什么:一张可见性矩阵</h3>
+
+<p>先给结论:<b>路由器(以及 ISP、同一 Wi-Fi 下的任何人)能看到「你去了哪」,能看到「你传了多少、什么时候、什么节奏」,但正常情况看不到「你说了什么」。</b></p>
+
+<h4>可见性矩阵</h4>
+<table>
+<thead><tr><th>场景</th><th>目标 IP</th><th>域名</th><th>URL 路径</th><th>Cookie / Token</th><th>账号密码</th><th>内容 / 视频</th></tr></thead>
+<tbody>
+<tr><td>明文 HTTP</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>HTTPS(无 ECH)</td><td>✅</td><td>✅ <span class="pill a">SNI</span></td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+<tr><td>HTTPS + ECH</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+<tr><td>明文 DNS</td><td>✅</td><td>✅ <span class="pill a">查询记录</span></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>DoH / DoT</td><td>✅</td><td>❌</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>走加密代理</b>(SS / VMess+TLS)</td><td>✅ <span class="pill a">仅代理服务器</span></td><td>❌</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+<tr><td><b>企业装了根证书</b>(TLS 拦截)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+</tbody>
+</table>
+
+<h4>逐条拆解</h4>
+
+<h4>1. 明文 HTTP —— 全部可见</h4>
+<p>URL、Header、Cookie、表单、Body 全是明文。这就是浏览器弹「不安全」警告的原因。现在主流网站都是 HTTPS,这种情况主要出现在内网系统、老旧网站、以及某些 App 的接口。</p>
+
+<h4>2. HTTPS —— 这是最常见的状态</h4>
+<ul>
+<li><b>能看到</b>:目标 IP、<b>SNI 域名</b>、包长 / 时序</li>
+<li><b>看不到</b>:URL 路径、query 参数、Cookie、Token、表单、响应内容、视频画面</li>
+<li>所以「路由器能看到你访问了 bilibili.com」,但看不到「你看了哪个视频」(内容层面)。<b>理论上</b>可以通过包长 / 时序指纹去猜,但那需要专门的分析能力,家用路由器不做这件事</li>
+</ul>
+
+<h4>3. 视频资源 —— 看不到画面</h4>
+<table>
+<thead><tr><th>能看到</th><th>看不到</th></tr></thead>
+<tbody>
+<tr><td>你在哪个平台(SNI)</td><td><b>画面内容</b></td></tr>
+<tr><td>你在「看视频」这件事(视频流特征明显:持续下行、包大而均匀)</td><td>具体是哪一集、哪一帧</td></tr>
+<tr><td>经过了多长时间、消耗了多少流量</td><td>——</td></tr>
+</tbody>
+</table>
+<p>学术上有「网站指纹 / 视频指纹」的研究,能识别到一定粒度,但那需要专门能力。家用路由器不做,ISP 层也不做这种细粒度分析(成本太高)。</p>
+
+<h4>4. Cookie / Token / 账号密码 —— 会暴露的三种情况</h4>
+<p>正常 HTTPS 下<b>看不到</b>(都在加密载荷里)。会暴露的只有这三种:</p>
+<table>
+<thead><tr><th>情况</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td><b>a. 网站是 HTTP</b></td><td>明文传输,全部可见</td></tr>
+<tr><td><b>b. 设备装了观察者的根证书</b></td><td>企业 / 学校的 <b>TLS 拦截(SSL Inspection)</b>:代理会解密 → 检查 → 再加密。对应用完全透明,但<b>证书链里会露出公司 CA</b></td></tr>
+<tr><td><b>c. 代理本身是恶意的 / 被中间人</b></td><td>典型例子就是你订阅里那个 <code>skip-cert-verify: true</code> 的免费节点 —— 客户端不校验证书,中间人可以冒充服务器解密你的 TLS</td></tr>
+</tbody>
+</table>
+<div class="box bad">
+<span class="t">这解释了附录 A10 的建议为什么重要</span>
+<p><code>skip-cert-verify: true</code> 的节点,<b>应急查资料可以,不要用它登录任何账号</b>。因为在这种节点上,「账号密码被中间人看到」从「理论上不可能」变成了「有可能」。</p>
+</div>
+
+<h4>5. 走了代理之后,路由器上看到什么</h4>
+<table>
+<thead><tr><th>代理类型</th><th>路由器能看到</th><th>路由器看不到</th></tr></thead>
+<tbody>
+<tr><td><b>加密代理</b>(SS / VMess + TLS)</td><td>你<b>连了一台服务器</b>(IP:端口),以及一堆看起来加密 / 随机的流量。<b>连 SNI 都没有</b>(SNI 在内层,被外层 TLS 保护)</td><td>你在这条连接里访问了什么。<b>完全不可见</b></td></tr>
+<tr><td><b>裸 SS / 明文协议</b></td><td>同上,但在<b>具备 DPI 能力</b>的网络里可能被识别出特征</td><td>内容仍然看不到</td></tr>
+</tbody>
+</table>
+<p class="sub">从路由器视角看,「你在用代理」这件事<b>本身可能可见</b>(因为连接的持久性、流量模式很反常),但「访问目标」不可见。</p>
+
+<h4>6. TUN 模式会影响这个吗</h4>
+<div class="box info">
+<span class="t">不会</span>
+<p>TUN 只改<b>你本机自己的路由表</b>,不改你出网流量的样子。路由器看到的东西<b>完全一样</b>。</p>
+<p>唯一的差别是:TUN 会补上原本「某些应用不走代理」的漏网流量,让你的「实际走代理比例」更接近 100%。它改的是<b>你自己这一侧</b>,不是<b>网络那一侧</b>。</p>
+</div>
+
+<div class="box good">
+<span class="t">把结论收成四句</span>
+<ul>
+<li>「路由器能看到我的访问记录吗?」→ <b>域名层面能看到</b>(DNS / SNI),前提是你没用「加密 DNS + ECH + 代理」这套组合</li>
+<li>「能看到账号密码吗?」→ <b>正常 HTTPS 下不能</b></li>
+<li>「能看 cookie / token 吗?」→ <b>不能</b>(同上)</li>
+<li>「能看视频资源吗?」→ <b>看不到画面</b>,能看出「在哪个平台、在看视频」</li>
+</ul>
+<p>再补一句最该记住的:<b>用代理后路由器只能看到你连了代理服务器 —— 但代理服务商能看到你的真实目标。信任只是转移了,不是消失了。</b></p>
+</div>
+
+<h3>B9 · 手机热点与路由器:原理几乎相同</h3>
+
+<p>一句话回答:<b>原理几乎相同。手机热点就是「用蜂窝数据做上行的迷你路由器」。</b></p>
+
+<h4>共同点(这就是「几乎相同」的依据)</h4>
+<table>
+<thead><tr><th>功能</th><th>家用路由器</th><th>手机热点</th></tr></thead>
+<tbody>
+<tr><td>提供 Wi-Fi 接入(AP)</td><td>✅</td><td>✅</td></tr>
+<tr><td>创建内部网络</td><td>✅</td><td>✅</td></tr>
+<tr><td>运行 DHCP 分配内网 IP</td><td>✅</td><td>✅</td></tr>
+<tr><td>作为默认网关</td><td>✅</td><td>✅</td></tr>
+<tr><td>IP 转发</td><td>✅</td><td>✅</td></tr>
+<tr><td>NAT / NAPT</td><td>✅</td><td>✅</td></tr>
+<tr><td>基础防火墙</td><td>✅</td><td>✅</td></tr>
+</tbody>
+</table>
+<p>从网络设备分类上看,手机热点就是「<b>由手机系统实现的便携式共享网络网关</b>」—— 它的角色与家用无线路由器同类,只是硬件能力、配置能力和运行目标不同。</p>
+
+<h4>差异点</h4>
+<table>
+<thead><tr><th>维度</th><th>家用路由器</th><th>手机热点</th></tr></thead>
+<tbody>
+<tr><td>上行方式</td><td>宽带 / 光猫 / 以太网</td><td><b>4G / 5G 蜂窝</b>(部分可共享上级 Wi-Fi)</td></tr>
+<tr><td>供电</td><td>长期外接电源</td><td>手机电池(<b>发热、耗电</b>)</td></tr>
+<tr><td>覆盖与天线</td><td>通常更强</td><td>受手机体积限制</td></tr>
+<tr><td>并发设备</td><td>更多</td><td>更少</td></tr>
+<tr><td>稳定性</td><td>适合长期运行</td><td>长期开启会发热、被系统策略影响</td></tr>
+<tr><td>有线 LAN 口</td><td>通常有</td><td>通常没有</td></tr>
+<tr><td>高级配置</td><td>丰富(端口映射、DMZ、QoS、DDNS)</td><td>少(个别支持端口映射)</td></tr>
+<tr><td>移动性</td><td>弱</td><td>强</td></tr>
+<tr><td>公网 IP</td><td>通常有(可申请)</td><td>常见在<b>运营商 CGNAT 之后</b></td></tr>
+</tbody>
+</table>
+
+<h4>差异带来的实际后果(这才是重点)</h4>
+
+<h4>① 双层 NAT</h4>
+<div class="flow">热点下的电脑 → <i>手机 NAT</i> → <i>运营商 CGNAT</i> → 因特网</div>
+<p>两跳 NAT 的后果:</p>
+<ul>
+<li><b>外部无法主动访问热点下的设备</b>(端口映射基本失效)</li>
+<li>P2P、游戏联机、自建服务、远程桌面 → 大概率失败</li>
+<li>能做 NAT 穿透的应用(STUN / TURN)还行,不能的就废</li>
+</ul>
+
+<h4>② 运营商对你的可见性 = 家用 ISP 一样</h4>
+<div class="box warn">
+<span class="t">热点不是匿名化手段</span>
+<p>运营商能看到:你连了哪些 IP、哪些域名(明文 DNS / SNI)、流量大小。HTTPS 保护内容,保护不了元数据 —— <b>跟有线宽带是同一套逻辑</b>。</p>
+<p>换句话说:换到手机热点,你换的是「哪家 ISP 在看你」,不是「没人看你」。</p>
+</div>
+
+<h4>③ 计费与限速</h4>
+<p>运营商常把「热点流量」单独计费 / 限速(即使套餐写着「无限」)。这是<b>运营商的策略限制</b>,不是技术限制 —— 所以会出现「手机自己上网很快,热点却慢」。</p>
+
+<h4>④ Wi-Fi 中继的复杂性</h4>
+<p>手机连着 Wi-Fi 再开热点,不同系统行为不同:有的继续用移动数据、有的共享上级 Wi-Fi、有的干脆不允许两者同时工作。<b>以手机实际显示的上联方式和路由配置为准。</b></p>
+
+<h4>⑤ 延迟</h4>
+<p>蜂窝链路多几处排队和调度,延迟通常高于有线宽带。浏览无感,对视频会议 / 实时协作有影响。</p>
+
+<h4>附:热点下的设备想「被外部访问」怎么办</h4>
+<table>
+<thead><tr><th>路径</th><th>做法</th><th>可行性</th></tr></thead>
+<tbody>
+<tr><td>手机侧端口映射</td><td>在热点设置里做映射</td><td>多数手机不支持</td></tr>
+<tr><td>运营商侧</td><td>申请公网 IP / 做 CGNAT 穿透</td><td>个人用户很难</td></tr>
+<tr><td><b>内网穿透</b></td><td>frp、Tailscale、ZeroTier 等</td><td><b>可行</b>:用第三方中继把「被主动访问」变成「主动出连」,绕开双层 NAT</td></tr>
+</tbody>
+</table>
+
+<footer>
+样本:本机 Clash Verge Rev 实际配置文件 · 内核 verge-mihomo<br>
+字段释义核对自 mihomo 官方文档 wiki.metacubex.one(全局配置 / DNS / 路由规则 / 策略组 / 代理协议 / TLS / 传输层)<br>
+域名 CNAME 链、IP 归属地、SS cipher 列表均为 2026-09-28 实测与文档核对结果<br>
+「原版 Clash 仓库已 404」为 2026-09-28 实际访问验证结果<br>
+附录 B 中 TUN 字段与 <code>auto-route</code> 机制核对自 wiki.metacubex.one(TUN 入站)<br>
+GTM 评估链与就近/健康检查机制核对自阿里云 GTM 官方文档(help.aliyun.com)<br>
+IEPL 主体资格、三不原则、非法经营罪追诉标准为公开法规与运营商办理说明的整理<br>
+DPI / SNI / JA3-JA4 / 主动探测 / TLS-in-TLS 等检测原理参照 IETF PEARG 审查技术综述(draft-irtf-pearg-censorship)<br>
+文中节点密码、UUID、订阅 token 均已打码
+</footer>
+
+</main>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav a'));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  function upd(){
+    var y = window.scrollY + 120, idx = 0;
+    for (var i=0;i<secs.length;i++){ if (secs[i] && secs[i].offsetTop <= y) idx = i; }
+    links.forEach(function(a,i){ a.classList.toggle('on', i===idx); });
+  }
+  window.addEventListener('scroll', upd, {passive:true});
+  upd();
+})();
+</script>
+</body>
+</html>
