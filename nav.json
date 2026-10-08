@@ -1,0 +1,32 @@
+[
+  {
+    "title": "洗衣避坑指南",
+    "desc": "5 个常见误区与正确洗护清单",
+    "url": "https://snake34475.github.io/my-pages/laundry-guide.html",
+    "logo": "🧺"
+  },
+  {
+    "title": "Mac 体检报告",
+    "desc": "系统健康状态检查与建议",
+    "url": "https://snake34475.github.io/my-pages/mac-health-check.html",
+    "logo": "🖥️"
+  },
+  {
+    "title": "视频码率与清晰度",
+    "desc": "B站 vs YouTube 统计面板解读",
+    "url": "https://snake34475.github.io/my-pages/video-bitrate-guide.html",
+    "logo": "🎬"
+  },
+  {
+    "title": "ENFJ 深度解析",
+    "desc": "从认知功能到真实生活",
+    "url": "https://snake34475.github.io/my-pages/enfj-deep-dive.html",
+    "logo": "🧠"
+  },
+  {
+    "title": "ENFJ × INFP 相处指南",
+    "desc": "相处与互补速查",
+    "url": "https://snake34475.github.io/my-pages/enfj-infp-guide.html",
+    "logo": "💬"
+  }
+]
