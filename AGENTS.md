@@ -21,9 +21,11 @@
 ## 新增功能页的标准流程
 
 1. 新 HTML 放仓库根目录（未来按文件夹拆分小项目时再调整）
-2. 更新 `index.html` 目录页，加入新页面入口
-3. 若该页需要出现在 nav 导航站：在 `nav.json` 数组追加一条记录
-4. 一次 commit 覆盖以上全部改动，push 到 main
+2. 更新 `index.html` 与 `archive.html`，加入新页面入口
+3. 公开功能页必须在 `nav.json` 数组追加一条记录，使 nav 导航站同步展示
+   - 仅当需求明确说明“不在 nav 导航站展示”时，才可不更新 `nav.json`；提交说明中必须写明原因
+4. 提交前核对功能页是否同时在首页、归档和 `nav.json` 收录；若三者不一致，必须有明确例外说明
+5. 一次 commit 覆盖以上全部改动，push 到 main
 
 ## nav.json 规范
 
@@ -46,6 +48,11 @@
 
 ## 其他约定
 
-- 页面均为自包含单文件（内联 CSS/JS），不引入构建步骤
+- 页面默认自包含单文件（内联 CSS/JS），不引入构建步骤
+- 例外：数据驱动页可拆为「文件夹 + 页面 + 数据 JSON」（先例 `coupon-calendar/`：
+  `index.html` 运行时 fetch 同目录 `data.json`，外部脚本/小组件可直读该 JSON 而不必抓取解析 HTML）。
+  此类页面本地预览需起 HTTP 服务（如 `python3 -m http.server`），`file://` 直开会被 CORS 拦截
+- 迁移已有页面到文件夹时，旧路径保留一个跳转桩（JS `location.replace`，带上原 query 与 hash），
+  并同步更新首页、归档、`nav.json` 三处入口
 - `index.html` / `archive.html` / `about.html` 是站点结构页，功能页不要反向依赖它们
 - 中文内容为主，提交信息用中文 conventional commits（`feat:` / `fix:` / `blog:` 等）

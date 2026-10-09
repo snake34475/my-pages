@@ -16,7 +16,7 @@ h1{font-size:19px;margin:0 0 6px;font-weight:600}
 .chip.on{background:#1c1f24;border-color:#1c1f24;color:#fff}
 .chip.on span{color:#b9c0c9}
 main{padding:14px 12px 60px;max-width:760px;margin:0 auto}
-.card{background:#fff;border:1px solid #e8eaee;border-radius:12px;padding:16px;margin-bottom:12px}
+.card{display:none;background:#fff;border:1px solid #e8eaee;border-radius:12px;padding:16px;margin-bottom:12px}
 .meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:9px}
 .id{font-size:12px;color:#9aa2ac;font-family:ui-monospace,Menlo,monospace}
 .seq{font-size:12px;color:#9aa2ac}
@@ -30,20 +30,23 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 .act{margin:0 0 10px;padding:10px 12px;background:#f7f9fb;border-left:3px solid #4a90d0;border-radius:0 6px 6px 0;font-size:14px;color:#333b44}
 .act b{display:block;font-size:12px;color:#7a828c;font-weight:500;margin-bottom:3px}
 .src{margin:0;font-size:12px;color:#9aa2ac;border-top:1px solid #f0f2f5;padding-top:9px}
+.src a{color:#3a6ea5;text-decoration:underline;text-underline-offset:2px}
 .dt{color:#c3c9d0}
 .empty{text-align:center;color:#9aa2ac;padding:40px 0;font-size:14px}
 .arcs{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .arcl{font-size:12px;color:#9aa2ac;margin-right:2px}
 .arc{font-size:13px;color:#3a6ea5;text-decoration:none;border:1px solid #dfe2e7;border-radius:14px;padding:3px 10px;background:#fff;white-space:nowrap}
 .arc:active{opacity:.6}
+.chip:focus-visible,.arc:focus-visible{outline:2px solid #3a6ea5;outline-offset:2px}
 </style></head><body>
 <header>
 <h1>健身知识库</h1>
-<div class="stat">325 条知识 · 6 类知识 × 8 个肌群 · 每日 9:45 推送一条</div>
-<div class="arcs"><span class="arcl">月度合集</span><a class="arc" href="archive-2026-08.html">2026年8月</a></div>
+<div class="stat" id="stat">正在按北京时间读取已发布内容…</div>
+<div class="arcs"><a class="arc" href="figures/gallery.html">查看动作图库 →</a></div>
 <div class="filters">
-<div class="row"><button class="chip on" data-k="all" data-v="">全部</button><button class="chip" data-k="cat" data-v="动作技术">动作技术<span>66</span></button><button class="chip" data-k="cat" data-v="解剖机制">解剖机制<span>31</span></button><button class="chip" data-k="cat" data-v="训练变量">训练变量<span>69</span></button><button class="chip" data-k="cat" data-v="有氧与代谢">有氧与代谢<span>39</span></button><button class="chip" data-k="cat" data-v="恢复与营养">恢复与营养<span>49</span></button><button class="chip" data-k="cat" data-v="冷知识与辟谣">冷知识与辟谣<span>71</span></button></div>
-<div class="row"><button class="chip" data-k="mus" data-v="胸">胸<span>40</span></button><button class="chip" data-k="mus" data-v="肩">肩<span>40</span></button><button class="chip" data-k="mus" data-v="背">背<span>40</span></button><button class="chip" data-k="mus" data-v="腿">腿<span>40</span></button><button class="chip" data-k="mus" data-v="二头">二头<span>15</span></button><button class="chip" data-k="mus" data-v="三头">三头<span>15</span></button><button class="chip" data-k="mus" data-v="核心">核心<span>15</span></button><button class="chip" data-k="mus" data-v="全身">全身<span>120</span></button></div>
+<div class="row"><button class="chip on" type="button" data-k="all" data-v="">全部<span></span></button><button class="chip" type="button" data-k="cat" data-v="动作技术">动作技术<span></span></button><button class="chip" type="button" data-k="cat" data-v="解剖机制">解剖机制<span></span></button><button class="chip" type="button" data-k="cat" data-v="训练变量">训练变量<span></span></button><button class="chip" type="button" data-k="cat" data-v="有氧与代谢">有氧与代谢<span></span></button><button class="chip" type="button" data-k="cat" data-v="恢复与营养">恢复与营养<span></span></button><button class="chip" type="button" data-k="cat" data-v="冷知识与辟谣">冷知识与辟谣<span></span></button></div>
+<div class="row"><button class="chip" type="button" data-k="mus" data-v="胸">胸<span></span></button><button class="chip" type="button" data-k="mus" data-v="肩">肩<span></span></button><button class="chip" type="button" data-k="mus" data-v="背">背<span></span></button><button class="chip" type="button" data-k="mus" data-v="腿">腿<span></span></button><button class="chip" type="button" data-k="mus" data-v="二头">二头<span></span></button><button class="chip" type="button" data-k="mus" data-v="三头">三头<span></span></button><button class="chip" type="button" data-k="mus" data-v="核心">核心<span></span></button><button class="chip" type="button" data-k="mus" data-v="全身">全身<span></span></button></div>
+<div class="row" id="months" aria-label="按月份筛选"></div>
 </div>
 </header>
 <main id="list"><article class="card" data-cat="动作技术" data-mus="胸">
@@ -67,13 +70,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>外展角越小，胸肌参与越少、三头发力越多，需要在安全与刺激之间取平衡</li><li>有肩部不适史的人，角度应更靠近 45 度</li></ul>
 <p class="act"><b>今日可执行</b>下放时让肘部指向斜下方约 45 度，而不是向两侧完全张开。</p>
 <p class="src">依据：NSCA 大众卧推标准　<span class="dt">2026-12-22</span></p>
-</article><article class="card" data-cat="动作技术" data-mus="胸">
+</article><article class="card" data-reviewed="true" data-cat="动作技术" data-mus="胸">
 <div class="meta"><span class="id">CH-004</span><span class="seq">Day 16</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">胸</span></div>
 <h3>脚不是摆设，它在产生脚推力</h3>
 <p class="body">双脚踩实地面，通过腿把力量传导到上背，让身体在凳面上形成稳定的支撑结构。脚一松，上背就散，肩胛也守不住。</p>
 <ul class="pts"><li>脚滑会让整条动力链断开，推力直接损失</li><li>是踩实并向上传导，不是把臀部推离凳面</li></ul>
 <p class="act"><b>今日可执行</b>起杠前先做一次踩地、夹臀、压肩胛的准备动作。</p>
-<p class="src">依据：NSCA 大众卧推标准　<span class="dt">2026-10-06</span></p>
+<p class="src">依据：<a href="https://www.nsca.com/contentassets/de9aebfe7a7340b69217b99bb13862a7/basics_of_strength_and_conditioning_manual.pdf">NSCA manual</a>　<span class="dt">2026-10-06</span></p>
 </article><article class="card" data-cat="动作技术" data-mus="胸">
 <div class="meta"><span class="id">CH-005</span><span class="seq">Day 226</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">胸</span></div>
 <h3>杠铃路径不是直线，是一条弧线</h3>
@@ -277,13 +280,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>完全停训后 2 到 3 周内肌肉量下降约 3% 到 5%</li><li>同时能量消耗下降，若饮食不变，多余热量转为脂肪</li></ul>
 <p class="act"><b>今日可执行</b>无法训练的那段时间，适当下调饮食摄入，减少脂肪堆积。</p>
 <p class="src">依据：官方健康科普材料　<span class="dt">2027-02-24</span></p>
-</article><article class="card" data-cat="冷知识与辟谣" data-mus="胸">
+</article><article class="card" data-reviewed="true" data-cat="冷知识与辟谣" data-mus="胸">
 <div class="meta"><span class="id">CH-034</span><span class="seq">Day 116</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">胸</span></div>
-<h3>肌肉有记忆的说法，只在神经层面部分成立</h3>
-<p class="body">停训后重新训练，恢复速度通常快于初次获得，这与运动单位募集模式等神经适应的保留有关，而不是肌肉记得自己多大。</p>
-<ul class="pts"><li>神经适应的保留让复训恢复更快</li><li>长期停训后肌纤维本身的横截面积确实下降了</li></ul>
+<h3>停训后复训更快，可能涉及多种肌肉记忆机制</h3>
+<p class="body">重新训练时，力量和肌肉量常比初练阶段恢复得快。神经适应、肌纤维细胞核和分子层面的变化都可能参与，不能把肌肉记忆只归因于神经系统。</p>
+<ul class="pts"><li>停训后肌肉量仍可能下降</li><li>复训速度存在个体差异，起步负荷仍应循序渐进</li></ul>
 <p class="act"><b>今日可执行</b>停训后复训不必从零开始，但仍需重新累积训练量。</p>
-<p class="src">依据：运动生理学综述　<span class="dt">2027-01-14</span></p>
+<p class="src">依据：<a href="https://pubmed.ncbi.nlm.nih.gov/39159314/">人体肌肉记忆研究</a>　<span class="dt">2027-01-14</span></p>
 </article><article class="card" data-cat="冷知识与辟谣" data-mus="胸">
 <div class="meta"><span class="id">CH-035</span><span class="seq">Day 177</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">胸</span></div>
 <h3>卧推不是练胸的唯一答案，也不是必须项</h3>
@@ -445,13 +448,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>每周 10 组的通用参考需结合间接刺激打折</li><li>中束与后束可作为独立训练重点</li></ul>
 <p class="act"><b>今日可执行</b>统计你一周所有含肩部参与的动作，判断实际容量是否已经足够。</p>
 <p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-02-16</span></p>
-</article><article class="card" data-cat="训练变量" data-mus="肩">
+</article><article class="card" data-reviewed="true" data-cat="训练变量" data-mus="肩">
 <div class="meta"><span class="id">SH-018</span><span class="seq">Day 11</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">肩</span></div>
-<h3>侧平举适合中等重量较高次数</h3>
-<p class="body">三角肌中束力矩臂短，大重量容易由斜方肌与借力完成。使用 12 到 20 次的重量区间，配合稳定控制，更有利于中束实际受力。</p>
-<ul class="pts"><li>轻重量没有错，关键是动作质量和接近力竭的程度</li><li>ACSM 2026 指出中等负荷在足够训练量下同样增肌</li></ul>
+<h3>侧平举选择能稳定控制的负荷</h3>
+<p class="body">侧平举可以使用不同负荷和次数。与其把 12 到 20 次当作必选区间，不如选择能保持动作幅度和控制、又符合个人训练目标的重量。</p>
+<ul class="pts"><li>负荷过大导致明显借力时可以减重</li><li>增肌效果不能仅凭单组次数判断</li></ul>
 <p class="act"><b>今日可执行</b>把侧平举重量下调一档，次数提到 15 次，看感受是否更集中在肩。</p>
-<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2026-10-01</span></p>
+<p class="src">依据：<a href="https://pubmed.ncbi.nlm.nih.gov/41843416/">ACSM 2026</a>　<span class="dt">2026-10-01</span></p>
 </article><article class="card" data-cat="训练变量" data-mus="肩">
 <div class="meta"><span class="id">SH-019</span><span class="seq">Day 39</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">肩</span></div>
 <h3>推拉比例失衡，是肩部不适的常见来源</h3>
@@ -515,13 +518,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>持续存在的关节不适是调整动作或幅度的信号</li><li>忽略早期信号往往导致问题加重</li></ul>
 <p class="act"><b>今日可执行</b>出现特定角度不适时，先降低幅度与重量，而非硬撑。</p>
 <p class="src">依据：运动医学共识　<span class="dt">2027-01-03</span></p>
-</article><article class="card" data-cat="恢复与营养" data-mus="肩">
+</article><article class="card" data-reviewed="true" data-cat="恢复与营养" data-mus="肩">
 <div class="meta"><span class="id">SH-028</span><span class="seq">Day 8</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">肩</span></div>
-<h3>肩部训练后的恢复，睡眠比补剂重要</h3>
-<p class="body">肩部肌群小、参与频率高，恢复主要依赖整体状态。睡眠不足会抬高静息皮质醇、降低合成能力，直接拖慢恢复。</p>
-<ul class="pts"><li>睡眠不足时力量与恢复能力同步下降</li><li>肩部不适期间适当降低训练量比补充剂更有效</li></ul>
+<h3>肩部训练后的恢复，先关注睡眠和训练量</h3>
+<p class="body">睡眠不足可能影响训练恢复，但不能仅凭肩部疲劳推断激素变化。持续疲劳或不适时，先检查睡眠、近期负荷和动作选择，再决定是否调整训练。</p>
+<ul class="pts"><li>睡眠是整体恢复的重要条件</li><li>肩部不适持续或加重时，应停止诱发疼痛的动作并寻求专业评估</li></ul>
 <p class="act"><b>今日可执行</b>肩部疲劳感持续时，先看最近睡眠是否不足 7 小时。</p>
-<p class="src">依据：内分泌与恢复研究综述　<span class="dt">2026-09-28</span></p>
+<p class="src">依据：<a href="https://pubmed.ncbi.nlm.nih.gov/32078168/">PMID: 32078168</a>　<span class="dt">2026-09-28</span></p>
 </article><article class="card" data-cat="恢复与营养" data-mus="肩">
 <div class="meta"><span class="id">SH-029</span><span class="seq">Day 115</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">肩</span></div>
 <h3>肩部热身要覆盖三个方向</h3>
@@ -536,13 +539,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>每 4 到 8 周安排一次减载是常见做法</li><li>减载不等于停练，降低组数或重量即可</li></ul>
 <p class="act"><b>今日可执行</b>如果本周所有推举都感觉沉重，把肩部组数砍掉一半试试。</p>
 <p class="src">依据：训练周期化研究综述　<span class="dt">2027-05-28</span></p>
-</article><article class="card" data-cat="冷知识与辟谣" data-mus="肩">
+</article><article class="card" data-reviewed="true" data-cat="冷知识与辟谣" data-mus="肩">
 <div class="meta"><span class="id">SH-031</span><span class="seq">Day 17</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">肩</span></div>
-<h3>练肩不能让肩变宽，锁骨长度才是决定因素</h3>
+<h3>练肩不能改变骨架，但能改变外观肩宽</h3>
 <p class="body">肩部的骨骼宽度主要由锁骨长度与肩胛位置决定，这是先天结构。训练能增加三角肌中束体积、改善体态带来的视觉宽度，但不能改变骨架。</p>
-<ul class="pts"><li>视觉上的肩宽，一部分来自斜方与肩胛的位置</li><li>改善圆肩姿态能立刻让肩看起来更展开</li></ul>
+<ul class="pts"><li>骨性宽度与外观宽度是不同概念</li><li>三角肌增长可改变肩部轮廓</li></ul>
 <p class="act"><b>今日可执行</b>把注意力放在中束体积和体态改善上，而非骨架。</p>
-<p class="src">依据：运动解剖学基础　<span class="dt">2026-10-07</span></p>
+<p class="src">依据：<a href="https://www.ncbi.nlm.nih.gov/books/NBK482410/">NCBI anatomy</a>　<span class="dt">2026-10-07</span></p>
 </article><article class="card" data-cat="冷知识与辟谣" data-mus="肩">
 <div class="meta"><span class="id">SH-032</span><span class="seq">Day 277</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">肩</span></div>
 <h3>肩膀响不一定有问题，伴随疼痛才需要关注</h3>
@@ -585,13 +588,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>让路是必要且安全的动作组成</li><li>关键是腰部不要代偿后仰</li></ul>
 <p class="act"><b>今日可执行</b>推举时让头自然后让再复位，不必僵硬固定。</p>
 <p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-04-14</span></p>
-</article><article class="card" data-cat="冷知识与辟谣" data-mus="肩">
+</article><article class="card" data-reviewed="true" data-cat="冷知识与辟谣" data-mus="肩">
 <div class="meta"><span class="id">SH-038</span><span class="seq">Day 3</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">肩</span></div>
-<h3>三角肌后束不会因为练背就被充分练到</h3>
-<p class="body">划船与下拉主要刺激背阔肌、斜方肌与菱形肌。后束参与的是肩关节水平外展，与背部主要动作的模式并不相同。</p>
-<ul class="pts"><li>后束需要专门的水平外展动作</li><li>认为练背顺带练到后束，是常见的高估</li></ul>
+<h3>划船会练到后束，反向飞鸟可提供不同刺激</h3>
+<p class="body">三角肌后束参与部分划船动作。比较研究中，反向蝴蝶机对后束的肌电激活高于坐姿划船和斜向下拉，但肌电差异不能直接等同于长期增肌差异。</p>
+<ul class="pts"><li>后束并非完全不参与背部训练</li><li>若后束是训练重点，可考虑增加反向飞鸟等动作</li></ul>
 <p class="act"><b>今日可执行</b>单独安排 2 到 3 组反向飞鸟或面拉。</p>
-<p class="src">依据：运动解剖学基础　<span class="dt">2026-09-23</span></p>
+<p class="src">依据：<a href="https://pubmed.ncbi.nlm.nih.gov/24947920/">PMID: 24947920</a>　<span class="dt">2026-09-23</span></p>
 </article><article class="card" data-cat="冷知识与辟谣" data-mus="肩">
 <div class="meta"><span class="id">SH-039</span><span class="seq">Day 89</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">肩</span></div>
 <h3>肩部训练不会让身高变化</h3>
@@ -620,13 +623,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>手只是挂钩，肘部才是发力端</li><li>拉至锁骨附近即可，不必强行拉到胸前以下</li></ul>
 <p class="act"><b>今日可执行</b>这组下拉只想着把肘部往下带。</p>
 <p class="src">依据：NSCA 训练动作指南　<span class="dt">2027-04-29</span></p>
-</article><article class="card" data-cat="动作技术" data-mus="背">
+</article><article class="card" data-reviewed="true" data-cat="动作技术" data-mus="背">
 <div class="meta"><span class="id">BK-003</span><span class="seq">Day 6</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">背</span></div>
-<h3>划船要先完成肩胛后缩再屈肘</h3>
-<p class="body">常见错误是一开始就屈肘，让小臂和肱二头肌主导。正确顺序是先让肩胛骨后缩靠拢，再靠肘部向后带动，最后收紧背部。</p>
-<ul class="pts"><li>肩胛后缩是划船的启动环节</li><li>顺序错了，练的是手臂而不是背</li></ul>
-<p class="act"><b>今日可执行</b>用轻重量做一组划船，刻意分成肩胛后缩与屈肘两步。</p>
-<p class="src">依据：NSCA 训练动作指南　<span class="dt">2026-09-26</span></p>
+<h3>划船时让肩胛与手臂协调运动</h3>
+<p class="body">划船由肩关节、肩胛骨和肘关节共同完成。无需强制拆成“先后缩、再屈肘”两步；重点是躯干稳定、动作可控，让手肘沿合适的方向向后移动。</p>
+<ul class="pts"><li>肩胛骨可随动作自然前伸与后缩</li><li>避免靠甩动躯干拉起超出控制的重量</li></ul>
+<p class="act"><b>今日可执行</b>用轻重量做一组划船，观察手臂与肩胛是否顺畅配合。</p>
+<p class="src">依据：<a href="https://www.nsca.com/contentassets/de9aebfe7a7340b69217b99bb13862a7/basics_of_strength_and_conditioning_manual.pdf">NSCA manual</a>　<span class="dt">2026-09-26</span></p>
 </article><article class="card" data-cat="动作技术" data-mus="背">
 <div class="meta"><span class="id">BK-004</span><span class="seq">Day 251</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">背</span></div>
 <h3>俯身划船的躯干角度，越接近水平越练上背</h3>
@@ -690,13 +693,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>只练下拉，背部厚度增长会受限</li><li>划船类比下拉类更能刺激肩胛后缩肌群</li></ul>
 <p class="act"><b>今日可执行</b>确保每周划船类的训练量不低于下拉类。</p>
 <p class="src">依据：运动解剖学基础　<span class="dt">2026-11-21</span></p>
-</article><article class="card" data-cat="解剖机制" data-mus="背">
+</article><article class="card" data-reviewed="true" data-cat="解剖机制" data-mus="背">
 <div class="meta"><span class="id">BK-013</span><span class="seq">Day 14</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">背</span></div>
-<h3>竖脊肌是脊柱的稳定器，不是主要发力肌</h3>
-<p class="body">竖脊肌沿脊柱走行，主要功能是维持脊柱中立与抗屈曲。在硬拉中它做等长收缩稳定躯干，真正产生伸展力的是髋与膝。</p>
-<ul class="pts"><li>腰酸的硬拉通常是稳定性超负荷，而非训练到位</li><li>强化竖脊肌的方式包括硬拉、山羊挺身等</li></ul>
+<h3>硬拉时竖脊肌承担重要的躯干稳定负荷</h3>
+<p class="body">竖脊肌在硬拉中高度活跃，帮助维持躯干姿势；髋和膝的伸展肌群也参与起杠。不能把竖脊肌描述为几乎不发力。</p>
+<ul class="pts"><li>腰部疲劳不等于动作一定错误，也不应忽视疼痛</li><li>负荷、动作幅度和个人能力都影响腰部感受</li></ul>
 <p class="act"><b>今日可执行</b>如果硬拉时腰先酸，先检查是否在用腰发力起杠。</p>
-<p class="src">依据：运动解剖学基础　<span class="dt">2026-10-04</span></p>
+<p class="src">依据：<a href="https://pubmed.ncbi.nlm.nih.gov/32107499/">PMID: 32107499</a>　<span class="dt">2026-10-04</span></p>
 </article><article class="card" data-cat="解剖机制" data-mus="背">
 <div class="meta"><span class="id">BK-014</span><span class="seq">Day 41</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">背</span></div>
 <h3>肩胛骨的活动范围决定了背部的完整行程</h3>
@@ -914,13 +917,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>站距改变时，脚尖外展角度要同步调整</li><li>找到自己髋关节最适合的站距，比照搬他人更实际</li></ul>
 <p class="act"><b>今日可执行</b>试三种站距各做 3 次，选髋部最顺畅的那个。</p>
 <p class="src">依据：生物力学综述　<span class="dt">2027-07-20</span></p>
-</article><article class="card" data-cat="动作技术" data-mus="腿">
+</article><article class="card" data-reviewed="true" data-cat="动作技术" data-mus="腿">
 <div class="meta"><span class="id">LG-005</span><span class="seq">Day 12</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">腿</span></div>
-<h3>高杠与低杠深蹲，练的侧重不同</h3>
-<p class="body">高杠位于斜方肌上，躯干更直立，股四头肌参与更多；低杠位于三角肌后束，躯干前倾更多，臀部与后链参与更多。</p>
+<h3>高杠与低杠深蹲的姿势可能不同</h3>
+<p class="body">杠位可能改变躯干角度和动作感受，但在控制站距和负荷的研究中，两种杠位的下肢肌肉受力未必有显著差异。不能仅凭杠位断定练到哪块肌肉更多。</p>
 <ul class="pts"><li>两种都是有效变式，选择取决于目标与身体结构</li><li>低杠对肩关节活动度要求更高</li></ul>
-<p class="act"><b>今日可执行</b>确认当前用的杠位，并知道它偏重哪一侧。</p>
-<p class="src">依据：NSCA 训练动作指南　<span class="dt">2026-10-02</span></p>
+<p class="act"><b>今日可执行</b>选择肩部舒适、能稳定完成目标动作幅度的杠位。</p>
+<p class="src">依据：<a href="https://pubmed.ncbi.nlm.nih.gov/38900172/">PMID: 38900172</a>　<span class="dt">2026-10-02</span></p>
 </article><article class="card" data-cat="动作技术" data-mus="腿">
 <div class="meta"><span class="id">LG-006</span><span class="seq">Day 295</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">腿</span></div>
 <h3>保加利亚分腿蹲是单腿训练的高效选择</h3>
@@ -942,13 +945,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>腘绳肌在离心阶段承受的张力更高</li><li>快速回落等于跳过了刺激最充分的部分</li></ul>
 <p class="act"><b>今日可执行</b>腿弯举回放默数两秒，感受大腿后侧的拉扯。</p>
 <p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-06-06</span></p>
-</article><article class="card" data-cat="动作技术" data-mus="腿">
+</article><article class="card" data-reviewed="true" data-cat="动作技术" data-mus="腿">
 <div class="meta"><span class="id">LG-009</span><span class="seq">Day 20</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">腿</span></div>
-<h3>小腿训练要完整行程，包括底部拉伸</h3>
-<p class="body">提踵时在最高点停顿、在最低点充分下沉，让小腿三头肌经历完整的长度变化。多数人只做了行程的上半段。</p>
-<ul class="pts"><li>底部下沉带来的拉伸对小腿刺激很重要</li><li>站姿提踵偏腓肠肌，坐姿提踵偏比目鱼肌</li></ul>
+<h3>提踵训练可关注底部拉长位置</h3>
+<p class="body">提踵可以采用可控的完整行程，也可以有目的地训练底部拉长位置。有研究观察到拉长位部分行程对腓肠肌增长不逊于完整行程，因此不必把完整行程当成唯一有效做法。</p>
+<ul class="pts"><li>底部位置应保持控制，不要反弹</li><li>站姿与坐姿提踵对腓肠肌的刺激可能不同</li></ul>
 <p class="act"><b>今日可执行</b>这次提踵在底部停 1 秒再向上顶，顶部再停 1 秒。</p>
-<p class="src">依据：NSCA 训练动作指南　<span class="dt">2026-10-10</span></p>
+<p class="src">依据：<a href="https://pubmed.ncbi.nlm.nih.gov/37015016/">PMID: 37015016</a> / <a href="https://pubmed.ncbi.nlm.nih.gov/38156065/">PMID: 38156065</a>　<span class="dt">2026-10-10</span></p>
 </article><article class="card" data-cat="动作技术" data-mus="腿">
 <div class="meta"><span class="id">LG-010</span><span class="seq">Day 267</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">腿</span></div>
 <h3>硬拉与深蹲的区分，在于髋膝的比例</h3>
@@ -1019,13 +1022,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>腿部 12 到 20 组每周是常见区间</li><li>上限受恢复能力限制，超过后收益递减甚至倒退</li></ul>
 <p class="act"><b>今日可执行</b>如果腿部还有余力，尝试本周增加 2 到 3 组。</p>
 <p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-04-27</span></p>
-</article><article class="card" data-cat="训练变量" data-mus="腿">
+</article><article class="card" data-reviewed="true" data-cat="训练变量" data-mus="腿">
 <div class="meta"><span class="id">LG-020</span><span class="seq">Day 5</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">腿</span></div>
-<h3>每周练腿 2 次，通常优于挤在一天</h3>
-<p class="body">腿部动作负荷大、疲劳高，一次训练很难兼顾足够的训练量与质量。分成两次，例如深蹲日与硬拉日，能更好平衡容量与恢复。</p>
-<ul class="pts"><li>ACSM 2026 建议每肌群每周至少 2 次</li><li>两次之间保持 48 小时以上间隔</li></ul>
+<h3>每周练腿 2 次，便于分配训练量</h3>
+<p class="body">ACSM 建议每周至少两天训练主要肌群。把腿部训练量分到两次，可能更容易保持单次动作质量；在每周总量相同时，更多训练日并不一定带来更多肌肥大。</p>
+<ul class="pts"><li>优先满足可持续的每周训练总量</li><li>根据疲劳和表现安排两次训练的间隔</li></ul>
 <p class="act"><b>今日可执行</b>把腿部训练拆成深蹲侧重日与硬拉侧重日。</p>
-<p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2026-09-25</span></p>
+<p class="src">依据：<a href="https://pubmed.ncbi.nlm.nih.gov/41843416/">ACSM 2026</a> / <a href="https://pubmed.ncbi.nlm.nih.gov/30558493/">PMID: 30558493</a>　<span class="dt">2026-09-25</span></p>
 </article><article class="card" data-cat="训练变量" data-mus="腿">
 <div class="meta"><span class="id">LG-021</span><span class="seq">Day 201</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">腿</span></div>
 <h3>腿部力量训练的次数区间可以很宽</h3>
@@ -1054,13 +1057,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>小腿对低训练量反应不敏感</li><li>完整行程与顶峰停顿比加重更重要</li></ul>
 <p class="act"><b>今日可执行</b>把小腿训练频率提高到每周 3 次，每次 4 组。</p>
 <p class="src">依据：训练计划设计共识　<span class="dt">2027-06-11</span></p>
-</article><article class="card" data-cat="训练变量" data-mus="腿">
+</article><article class="card" data-reviewed="true" data-cat="训练变量" data-mus="腿">
 <div class="meta"><span class="id">LG-025</span><span class="seq">Day 15</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">腿</span></div>
-<h3>腿部训练后的恢复时间要留足</h3>
-<p class="body">腿部训练带来的全身疲劳与肌肉损伤程度高于上肢，需要更长的恢复窗口。通常 48 到 72 小时后再安排同一肌群的高强度训练。</p>
-<ul class="pts"><li>过早重复高强度腿部训练会压缩修复窗口</li><li>腿部与全身性动作（硬拉）尤其需要拉开间隔</li></ul>
-<p class="act"><b>今日可执行</b>把两次腿部训练之间留出至少两天。</p>
-<p class="src">依据：运动生理学共识　<span class="dt">2026-10-05</span></p>
+<h3>腿部训练间隔应根据负荷和恢复调整</h3>
+<p class="body">训练后的疲劳程度受组数、强度、是否练到力竭及个人经验影响。没有人人适用的 48 到 72 小时恢复期限；下一次高强度训练应结合动作表现与不适情况安排。</p>
+<ul class="pts"><li>练到力竭可能延长恢复时间</li><li>疼痛、动作质量和力量变化比固定小时数更值得关注</li></ul>
+<p class="act"><b>今日可执行</b>记录下次腿部训练的表现，再调整两次训练的间隔。</p>
+<p class="src">依据：<a href="https://pubmed.ncbi.nlm.nih.gov/28965198/">PMID: 28965198</a>　<span class="dt">2026-10-05</span></p>
 </article><article class="card" data-cat="训练变量" data-mus="腿">
 <div class="meta"><span class="id">LG-026</span><span class="seq">Day 246</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">腿</span></div>
 <h3>腿部减载比上肢更需要严格执行</h3>
@@ -1229,13 +1232,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>上臂在体后时，长头被拉长</li><li>上臂在体前时，长头处于缩短位</li></ul>
 <p class="act"><b>今日可执行</b>理解这一点，就明白为什么上斜弯举感觉不同。</p>
 <p class="src">依据：运动解剖学基础　<span class="dt">2026-10-20</span></p>
-</article><article class="card" data-cat="解剖机制" data-mus="二头">
+</article><article class="card" data-reviewed="true" data-cat="解剖机制" data-mus="二头">
 <div class="meta"><span class="id">BI-010</span><span class="seq">Day 9</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">二头</span></div>
 <h3>肱肌是肱二头肌的邻居，也是屈肘的主力</h3>
 <p class="body">肱肌位于肱二头肌深面，是纯粹的屈肘肌，不参与旋后。它增厚能把肱二头肌顶起来，让手臂看起来更粗。</p>
 <ul class="pts"><li>锤式弯举对肱肌刺激较好</li><li>肱肌增长对臂围的贡献常被低估</li></ul>
 <p class="act"><b>今日可执行</b>把中立握动作纳入手臂训练，兼顾肱肌。</p>
-<p class="src">依据：运动解剖学基础　<span class="dt">2026-09-29</span></p>
+<p class="src">依据：<a href="https://www.ncbi.nlm.nih.gov/books/NBK482410/">NCBI anatomy</a>　<span class="dt">2026-09-29</span></p>
 </article><article class="card" data-cat="训练变量" data-mus="二头">
 <div class="meta"><span class="id">BI-011</span><span class="seq">Day 97</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">二头</span></div>
 <h3>手臂是小肌群，间接刺激已占一部分</h3>
@@ -1250,13 +1253,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>先把背部练好，再用孤立动作补手臂</li><li>同一天训练时顺序很关键</li></ul>
 <p class="act"><b>今日可执行</b>把弯举安排在划船与下拉之后。</p>
 <p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-02-02</span></p>
-</article><article class="card" data-cat="恢复与营养" data-mus="二头">
+</article><article class="card" data-reviewed="true" data-cat="恢复与营养" data-mus="二头">
 <div class="meta"><span class="id">BI-013</span><span class="seq">Day 19</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">二头</span></div>
-<h3>肘部肌腱的恢复慢于肌肉</h3>
-<p class="body">肱二头肌长头肌腱与前臂屈肌起点血供较少，恢复速度慢。高频率弯举容易累积肘部不适，需要控制总量。</p>
-<ul class="pts"><li>肘部不适常与弯举总量过高有关</li><li>出现不适时先减少握持类与弯举类容量</li></ul>
-<p class="act"><b>今日可执行</b>如果肘部开始隐痛，把弯举组数减半观察一周。</p>
-<p class="src">依据：运动医学共识　<span class="dt">2026-10-09</span></p>
+<h3>弯举引起肘部疼痛时应调整负荷</h3>
+<p class="body">肘部持续疼痛可能涉及多种组织和原因，不能直接归因于“肱二头肌长头肌腱恢复慢”；该肌腱的近端位于肩部。反复弯举或握持时出现疼痛，应先减少诱发疼痛的负荷，并在症状持续时寻求专业评估。</p>
+<ul class="pts"><li>不要靠疼痛位置自行判断是哪条肌腱受伤</li><li>训练调整应结合症状变化，而非套用固定组数</li></ul>
+<p class="act"><b>今日可执行</b>若弯举使肘部疼痛，停止该动作并记录诱发疼痛的负荷。</p>
+<p class="src">依据：<a href="https://www.ncbi.nlm.nih.gov/books/NBK482410/">NCBI anatomy</a> / <a href="https://pubmed.ncbi.nlm.nih.gov/34501416/">PMID: 34501416</a>　<span class="dt">2026-10-09</span></p>
 </article><article class="card" data-cat="冷知识与辟谣" data-mus="二头">
 <div class="meta"><span class="id">BI-014</span><span class="seq">Day 186</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">二头</span></div>
 <h3>弯举不能减掉手臂上的脂肪</h3>
@@ -1299,13 +1302,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>长头在手臂上举时处于拉长位</li><li>下拉类动作无法充分刺激长头</li></ul>
 <p class="act"><b>今日可执行</b>在手臂训练中加入过顶绳索臂屈伸，做 3 组。</p>
 <p class="src">依据：运动解剖学基础　<span class="dt">2027-04-19</span></p>
-</article><article class="card" data-cat="动作技术" data-mus="三头">
+</article><article class="card" data-reviewed="true" data-cat="动作技术" data-mus="三头">
 <div class="meta"><span class="id">TR-005</span><span class="seq">Day 2</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">三头</span></div>
-<h3>双杠臂屈伸的躯干角度改变肌群侧重</h3>
-<p class="body">躯干越直立，三头肌参与越多；躯干前倾越多，胸大肌下部参与越多。想练三头就保持躯干接近垂直。</p>
-<ul class="pts"><li>角度是控制侧重的直接手段</li><li>下放到肩关节舒适的位置即可</li></ul>
-<p class="act"><b>今日可执行</b>用躯干直立的姿势做双杠臂屈伸，感受三头肌发力。</p>
-<p class="src">依据：生物力学综述　<span class="dt">2026-09-22</span></p>
+<h3>双杠臂屈伸会同时动用胸肌与三头肌</h3>
+<p class="body">双杠臂屈伸涉及肩和肘两个关节，胸大肌与肱三头肌都会参与。身体姿势和器械形式可能改变动作负荷，但不能只凭躯干角度精确隔离某一块肌肉。</p>
+<ul class="pts"><li>不同臂屈伸变式的关节活动范围与肌肉活动存在差异</li><li>下放到肩关节舒适的位置即可</li></ul>
+<p class="act"><b>今日可执行</b>用可控制的动作幅度完成臂屈伸，留意肩部是否舒适。</p>
+<p class="src">依据：<a href="https://pubmed.ncbi.nlm.nih.gov/36293792/">PMID: 36293792</a>　<span class="dt">2026-09-22</span></p>
 </article><article class="card" data-cat="动作技术" data-mus="三头">
 <div class="meta"><span class="id">TR-006</span><span class="seq">Day 138</span><span class="tag t-cat">动作技术</span><span class="tag t-mus">三头</span></div>
 <h3>绳索下压的末端，可以稍微外展手腕</h3>
@@ -1334,13 +1337,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>长头既参与伸肘，也参与肩关节伸展</li><li>过顶类动作是长头的专属补充</li></ul>
 <p class="act"><b>今日可执行</b>检查当前手臂计划是否有过顶的三头动作。</p>
 <p class="src">依据：运动解剖学基础　<span class="dt">2027-05-02</span></p>
-</article><article class="card" data-cat="解剖机制" data-mus="三头">
+</article><article class="card" data-reviewed="true" data-cat="解剖机制" data-mus="三头">
 <div class="meta"><span class="id">TR-010</span><span class="seq">Day 18</span><span class="tag t-cat">解剖机制</span><span class="tag t-mus">三头</span></div>
-<h3>三头肌占上臂围度的比例比想象中大</h3>
-<p class="body">肱三头肌的体积约占上臂肌肉总量的三分之二。想让手臂变粗，三头肌的训练量往往应高于肱二头肌。</p>
-<ul class="pts"><li>臂围增长的主要来源是三头肌</li><li>很多人手臂练不大，问题出在三头训练量不足</li></ul>
-<p class="act"><b>今日可执行</b>让三头的总组数不少于二头。</p>
-<p class="src">依据：运动解剖学基础　<span class="dt">2026-10-08</span></p>
+<h3>肱三头肌是上臂肌群的重要组成部分</h3>
+<p class="body">肱三头肌负责伸肘，肱二头肌和肱肌等也会影响上臂外观。仅凭大致体积比例，不能推断每个人的三头训练组数都应高于二头。</p>
+<ul class="pts"><li>推类动作已经会使用肱三头肌</li><li>直接训练量应结合已有训练和恢复情况安排</li></ul>
+<p class="act"><b>今日可执行</b>回顾本周推类与手臂动作，再决定是否增加三头训练。</p>
+<p class="src">依据：<a href="https://www.ncbi.nlm.nih.gov/books/NBK482410/">NCBI anatomy</a>　<span class="dt">2026-10-08</span></p>
 </article><article class="card" data-cat="训练变量" data-mus="三头">
 <div class="meta"><span class="id">TR-011</span><span class="seq">Day 179</span><span class="tag t-cat">训练变量</span><span class="tag t-mus">三头</span></div>
 <h3>三头在推类动作中已被大量使用</h3>
@@ -1509,13 +1512,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>每周 1 到 2 次间歇训练通常足够</li><li>与力量训练安排在同一天时要注意间隔</li></ul>
 <p class="act"><b>今日可执行</b>把间歇训练安排在非力量日，或力量训练之后。</p>
 <p class="src">依据：运动生理学综述　<span class="dt">2027-01-11</span></p>
-</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+</article><article class="card" data-reviewed="true" data-cat="有氧与代谢" data-mus="全身">
 <div class="meta"><span class="id">CA-005</span><span class="seq">Day 4</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
 <h3>人体的三个供能系统同时工作，只是比例不同</h3>
 <p class="body">磷酸原系统负责极短时高强度输出，糖解系统负责中短时中高强度，氧化系统负责长时间低强度。任何运动都是三者按比例共同供能。</p>
 <ul class="pts"><li>不存在只动用某一个系统的运动</li><li>训练强度与持续时间决定各系统的贡献比例</li></ul>
 <p class="act"><b>今日可执行</b>理解这一点，就不再被有氧无氧截然分开的说法误导。</p>
-<p class="src">依据：运动生理学基础　<span class="dt">2026-09-24</span></p>
+<p class="src">依据：<a href="https://pubmed.ncbi.nlm.nih.gov/21188163/">PMID: 21188163</a>　<span class="dt">2026-09-24</span></p>
 </article><article class="card" data-cat="有氧与代谢" data-mus="全身">
 <div class="meta"><span class="id">CA-006</span><span class="seq">Day 51</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
 <h3>无氧运动一样能减脂</h3>
@@ -1558,13 +1561,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>顺序与间隔都会影响两者的相互干扰</li><li>普通健身者按此安排即可，不必过度复杂化</li></ul>
 <p class="act"><b>今日可执行</b>把有氧安排在力量训练之后或隔天。</p>
 <p class="src">依据：运动生理学综述　<span class="dt">2026-11-15</span></p>
-</article><article class="card" data-cat="有氧与代谢" data-mus="全身">
+</article><article class="card" data-reviewed="true" data-cat="有氧与代谢" data-mus="全身">
 <div class="meta"><span class="id">CA-012</span><span class="seq">Day 10</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
-<h3>减脂期有氧越多不一定越好</h3>
-<p class="body">过高的有氧容量会挤占恢复资源、增加食欲并可能影响肌肉保留。在热量缺口已经存在的前提下，适度有氧配合力量训练通常更高效。</p>
-<ul class="pts"><li>热量缺口主要靠饮食创造</li><li>有氧是辅助工具，不是越多越有效</li></ul>
-<p class="act"><b>今日可执行</b>如果已经每天有氧，试着减少到每周 3 次并观察变化。</p>
-<p class="src">依据：运动生理学综述　<span class="dt">2026-09-30</span></p>
+<h3>减脂期有氧量要与恢复能力匹配</h3>
+<p class="body">有氧运动有独立的健康价值。减脂期可同时安排有氧与力量训练，并根据时间、疲劳和饮食情况调整；单纯增加有氧时长，不保证减脂效果持续增加。</p>
+<ul class="pts"><li>结合饮食、力量训练和可坚持的活动量</li><li>疲劳明显或力量持续下降时检查整体负荷</li></ul>
+<p class="act"><b>今日可执行</b>记录一周的有氧时长与力量表现，按恢复情况调整。</p>
+<p class="src">依据：<a href="https://pubmed.ncbi.nlm.nih.gov/34757594/">PMID: 34757594</a>　<span class="dt">2026-09-30</span></p>
 </article><article class="card" data-cat="有氧与代谢" data-mus="全身">
 <div class="meta"><span class="id">CA-013</span><span class="seq">Day 72</span><span class="tag t-cat">有氧与代谢</span><span class="tag t-mus">全身</span></div>
 <h3>爬坡走对关节友好且强度可控</h3>
@@ -1705,13 +1708,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>增肌人群每日 1.6 到 2.2 克每公斤体重是常见区间</li><li>长期训练者可能需要接近区间上限</li></ul>
 <p class="act"><b>今日可执行</b>先算出自己的每日目标克数，再分配到三餐。</p>
 <p class="src">依据：ISSN 蛋白质与运动立场声明　<span class="dt">2027-05-12</span></p>
-</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+</article><article class="card" data-reviewed="true" data-cat="恢复与营养" data-mus="全身">
 <div class="meta"><span class="id">RC-003</span><span class="seq">Day 266</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
-<h3>每餐蛋白质有单次利用上限</h3>
-<p class="body">肌肉蛋白合成对单次蛋白质摄入存在饱和点，每餐约 0.4 克每公斤体重可较好激活合成反应。超过这个量，额外部分更多用于氧化供能。</p>
-<ul class="pts"><li>分散摄入优于集中在一餐</li><li>每餐含 2 到 3 克亮氨酸有利于合成</li></ul>
-<p class="act"><b>今日可执行</b>把每日蛋白质拆成 3 到 4 餐，每餐约 30 到 40 克。</p>
-<p class="src">依据：ISSN 蛋白质与运动立场声明　<span class="dt">2027-06-13</span></p>
+<h3>蛋白质分餐摄入是实用策略，没有固定吸收上限</h3>
+<p class="body">单次进食对肌肉蛋白合成的反应会受体重、年龄、蛋白质来源和整餐搭配影响。每餐约 0.4 克每公斤体重可作为分配每日蛋白质的参考，并不代表超过后就无法利用。</p>
+<ul class="pts"><li>优先保证全天总摄入量，再考虑如何分餐</li><li>额外蛋白质并非全部被浪费，单餐没有通用的绝对上限</li></ul>
+<p class="act"><b>今日可执行</b>先估算全天蛋白质目标，再按体重、食量和日程分配到几餐。</p>
+<p class="src">依据：<a href="https://pubmed.ncbi.nlm.nih.gov/29497353/">单餐蛋白质利用综述</a>　<span class="dt">2027-06-13</span></p>
 </article><article class="card" data-cat="恢复与营养" data-mus="全身">
 <div class="meta"><span class="id">RC-004</span><span class="seq">Day 270</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
 <h3>亮氨酸是触发合成信号的关键氨基酸</h3>
@@ -1859,13 +1862,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>状态差时应调整强度而非完全放弃</li><li>保持训练习惯比完成计划更重要</li></ul>
 <p class="act"><b>今日可执行</b>状态不好时把重量降低两成，完成一个轻量版本。</p>
 <p class="src">依据：运动生理学共识　<span class="dt">2027-06-21</span></p>
-</article><article class="card" data-cat="恢复与营养" data-mus="全身">
+</article><article class="card" data-reviewed="true" data-cat="恢复与营养" data-mus="全身">
 <div class="meta"><span class="id">RC-025</span><span class="seq">Day 1</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
-<h3>年龄增长会影响恢复速度，但不改变训练原则</h3>
-<p class="body">随年龄增长，肌肉合成反应与恢复速度都会下降，需要更长的恢复时间与更充足的蛋白质。但渐进超负荷、训练量与频率的基本原则不变。</p>
-<ul class="pts"><li>成年人 30 岁后睾酮水平缓慢下降</li><li>恢复时间需要相应延长，训练计划随之调整</li></ul>
-<p class="act"><b>今日可执行</b>把训练频率或单次容量适当下调，观察恢复状况。</p>
-<p class="src">依据：运动生理学综述　<span class="dt">2026-09-21</span></p>
+<h3>不同年龄都能从力量训练中获益</h3>
+<p class="body">年龄、训练经验和健康状况会影响训练后的反应，但不能只凭年龄推定每个人都需要更长恢复期。渐进训练和根据实际表现调整负荷，对成年人仍然适用。</p>
+<ul class="pts"><li>观察连续训练中的力量、疲劳和不适变化</li><li>需要时再调整训练量与间隔，而非按年龄固定下调</li></ul>
+<p class="act"><b>今日可执行</b>记录本周训练后的恢复感受，再决定是否调整下一次负荷。</p>
+<p class="src">依据：<a href="https://pubmed.ncbi.nlm.nih.gov/40917577/">PMID: 40917577</a>　<span class="dt">2026-09-21</span></p>
 </article><article class="card" data-cat="恢复与营养" data-mus="全身">
 <div class="meta"><span class="id">RC-026</span><span class="seq">Day 302</span><span class="tag t-cat">恢复与营养</span><span class="tag t-mus">全身</span></div>
 <h3>训练日志是判断恢复的主要依据</h3>
@@ -2216,13 +2219,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>窗口期不是 30 分钟的倒计时</li><li>训练前已进食者更不必紧张</li></ul>
 <p class="act"><b>今日可执行</b>按正常节奏安排练后一餐。</p>
 <p class="src">依据：ISSN 蛋白质与运动立场声明　<span class="dt">2027-07-06</span></p>
-</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+</article><article class="card" data-reviewed="true" data-cat="冷知识与辟谣" data-mus="全身">
 <div class="meta"><span class="id">MY-016</span><span class="seq">Day 13</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
-<h3>低碳水不会让训练效果更好</h3>
-<p class="body">碳水是力量训练的主要燃料。长期低碳水会降低训练表现与恢复速度，尤其在腿部等高消耗训练中更明显。</p>
-<ul class="pts"><li>碳水摄入量应匹配训练量</li><li>极低碳水在减脂短期有效，但影响训练质量</li></ul>
-<p class="act"><b>今日可执行</b>训练日保证足够碳水，非训练日可适当下调。</p>
-<p class="src">依据：运动营养学共识　<span class="dt">2026-10-03</span></p>
+<h3>力量训练是否需要更多碳水，取决于训练情境</h3>
+<p class="body">研究没有发现较高碳水摄入对所有力量训练都有稳定优势；在长时间、高训练量或糖原已消耗的情况下，碳水可能更有帮助。饮食应与训练量、总能量和个人目标匹配。</p>
+<ul class="pts"><li>普通训练不必因一次低碳水饮食就担心效果消失</li><li>高训练量或一天多练时更应关注补给</li></ul>
+<p class="act"><b>今日可执行</b>结合训练时长和表现，调整饮食，而不是套用统一碳水比例。</p>
+<p class="src">依据：<a href="https://pubmed.ncbi.nlm.nih.gov/35215506/">PMID: 35215506</a>　<span class="dt">2026-10-03</span></p>
 </article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
 <div class="meta"><span class="id">MY-017</span><span class="seq">Day 318</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
 <h3>没有能局部燃烧脂肪的动作</h3>
@@ -2279,13 +2282,13 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <ul class="pts"><li>热身提高运动效率</li><li>递增组本身就是热身的一部分</li></ul>
 <p class="act"><b>今日可执行</b>正式组前用 5 到 10 分钟完成热身。</p>
 <p class="src">依据：ACSM 2026 抗阻训练立场声明　<span class="dt">2027-01-05</span></p>
-</article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
+</article><article class="card" data-reviewed="true" data-cat="冷知识与辟谣" data-mus="全身">
 <div class="meta"><span class="id">MY-025</span><span class="seq">Day 7</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
 <h3>体重秤上的数字不能反映全部健康</h3>
 <p class="body">体成分、心肺适能、力量水平与代谢指标同样是健康的重要维度。仅关注体重容易忽略训练带来的真实改善。</p>
 <ul class="pts"><li>肌肉密度高于脂肪，体重不是唯一指标</li><li>腰围与力量进步同样值得关注</li></ul>
 <p class="act"><b>今日可执行</b>记录腰围与力量数据，与体重一起看。</p>
-<p class="src">依据：公共卫生运动指南　<span class="dt">2026-09-27</span></p>
+<p class="src">依据：<a href="https://www.who.int/publications-detail-redirect/9789240015128">WHO 2020</a>　<span class="dt">2026-09-27</span></p>
 </article><article class="card" data-cat="冷知识与辟谣" data-mus="全身">
 <div class="meta"><span class="id">MY-026</span><span class="seq">Day 231</span><span class="tag t-cat">冷知识与辟谣</span><span class="tag t-mus">全身</span></div>
 <h3>补剂不会弥补不规律的训练</h3>
@@ -2322,24 +2325,70 @@ h3{font-size:16px;margin:0 0 8px;font-weight:600;line-height:1.5}
 <p class="act"><b>今日可执行</b>看到健身内容时，先问一句：它的依据是什么。</p>
 <p class="src">依据：运动科学方法论　<span class="dt">2027-04-07</span></p>
 </article></main>
-<div class="empty" id="empty" style="display:none">没有匹配的条目</div>
+<div class="empty" id="empty" style="display:none">没有匹配的已发布条目</div>
+<noscript><p class="empty">请启用 JavaScript，以按北京时间查看已发布内容。</p></noscript>
 <script>
-var f={cat:'',mus:''};
-function apply(){
-  var n=0;
-  document.querySelectorAll('.card').forEach(function(c){
-    var ok=(!f.cat||c.dataset.cat===f.cat)&&(!f.mus||c.dataset.mus===f.mus);
-    c.style.display=ok?'':'none'; if(ok)n++;
-  });
-  document.getElementById('empty').style.display=n?'none':'block';
-}
-document.querySelectorAll('.chip').forEach(function(b){
-  b.addEventListener('click',function(){
-    var k=b.dataset.k,v=b.dataset.v;
-    if(k==='all'){f.cat='';f.mus='';document.querySelectorAll('.chip').forEach(function(x){x.classList.toggle('on',x.dataset.k==='all')});apply();return;}
-    f[k]=(f[k]===v)?'':v;
-    b.classList.toggle('on',f[k]===v);
-    apply();
-  });
+var filters={cat:'',mus:'',month:''};
+var cards=Array.from(document.querySelectorAll('.card')).map(function(node){
+  var date=node.querySelector('.dt').textContent.trim();
+  return {node:node,date:date,month:date.slice(0,7),cat:node.dataset.cat,mus:node.dataset.mus,reviewed:node.dataset.reviewed==='true'};
 });
+cards.sort(function(a,b){return b.date.localeCompare(a.date)});
+document.getElementById('list').replaceChildren.apply(document.getElementById('list'),cards.map(function(card){return card.node}));
+function beijingDay(date){
+  var parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date);
+  function part(type){return parts.find(function(x){return x.type===type}).value}
+  return part('year')+'-'+part('month')+'-'+part('day');
+}
+function matches(card,except){
+  return (!filters.cat||except==='cat'||card.cat===filters.cat)
+    &&(!filters.mus||except==='mus'||card.mus===filters.mus)
+    &&(!filters.month||except==='month'||card.month===filters.month);
+}
+function render(){
+  var today=beijingDay(new Date());
+  var published=cards.filter(function(card){return card.reviewed&&card.date<=today});
+  var months=Array.from(new Set(published.map(function(card){return card.month}))).sort().reverse();
+  if(filters.month&&months.indexOf(filters.month)<0)filters.month='';
+  var monthRow=document.getElementById('months');
+  monthRow.replaceChildren();
+  months.forEach(function(month){
+    var button=document.createElement('button');
+    button.className='chip';button.type='button';button.dataset.k='month';button.dataset.v=month;
+    button.textContent=month.slice(0,4)+'年'+Number(month.slice(5))+'月';
+    button.appendChild(document.createElement('span'));
+    monthRow.appendChild(button);
+  });
+  var visible=0;
+  cards.forEach(function(card){
+    var show=card.reviewed&&card.date<=today&&matches(card);
+    card.node.style.display=show?'block':'none';
+    if(show)visible++;
+  });
+  document.getElementById('stat').textContent='已发布 '+published.length+' 条已核实知识 · 共 '+cards.length+' 条排期 · 按北京时间展示；待核实条目暂不展示';
+  document.getElementById('empty').style.display=visible?'none':'block';
+  document.querySelectorAll('.chip').forEach(function(button){
+    var key=button.dataset.k,value=button.dataset.v;
+    var selected=key==='all'? !filters.cat&&!filters.mus&&!filters.month : filters[key]===value;
+    button.classList.toggle('on',selected);
+    button.setAttribute('aria-pressed',String(selected));
+    var count=key==='all'?published.length:published.filter(function(card){return card[key]===value&&matches(card,key)}).length;
+    button.querySelector('span').textContent=' '+count;
+  });
+}
+document.querySelector('.filters').addEventListener('click',function(event){
+  var button=event.target.closest('button.chip');
+  if(!button)return;
+  var key=button.dataset.k,value=button.dataset.v;
+  if(key==='all')filters={cat:'',mus:'',month:''};
+  else filters[key]=filters[key]===value?'':value;
+  render();
+});
+function scheduleRefresh(){
+  var today=beijingDay(new Date());
+  var next=Date.parse(today+'T00:00:00+08:00')+86400000;
+  setTimeout(function(){render();scheduleRefresh()},Math.max(1000,next-Date.now()+1000));
+}
+document.addEventListener('visibilitychange',function(){if(!document.hidden)render()});
+render();scheduleRefresh();
 </script></body></html>
