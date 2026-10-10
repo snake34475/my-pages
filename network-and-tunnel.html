@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>网络与隧道原理手册</title>
+<meta name="description" content="从 VPN 隧道分层、路由表死循环，到 DHCP、级联、广播与骨干网容量：一份由浅入深的网络原理手册。">
+<script>
+(function(){
+  try{
+    var q=new URLSearchParams(location.search).get('theme');
+    if(q==='light'||q==='dark'){document.documentElement.setAttribute('data-theme',q);return;}
+    var t=localStorage.getItem('netguide-theme');
+    if(t!=='light'&&t!=='dark'){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';}
+    document.documentElement.setAttribute('data-theme',t);
+  }catch(e){document.documentElement.setAttribute('data-theme','light');}
+})();
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#faf9f7;--bg2:#ffffff;--bg3:#f3f2ee;--bg4:#e9e7e0;
+  --tx:#1e1d1b;--tx2:#5d5c57;--tx3:#918e85;
+  --bd:#e5e3dc;--bd2:#d2d0c8;
+  --ac:#0f6e56;--ac2:#1d9e75;--acbg:#e1f5ee;
+  --am:#854f0b;--ambg:#faeeda;
+  --rd:#a32d2d;--rdbg:#fcebeb;
+  --bl:#185fa5;--blbg:#e6f1fb;
+  --pp:#534ab7;--ppbg:#eeedfe;
+  --cbg:#f4f2ec;--cbd:#e2e0d8;
+  --sh:0 1px 2px rgba(30,29,27,.05),0 6px 22px rgba(30,29,27,.05);
+}
+html[data-theme=dark]{
+  --bg:#141413;--bg2:#1c1c1b;--bg3:#252522;--bg4:#2f2f2b;
+  --tx:#ebe9e3;--tx2:#a5a29a;--tx3:#7c7a70;
+  --bd:#302f2c;--bd2:#474640;
+  --ac:#5dcaa5;--ac2:#1d9e75;--acbg:#0c352a;
+  --am:#ef9f27;--ambg:#3a290b;
+  --rd:#f09595;--rdbg:#3b1919;
+  --bl:#85b7eb;--blbg:#0d273e;
+  --pp:#afa9ec;--ppbg:#241f58;
+  --cbg:#232320;--cbd:#3a3935;
+  --sh:0 1px 2px rgba(0,0,0,.4),0 6px 22px rgba(0,0,0,.3);
+}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 15px/1.8 system-ui,-apple-system,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--ac);text-decoration:none}
+a:hover{text-decoration:underline}
+code,kbd,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+code{background:var(--cbg);border:1px solid var(--cbd);border-radius:5px;padding:1px 5px;font-size:.86em;color:var(--tx)}
+pre{background:var(--cbg);border:1px solid var(--cbd);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:12.5px;line-height:1.75;margin:16px 0}
+pre code{background:none;border:0;padding:0;font-size:inherit;color:inherit}
+.hero{border-bottom:1px solid var(--bd);background:var(--bg2)}
+.hero-in{max-width:1240px;margin:0 auto;padding:48px 24px 40px;position:relative}
+.hero h1{margin:0 0 14px;font-size:34px;line-height:1.25;font-weight:600;letter-spacing:-.025em}
+.hero .lede{margin:0;color:var(--tx2);font-size:15px;max-width:660px}
+.hero .meta{margin-top:20px;color:var(--tx3);font-size:12.5px;display:flex;gap:8px 18px;flex-wrap:wrap;align-items:center}
+.meta i{display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--bd2);font-style:normal}
+.tt{position:absolute;top:48px;right:24px;height:34px;padding:0 13px;border:1px solid var(--bd2);border-radius:999px;background:var(--bg3);color:var(--tx2);font-size:12.5px;font-family:inherit;cursor:pointer;transition:.15s}
+.tt:hover{color:var(--tx);border-color:var(--tx3)}
+.wrap{max-width:1240px;margin:0 auto;padding:44px 24px 110px;display:grid;grid-template-columns:222px minmax(0,1fr);gap:56px;align-items:start}
+.toc{position:sticky;top:32px;max-height:calc(100vh - 64px);overflow:auto;font-size:13.5px}
+.toc-t{font-size:11.5px;letter-spacing:.12em;color:var(--tx3);font-weight:600;margin:0 0 12px;padding-left:12px}
+.toc a{display:block;padding:5px 12px;border-left:2px solid transparent;color:var(--tx2);line-height:1.5;border-radius:0 6px 6px 0}
+.toc a:hover{color:var(--tx);background:var(--bg3);text-decoration:none}
+.toc a.on{color:var(--ac);border-left-color:var(--ac);background:var(--acbg);font-weight:500}
+article{min-width:0}
+.ch{padding-top:28px;margin-bottom:60px;scroll-margin-top:28px}
+.ch-hd{display:flex;align-items:baseline;gap:13px;margin:0 0 8px}
+.ch-n{font-size:13px;font-weight:600;color:var(--ac);letter-spacing:.05em}
+.ch h2{margin:0;font-size:25px;font-weight:600;letter-spacing:-.018em;line-height:1.3}
+.ch-sub{margin:0 0 24px;color:var(--tx3);font-size:13.5px}
+h3{font-size:16.5px;font-weight:600;margin:38px 0 12px;letter-spacing:-.008em}
+h4{font-size:14.5px;font-weight:600;margin:26px 0 8px;color:var(--tx2)}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 14px;padding-left:22px}
+li{margin-bottom:7px}
+li>ul,li>ol{margin-top:7px;margin-bottom:0}
+strong,b{font-weight:600;color:var(--tx)}
+.tl{margin:0 0 28px;padding:15px 18px;border:1px solid var(--bd);border-left:3px solid var(--ac);border-radius:0 10px 10px 0;background:var(--bg3);font-size:14.5px}
+.tl p{margin:0}
+.tl b{color:var(--ac)}
+.note{margin:18px 0;padding:14px 16px;border-radius:10px;border:1px solid var(--bd);background:var(--bg2);font-size:14px}
+.note .nt{display:block;font-weight:600;font-size:13px;margin-bottom:6px}
+.note p:last-child,.note ul:last-child{margin-bottom:0}
+.note.ok{background:var(--acbg);border-color:var(--bd)}
+.note.ok .nt{color:var(--ac)}
+.note.warn{background:var(--ambg);border-color:var(--bd)}
+.note.warn .nt{color:var(--am)}
+.note.bad{background:var(--rdbg);border-color:var(--bd)}
+.note.bad .nt{color:var(--rd)}
+.note.info{background:var(--blbg);border-color:var(--bd)}
+.note.info .nt{color:var(--bl)}
+.tw{overflow-x:auto;margin:18px 0}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--bd);vertical-align:top}
+th{font-weight:600;font-size:12.5px;color:var(--tx3);white-space:nowrap;border-bottom:1px solid var(--bd2)}
+tbody tr:hover{background:var(--bg3)}
+td:first-child{color:var(--tx)}
+.steps{counter-reset:s;list-style:none;padding:0;margin:20px 0}
+.steps>li{counter-increment:s;position:relative;padding:0 0 20px 46px;border-left:1px solid var(--bd);margin-left:14px}
+.steps>li:last-child{border-left-color:transparent;padding-bottom:4px}
+.steps>li::before{content:counter(s);position:absolute;left:-14px;top:-2px;width:28px;height:28px;border-radius:50%;background:var(--bg2);border:1px solid var(--bd2);color:var(--ac);font-size:12.5px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.steps>li p:last-child{margin-bottom:0}
+.fig{margin:24px 0;padding:18px;border:1px solid var(--bd);border-radius:12px;background:var(--bg2)}
+.fig svg{display:block;width:100%;height:auto}
+.fig figcaption{margin-top:14px;font-size:12.5px;color:var(--tx3);line-height:1.7}
+.fgt{font-size:12.5px;font-weight:600;color:var(--tx2);margin-bottom:14px}
+.qk{margin:18px 0;padding:16px 18px;border:1px solid var(--bd);border-radius:10px;background:var(--bg3);font-size:14px}
+.qk .qt{font-weight:600;font-size:13px;color:var(--tx3);margin-bottom:8px}
+.qk p{margin:0}
+footer{border-top:1px solid var(--bd);background:var(--bg2);padding:36px 24px;color:var(--tx3);font-size:12.5px;text-align:center;line-height:1.9}
+@media(max-width:940px){
+  .wrap{grid-template-columns:1fr;gap:0;padding:28px 20px 80px}
+  .toc{position:static;max-height:none;margin-bottom:36px;border:1px solid var(--bd);border-radius:12px;padding:16px 8px;background:var(--bg2)}
+  .hero h1{font-size:26px}
+  .hero-in{padding:34px 20px 30px}
+  .tt{top:26px;right:20px}
+  .ch h2{font-size:21px}
+}
+@media(max-width:560px){
+  .tt{position:static;margin-top:18px}
+  .hero-in{padding-bottom:26px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-in">
+    <h1>网络与隧道原理手册</h1>
+    <p class="lede">从「一台电脑开了 VPN，交换机上其他设备为什么进不去公司内网」出发，把隧道分层、路由表、防火墙方向、VPN 与 Clash 的分野、DHCP、广播、级联、骨干网和光纤容量串成一条完整的因果链。</p>
+    <div class="meta">
+      <span>正文 12 章 + 附录 · 15 张图解 · 26 张对照表</span><i></i>
+      <span>由浅入深</span><i></i>
+      <span>每章给结论 → 讲原理 → 走链路 → 说坑</span>
+    </div>
+    <button class="tt" id="tt" type="button">切换主题</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc" id="toc">
+  <p class="toc-t">目录</p>
+  <a href="#c1">01　从一个具体问题开始</a>
+  <a href="#c2">02　隧道是怎么套出来的</a>
+  <a href="#c3">03　两套隧道打架</a>
+  <a href="#c4">04　隧道的死循环</a>
+  <a href="#c5">05　本机服务与防火墙方向</a>
+  <a href="#c6">06　VPN 与 Clash 的分野</a>
+  <a href="#c7">07　IP 从哪来</a>
+  <a href="#c8">08　设备的能力边界</a>
+  <a href="#c9">09　WAN 接 LAN 是什么</a>
+  <a href="#c10">10　掩码、网关与广播</a>
+  <a href="#c11">11　互联网是怎么连起来的</a>
+  <a href="#c12">12　从河南到河北</a>
+  <a href="#c13">附　速查表</a>
+</nav>
+
+<article>
+
+<!-- ══════════════════ 第 1 章 ══════════════════ -->
+<section class="ch" id="c1">
+  <div class="ch-hd"><span class="ch-n">01</span><h2>从一个具体问题开始</h2></div>
+  <p class="ch-sub">一台电脑开了 VPN，交换机下的其他设备能进公司内网吗</p>
+
+  <div class="tl">
+    <p><b>先说结论：不能。</b>开 VPN 的是<b>那一台电脑自己</b>，不是整个局域网。隧道是端到端的——一头在你电脑的虚拟网卡上，一头在公司网关。链路上的交换机和路由器只是搬运工，它们根本不知道有隧道存在。</p>
+  </div>
+
+  <p>这个问题看着小，但它牵出了后面所有的知识：隧道是什么、路由表怎么工作、设备之间怎么互相看见、什么设备能干什么。所以先把场景和结论钉死，再逐层拆。</p>
+
+  <h3>1.1　场景与拓扑</h3>
+
+  <p>路由器 LAN 口接一台二层交换机，交换机下面挂三台电脑。其中<strong>只有电脑 A</strong> 开了公司 VPN 客户端。</p>
+
+  <figure class="fig">
+    <div class="fgt">图 1-1　隧道只存在于电脑 A 与公司网关之间</div>
+    <svg viewBox="0 0 680 446" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>VPN 隧道只属于单台电脑</title>
+      <desc>路由器下接二层交换机，交换机下挂三台电脑，只有电脑 A 与公司内网之间存在 VPN 隧道。</desc>
+      <defs>
+        <marker id="b1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <rect x="240" y="40" width="200" height="60" rx="12" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="340" y="62" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" style="fill:var(--ac)">公司内网</text>
+      <text x="340" y="82" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--ac)">VPN 网关</text>
+      <path d="M340 160 L340 104" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#b1)"/>
+      <text x="352" y="132" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">经公网</text>
+      <rect x="270" y="160" width="140" height="56" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="340" y="180" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" style="fill:var(--tx)">路由器</text>
+      <text x="340" y="198" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">LAN 口接交换机</text>
+      <rect x="100" y="270" width="480" height="50" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="340" y="295" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" style="fill:var(--tx)">二层交换机</text>
+      <path d="M340 270 L340 220" fill="none" stroke="var(--bd2)" stroke-width="1"/>
+      <path d="M160 370 L160 320" fill="none" stroke="var(--bd2)" stroke-width="1"/>
+      <path d="M340 370 L340 320" fill="none" stroke="var(--bd2)" stroke-width="1"/>
+      <path d="M520 370 L520 320" fill="none" stroke="var(--bd2)" stroke-width="1"/>
+      <rect x="90" y="370" width="140" height="56" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="160" y="390" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" style="fill:var(--ac)">电脑 A</text>
+      <text x="160" y="408" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--ac)">已开公司 VPN</text>
+      <rect x="270" y="370" width="140" height="56" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="340" y="390" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" style="fill:var(--tx)">电脑 B</text>
+      <text x="340" y="408" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">未开 VPN</text>
+      <rect x="450" y="370" width="140" height="56" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="520" y="390" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" style="fill:var(--tx)">电脑 C</text>
+      <text x="520" y="408" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">未开 VPN</text>
+      <path d="M90 398 L60 398 L60 70 L236 70" fill="none" stroke="var(--ac)" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#b1)"/>
+      <text x="150" y="88" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--ac)">VPN 隧道</text>
+      <text x="150" y="106" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">只属于电脑 A</text>
+    </svg>
+    <figcaption>隧道的两个端点：<b>电脑 A 的虚拟网卡</b>和<b>公司 VPN 网关</b>。中间的交换机、路由器只看到加密后的外壳，不知道里面是什么。</figcaption>
+  </figure>
+
+  <h3>1.2　隧道为什么只属于一台设备</h3>
+
+  <p>把它想成一条<strong>私人电话线</strong>：某台电脑和公司网关之间单独拉了一根线，线里的包裹被套了个壳（加密），外面的人只看得到壳。</p>
+
+  <p>关键在于这根线<strong>只有两个接口</strong>：一个在你的电脑上（一块虚拟网卡），一个在公司的 VPN 网关上。它天然是一对一的，不可能「一个房间的人都接进去」。</p>
+
+  <div class="note info">
+    <span class="nt">交换机全程不参与</span>
+    <p>二层交换机只认 MAC 地址，做的是「这个帧该从哪个口送出去」。它看不懂 IP，更看不懂隧道。而<b>加密封装是电脑 A 上的 VPN 客户端软件自己完成的</b>——套完壳之后，它就是交给路由器一个「看起来平平无奇的加密包裹」，跟平时刷网页没有任何区别。链路上没有一台设备知道「这里有条隧道」，自然也无从蹭进去。</p>
+  </div>
+
+  <h3>1.3　拆分隧道与全隧道</h3>
+
+  <p>这两个模式的区别，只影响<strong>同一台电脑自己</strong>的流量怎么走，不会让隧道扩大到整个局域网。它们改的都是电脑 A 的<strong>路由表</strong>，只是改法不同。</p>
+
+  <figure class="fig">
+    <div class="fgt">图 1-2　两种模式的流量走向</div>
+    <svg viewBox="0 0 680 280" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>拆分隧道与全隧道对比</title>
+      <desc>拆分隧道只把公司网段流量送进隧道，全隧道把所有流量都送进隧道，但两者都只影响本机。</desc>
+      <defs>
+        <marker id="b2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <text x="40" y="30" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--tx)">拆分隧道（Split Tunnel）</text>
+      <text x="350" y="30" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--tx)">全隧道（Full Tunnel）</text>
+      <rect x="40" y="48" width="290" height="52" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="185" y="66" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--tx)">电脑 A</text>
+      <text x="185" y="84" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">一个 VPN 客户端</text>
+      <rect x="350" y="48" width="290" height="52" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="495" y="66" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--tx)">电脑 A</text>
+      <text x="495" y="84" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">同一个 VPN 客户端</text>
+      <path d="M105 100 L105 166" fill="none" stroke="var(--ac)" stroke-width="1.5" marker-end="url(#b2)"/>
+      <path d="M265 100 L265 166" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#b2)"/>
+      <path d="M415 100 L415 166" fill="none" stroke="var(--ac)" stroke-width="1.5" marker-end="url(#b2)"/>
+      <path d="M575 100 L575 166" fill="none" stroke="var(--ac)" stroke-width="1.5" marker-end="url(#b2)"/>
+      <text x="115" y="134" dominant-baseline="central" font-size="12" style="fill:var(--ac)">走隧道</text>
+      <text x="275" y="134" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">直连</text>
+      <text x="425" y="134" dominant-baseline="central" font-size="12" style="fill:var(--ac)">走隧道</text>
+      <text x="585" y="134" dominant-baseline="central" font-size="12" style="fill:var(--ac)">也走隧道</text>
+      <rect x="40" y="170" width="130" height="52" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="105" y="188" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--ac)">公司内网</text>
+      <text x="105" y="206" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--ac)">10.10.0.0/16</text>
+      <rect x="200" y="170" width="130" height="52" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="265" y="188" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--tx)">公网</text>
+      <text x="265" y="206" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">百度 微信</text>
+      <rect x="350" y="170" width="130" height="52" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="415" y="188" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--ac)">公司内网</text>
+      <text x="415" y="206" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--ac)">10.10.0.0/16</text>
+      <rect x="510" y="170" width="130" height="52" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="575" y="188" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--ac)">公网</text>
+      <text x="575" y="206" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--ac)">百度 微信</text>
+      <text x="40" y="250" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">只把公司网段送进隧道，其余直连</text>
+      <text x="350" y="250" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">全部流量都进隧道，上网也绕公司</text>
+      <path d="M340 18 L340 264" fill="none" stroke="var(--bd2)" stroke-width="0.5" stroke-dasharray="4 4"/>
+    </svg>
+    <figcaption>不管哪种模式，改的都只是电脑 A 自己的路由表。电脑 B 和电脑 C 的路由表<b>一个字都没动</b>。</figcaption>
+  </figure>
+
+  <h3>1.4　其他设备什么条件下才可能「借道」</h3>
+
+  <p>所谓的「借道」，是让 B 把包交给 A，A 再替它从隧道送出去。这<strong>不是默认行为</strong>，必须三件事同时做到：</p>
+
+  <figure class="fig">
+    <div class="fgt">图 1-3　默认不通 vs 要借道的三个前提</div>
+    <svg viewBox="0 0 680 302" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>借道 VPN 主机的条件</title>
+      <desc>默认情况下电脑 B 的包交给路由器后因不认识公司内网被丢弃，只有三件事同时做到才可能借道。</desc>
+      <defs>
+        <marker id="b3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <text x="40" y="30" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--tx)">默认情况：不通</text>
+      <text x="350" y="30" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--ac)">要借道：三件事缺一不可</text>
+      <rect x="40" y="56" width="290" height="44" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="185" y="78" text-anchor="middle" dominant-baseline="central" font-size="13" style="fill:var(--tx)">电脑 B 想访问 10.10.1.5</text>
+      <path d="M185 100 L185 132" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#b3)"/>
+      <rect x="40" y="136" width="290" height="44" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="185" y="158" text-anchor="middle" dominant-baseline="central" font-size="13" style="fill:var(--tx)">交给默认网关：路由器</text>
+      <path d="M185 180 L185 212" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#b3)"/>
+      <rect x="40" y="216" width="290" height="44" rx="10" style="fill:var(--rdbg)" stroke="var(--rd)" stroke-width="0.5"/>
+      <text x="185" y="238" text-anchor="middle" dominant-baseline="central" font-size="13" style="fill:var(--rd)">路由器不认识该网段，丢弃</text>
+      <rect x="350" y="56" width="290" height="44" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="495" y="78" text-anchor="middle" dominant-baseline="central" font-size="13" style="fill:var(--ac)">一：B 的网关或路由改指向 A</text>
+      <path d="M495 100 L495 132" fill="none" stroke="var(--ac)" stroke-width="1.5" marker-end="url(#b3)"/>
+      <rect x="350" y="136" width="290" height="44" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="495" y="158" text-anchor="middle" dominant-baseline="central" font-size="13" style="fill:var(--ac)">二：A 开启转发或网络共享</text>
+      <path d="M495 180 L495 212" fill="none" stroke="var(--ac)" stroke-width="1.5" marker-end="url(#b3)"/>
+      <rect x="350" y="216" width="290" height="44" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="495" y="238" text-anchor="middle" dominant-baseline="central" font-size="13" style="fill:var(--ac)">三：A 做地址转换并放行防火墙</text>
+      <text x="185" y="286" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">B 的包跟电脑 A 的隧道毫无关系</text>
+      <text x="495" y="286" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">这些都要手动配置，默认全关</text>
+      <path d="M340 18 L340 296" fill="none" stroke="var(--bd2)" stroke-width="0.5" stroke-dasharray="4 4"/>
+    </svg>
+    <figcaption>默认三件事<b>一件都没做</b>，所以不通。而且即使三件都做了，很多公司的 VPN 客户端还会主动拒绝转发——这是设计上的安全策略。</figcaption>
+  </figure>
+
+  <ol>
+    <li><strong>B 得知道要走 A</strong>：手动把 B 的默认网关改成 A 的地址，或者加一条静态路由指向 A。</li>
+    <li><strong>A 得愿意帮别人转发</strong>：开启 IP 转发。Windows 上就是「网络共享（ICS）」，或者改注册表的 <code>IPEnableRouter</code>。</li>
+    <li><strong>A 得会改写来源地址</strong>：公司 VPN 网关只认隧道这头（电脑 A）的地址，B 的地址公司不认。所以 A 必须做 NAT（地址转换），并在防火墙上放行。</li>
+  </ol>
+
+  <h3>1.5　电脑上开 VPN vs 路由器上开 VPN</h3>
+
+  <p>这两个差别<strong>巨大</strong>，很多人就是在这里搞混的。原因只有一句话：<strong>隧道的入口在哪台设备上，就只有那台设备（及其下游）进得去。</strong></p>
+
+  <figure class="fig">
+    <div class="fgt">图 1-4　隧道的入口位置决定了覆盖范围</div>
+    <svg viewBox="0 0 680 318" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>电脑开 VPN 与路由器开 VPN 的差别</title>
+      <desc>在电脑上开 VPN 只有该电脑进入隧道，在路由器上配置 VPN 客户端则整个局域网设备都进入隧道。</desc>
+      <defs>
+        <marker id="b4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <text x="40" y="30" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--tx)">在电脑上开 VPN</text>
+      <text x="350" y="30" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--ac)">在路由器上开 VPN</text>
+      <rect x="55" y="56" width="260" height="44" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="185" y="78" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--ac)">公司内网</text>
+      <rect x="365" y="56" width="260" height="44" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="495" y="78" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--ac)">公司内网</text>
+      <path d="M82 212 L82 104" fill="none" stroke="var(--ac)" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#b4)"/>
+      <path d="M495 148 L495 104" fill="none" stroke="var(--ac)" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#b4)"/>
+      <text x="152" y="164" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--ac)">只有这条线进公司</text>
+      <rect x="350" y="148" width="290" height="46" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="495" y="171" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--ac)">路由器（内置 VPN 客户端）</text>
+      <rect x="40" y="216" width="84" height="46" rx="8" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="82" y="239" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--ac)">电脑 A</text>
+      <rect x="143" y="216" width="84" height="46" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="185" y="239" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--tx3)">电脑 B</text>
+      <rect x="246" y="216" width="84" height="46" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="288" y="239" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--tx3)">电脑 C</text>
+      <path d="M392 216 L495 194" fill="none" stroke="var(--ac)" stroke-width="1"/>
+      <path d="M495 216 L495 194" fill="none" stroke="var(--ac)" stroke-width="1"/>
+      <path d="M598 216 L495 194" fill="none" stroke="var(--ac)" stroke-width="1"/>
+      <rect x="350" y="216" width="84" height="46" rx="8" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="392" y="239" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--ac)">电脑 A</text>
+      <rect x="453" y="216" width="84" height="46" rx="8" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="495" y="239" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--ac)">电脑 B</text>
+      <rect x="556" y="216" width="84" height="46" rx="8" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="598" y="239" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--ac)">电脑 C</text>
+      <text x="185" y="292" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">另外两台只能干看着</text>
+      <text x="495" y="292" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">三台都自动进公司内网</text>
+      <path d="M335 18 L335 308" fill="none" stroke="var(--bd2)" stroke-width="0.5" stroke-dasharray="4 4"/>
+    </svg>
+    <figcaption>原因：路由器是所有设备的<b>默认网关</b>，本来就要经手全部流量；而电脑只是局域网里普通的一员。</figcaption>
+  </figure>
+
+  <h3>1.6　安全提醒：能访问这台电脑 ≠ 能进公司内网</h3>
+
+  <p>同一台交换机下、同一个网段里的设备，<strong>本来就能互相看见</strong>——能 ping 通、能扫到开放的端口、如果开了共享还能进共享目录。这是局域网自身的性质，跟你开不开 VPN 一点关系都没有。如果你在电脑 A 上开了「文件共享 / 远程桌面」，哪怕不开 VPN 也是一样能被访问的。</p>
+
+  <p>但一定要把两件事分开：</p>
+
+  <div class="qk">
+    <div class="qt">两个完全不同的层次</div>
+    <p><strong>能访问这台 VPN 电脑</strong> = 邻居能串门（局域网自身的二层可达性）<br>
+    <strong>能进公司内网</strong> = 要拿到公司大门的钥匙（钥匙在那条隧道的另一头，不在局域网上）</p>
+  </div>
+
+  <p>真正值得警惕的风险是<strong>反过来的</strong>：这台电脑变成了「一把双门钥匙」——既暴露在同网段里被别人扫得到，又持有进公司内网的合法身份。一旦它被攻陷（弱口令、共享目录暴露、系统漏洞、装了带毒软件），攻击者就能拿它当跳板钻到公司内网里去。这在安全上叫 <strong>横向移动（lateral movement）</strong>，也正是很多公司 VPN 客户端刻意默认禁止转发的原因。</p>
+
+  <div class="note warn">
+    <span class="nt">几条实操建议</span>
+    <ul>
+      <li>不用公司 VPN 时及时断开</li>
+      <li>这台机器别开面向同网段的共享目录、远程桌面</li>
+      <li>VPN 账号个人专用，别把电脑借给别人挂着你的 VPN 用</li>
+      <li>真要「全屋都进公司内网」，正确做法是让 IT 在<b>路由器或防火墙上配 VPN</b>，而不是靠某台电脑当跳板</li>
+    </ul>
+  </div>
+
+  <div class="qk">
+    <div class="qt">这一章的收口</div>
+    <p>VPN 隧道的入口在哪台设备上，就只有哪台设备进得去。<strong>隧道是「单人通道」，不是「整层楼的走廊」。</strong></p>
+  </div>
+</section>
+
+<!-- ══════════════════ 第 2 章 ══════════════════ -->
+<section class="ch" id="c2">
+  <div class="ch-hd"><span class="ch-n">02</span><h2>隧道是怎么套出来的</h2></div>
+  <p class="ch-sub">分层封装 · 两次查路由表 · 全隧道「反向的坑」</p>
+
+  <div class="tl">
+    <p><b>一句话结论：</b>隧道不是「一条线」，而是把一个<b>完整的 IP 包</b>当成货物，塞进另一个包里运出去。原始包的源和目的地址<b>一个字节都没变</b>，只是外面又套了一层新地址。所以「谁在隧道里」由发起封装的那台设备决定，链路上的交换机、路由器只看到外壳。</p>
+  </div>
+
+  <h3>1.1　按工作层次拆解各层职责</h3>
+
+  <p>数据从你的程序发出去，要经过一条完整的栈。每一层只做一件事、只关心一件事。关键在于：<strong>隧道是在「网络层」和「链路层」之间硬插进去的一层</strong>，它把上面已经组装好的包整个当作载荷。</p>
+
+  <figure class="fig">
+    <div class="fgt">图 1-1　一个包穿过各层时，每层各加了什么</div>
+    <svg viewBox="0 0 680 410" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>网络分层职责</title>
+      <desc>应用层产生数据，传输层分段，网络层加原始 IP 头并第一次查路由表，隧道层加密并套外层 IP 头后第二次查路由表，链路层从真实网卡发出。</desc>
+      <defs>
+        <marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <rect x="40" y="56" width="600" height="46" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="62" y="79" dominant-baseline="central" font-size="14" font-weight="500" style="fill:var(--tx)">应用层</text>
+      <text x="190" y="79" dominant-baseline="central" font-size="13" style="fill:var(--tx2)">产生数据：我要访问 10.10.1.5 的 443 端口</text>
+      <path d="M340 102 L340 124" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#a1)"/>
+      <rect x="40" y="128" width="600" height="46" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="62" y="151" dominant-baseline="central" font-size="14" font-weight="500" style="fill:var(--tx)">传输层</text>
+      <text x="190" y="151" dominant-baseline="central" font-size="13" style="fill:var(--tx2)">TCP 分段、编号、重传，对端到端负责</text>
+      <path d="M340 174 L340 196" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#a1)"/>
+      <rect x="40" y="200" width="600" height="46" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="62" y="223" dominant-baseline="central" font-size="14" font-weight="500" style="fill:var(--ac)">网络层</text>
+      <text x="190" y="223" dominant-baseline="central" font-size="13" style="fill:var(--ac)">加原始 IP 头，第一次查路由表 → 命中隧道网卡</text>
+      <path d="M340 246 L340 268" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#a1)"/>
+      <rect x="40" y="272" width="600" height="46" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="62" y="295" dominant-baseline="central" font-size="14" font-weight="500" style="fill:var(--ac)">隧道层</text>
+      <text x="190" y="295" dominant-baseline="central" font-size="13" style="fill:var(--ac)">整包加密，套外层 IP 头，第二次查路由表</text>
+      <path d="M340 318 L340 340" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#a1)"/>
+      <rect x="40" y="344" width="600" height="46" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="62" y="367" dominant-baseline="central" font-size="14" font-weight="500" style="fill:var(--tx)">链路层</text>
+      <text x="190" y="367" dominant-baseline="central" font-size="13" style="fill:var(--tx2)">从真实网卡发出 → 交换机 → 家用路由器 → 公网</text>
+    </svg>
+    <figcaption>注意：只有「网络层」和「隧道层」做了两件实质的事——加头、查表。<b>一个包出门要查两次路由表</b>，这是后面所有坑的根源。</figcaption>
+  </figure>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>层次</th><th>职责</th><th>在这个场景里的具体表现</th></tr></thead>
+      <tbody>
+        <tr><td>应用层</td><td>产生数据、定义协议</td><td>浏览器要访问 <code>10.10.1.5:443</code></td></tr>
+        <tr><td>传输层</td><td>分段、编号、重传、流控</td><td>TCP 三次握手，<b>端到端</b>（你的电脑 ↔ 公司服务器）</td></tr>
+        <tr><td>网络层</td><td>寻址 + 选路</td><td>原始 IP 头：<code>192.168.1.10 → 10.10.1.5</code></td></tr>
+        <tr><td>隧道层</td><td>封装 + 加密</td><td>整个包当载荷，加外层 IP 头（<code>你的公网 IP → 公司网关</code>）</td></tr>
+        <tr><td>链路层</td><td>实际投递</td><td>新包走物理网卡 → 交换机 → 路由器</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>1.2　完整链路：一次隧道内的访问</h3>
+
+  <ol class="steps">
+    <li><p>浏览器发起请求 → 传输层切成 TCP 段 → 网络层加上原始 IP 头：源 <code>192.168.1.10</code>，目的 <code>10.10.1.5</code>。</p></li>
+    <li><p><strong>第一次查路由表</strong>。系统拿目的地址 <code>10.10.1.5</code> 去表里找，命中 <code>10.10.0.0/16 → 隧道虚拟网卡</code>。于是这个包被交给隧道网卡。</p></li>
+    <li><p>隧道网卡把<strong>整个包（含原始 IP 头）当作载荷</strong>，加密，再套一个新的 IP 头：源是你的公网地址，目的是公司 VPN 网关的公网地址。这一步多出来的协议头叫「隧道封装头」（IPsec ESP / WireGuard UDP / OpenVPN 等）。</p></li>
+    <li><p><strong>第二次查路由表</strong>。这次查的是<span style="color:var(--ac)">外层包</span>，目的地是公司网关的公网 IP，命中 <code>0.0.0.0/0 → 真实网卡</code>。</p></li>
+    <li><p>从物理网卡发出 → 二层交换机（只按 MAC 转发，完全不知道这是隧道）→ 家用路由器做 NAT → 公网。</p></li>
+    <li><p>到达公司 VPN 网关：校验完整性 → 解密 → <strong>剥掉外层头</strong>，得到最初那个原始包。</p></li>
+    <li><p>公司内网的路由器把原始包按 <code>192.168.1.10 → 10.10.1.5</code> 送进内网，到达目标服务器。</p></li>
+    <li><p>回包沿路反向走一遍：公司网关再套一次外层头 → 公网 → 你家路由器 → 你的电脑解密还原。</p></li>
+  </ol>
+
+  <div class="note info">
+    <span class="nt">为什么交换机、路由器全程「看不见」隧道</span>
+    <p>它们看到的只是一个普通的、加密的、从你电脑发往某个公网 IP 的 IP 包。加密封装是在你的电脑上完成的，壳的里面是什么，链路上谁也看不到。这就是「隧道只属于一台设备」的物理原因——它是端到端的，中间设备只是一个搬运工。</p>
+  </div>
+
+  <h3>1.3　全隧道模式的「反向的坑」</h3>
+
+  <p>先说什么是「反向」：全隧道（Full Tunnel）本意是让<strong>你的所有流量都去公司</strong>，是个「管得更宽」的设置。但它的副作用是——<strong>连你家局域网里的其他设备，也访问不到你这台电脑了</strong>。方向反过来了，所以叫「反向的坑」。</p>
+
+  <p>原因是企业级 VPN 客户端除了改路由表，往往还会额外做两件事：</p>
+
+  <ul>
+    <li><strong>Kill Switch（断网保护）</strong>：通过 WFP / NDIS 过滤器驱动拦截流量，只要隧道没建立或掉线，就禁止任何包出去，防止数据泄漏。</li>
+    <li><strong>禁止访问本地网络（Block Local LAN）</strong>：明确拦截去往 <code>192.168.x.x</code>、<code>10.x.x.x</code> 等私有网段的流量。</li>
+  </ul>
+
+  <p>当同网段的电脑 B 访问 A 的 <code>192.168.1.10</code> 时：</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>环节</th><th>是否顺利</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>B 发出请求帧</td><td>正常</td><td>同网段，交换机二层直达</td></tr>
+        <tr><td>帧到达 A 的网卡</td><td>正常</td><td>物理层面完全没问题</td></tr>
+        <tr><td>A 的系统回应</td><td><b style="color:var(--rd)">被拦</b></td><td>过滤器驱动判定「这是本地网络流量」，直接丢弃</td></tr>
+        <tr><td>B 收到响应</td><td>超时</td><td>表现就是「ping 不通、连不上」</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note warn">
+    <span class="nt">快速验证方法</span>
+    <p>把公司 VPN 从「全隧道」切成「拆分隧道」。如果 B 立刻就能访问 A 了，那就百分之百是客户端策略拦的，跟交换机、路由器、IP 配置都无关。</p>
+  </div>
+</section>
+
+<!-- ══════════════════ 第 3 章 ══════════════════ -->
+<section class="ch" id="c3">
+  <div class="ch-hd"><span class="ch-n">03</span><h2>两套隧道打架：为什么关掉公司 VPN 再开 Clash TUN 会出问题</h2></div>
+  <p class="ch-sub">四层资源同时被争夺 · 不只是路由表被覆盖</p>
+
+  <div class="tl">
+    <p><b>一句话结论：</b>不是「路由表被覆盖」这么单一。公司 VPN 和 Clash TUN 都是<b>「全局接管型」工具</b>，它们会同时争抢四层资源——虚拟网卡、路由表、DNS、过滤驱动。路由表只是其中最显性、最容易观察到的那一层症状。</p>
+  </div>
+
+  <h3>2.1　被争夺的四层资源</h3>
+
+  <figure class="fig">
+    <div class="fgt">图 2-1　冲突发生在四个不同的层次上</div>
+    <svg viewBox="0 0 680 288" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>四层资源争夺</title>
+      <desc>过滤驱动层、DNS 层、路由表、虚拟网卡层，两个工具在每一层都会互相覆盖或争抢。</desc>
+      <defs>
+        <marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <rect x="40" y="52" width="380" height="48" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="62" y="76" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--tx)">过滤驱动层　WFP / NDIS</text>
+      <path d="M420 76 L458 76" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#a2)"/>
+      <text x="466" y="76" dominant-baseline="central" font-size="12.5" style="fill:var(--tx2)">两个 kill switch 同时拦截</text>
+      <rect x="40" y="108" width="380" height="48" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="62" y="132" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--tx)">DNS 层　系统域名服务器</text>
+      <path d="M420 132 L458 132" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#a2)"/>
+      <text x="466" y="132" dominant-baseline="central" font-size="12.5" style="fill:var(--tx2)">fake-ip 覆盖内网 DNS</text>
+      <rect x="40" y="164" width="380" height="48" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="62" y="188" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--ac)">路由表　0.0.0.0/0 归谁</text>
+      <path d="M420 188 L458 188" fill="none" stroke="var(--ac)" stroke-width="1" marker-end="url(#a2)"/>
+      <text x="466" y="188" dominant-baseline="central" font-size="12.5" style="fill:var(--ac)">默认路由被后启动者抢走</text>
+      <rect x="40" y="220" width="380" height="48" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="62" y="244" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--tx)">虚拟网卡层　TUN 设备归属</text>
+      <path d="M420 244 L458 244" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#a2)"/>
+      <text x="466" y="244" dominant-baseline="central" font-size="12.5" style="fill:var(--tx2)">网卡索引与跃点数错乱</text>
+    </svg>
+    <figcaption>这四层是自下而上叠加的：网卡是地基，路由表是决策，DNS 是翻译，过滤器是最后一道闸门。任何一层被抢走，都会表现出「VPN 连上了但用不了」。</figcaption>
+  </figure>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>层级</th><th>公司 VPN 想要</th><th>Clash TUN 想要</th><th>典型后果</th></tr></thead>
+      <tbody>
+        <tr><td>虚拟网卡</td><td>自己的 TUN 网卡 + 固定接口索引</td><td>新建 wintun 网卡并抢绑定顺序</td><td>出现两个 TUN 网卡，绑定顺序错乱</td></tr>
+        <tr><td>路由表</td><td><code>0.0.0.0/0 → 公司隧道</code></td><td><code>0.0.0.0/0 → Clash TUN</code></td><td><b>后启动者抢走默认路由，先启动的隧道断掉</b></td></tr>
+        <tr><td>DNS</td><td>指向公司内网 DNS、加搜索域</td><td>劫持到 fake-ip（<code>198.18.0.0/16</code>）</td><td>内网域名如 <code>git.corp.com</code> 解析失败</td></tr>
+        <tr><td>过滤驱动</td><td>Kill switch 拦截非隧道流量</td><td>同样是 WFP 过滤器拦截并重定向</td><td>包被丢弃或绕成环，行为不可预测</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>2.2　为什么「先关公司 VPN，再开 Clash TUN」这个顺序特别容易出事</h3>
+
+  <p>正常退出时，VPN 客户端会做一套清理动作：删掉自己的虚拟网卡、删掉自己加的路由、把 DNS 改回去。但如果它是<strong>非正常退出</strong>（进程被强杀、驱动挂起、客户端崩溃、直接关机），这套清理就<strong>做不完</strong>，系统进入一种「半残留」状态：</p>
+
+  <ul>
+    <li>虚拟网卡还在，但已经没有任何程序在管它</li>
+    <li>它加的 <code>/32</code> 路由和网段路由还留在表里</li>
+    <li>DNS 还指着公司内网服务器（这时候已经解析不了任何东西）</li>
+    <li>过滤器驱动还挂在网卡上，规则却已经失效</li>
+  </ul>
+
+  <p>这时候启动 Clash TUN，它会<strong>重新接管整个网络栈</strong>：创建新网卡、重写默认路由、劫持 DNS、注册自己的过滤器。问题在于——它不是在一个干净的环境里接管，而是在一堆残留之上接管。于是残留和新配置混在一起，形成一个谁都认不出的状态。</p>
+
+  <p>等下次再启动公司 VPN 时，它读到的系统状态和它上次退出时<strong>记事本上记的完全不一样</strong>，于是可能出现：反复重连、认不出自己的隧道、或者显示已连接但路由根本没生效。</p>
+
+  <div class="note bad">
+    <span class="nt">更底层的原因：这三个东西都不允许「共享」</span>
+    <ul>
+      <li><b>命名资源独占</b>：TUN 设备在操作系统里是具名对象，同一时刻只应有一个接管者。</li>
+      <li><b>过滤器分层注册</b>：WFP 过滤器按层注册，两个过滤器同时拦同一批包时，优先级和调用顺序由系统决定，结果不可预测。</li>
+      <li><b>状态机假设</b>：VPN 客户端内部维护着「我已连接 / 隧道 IP 是多少 / 我改过哪些路由」的快照，它<b>假设自己是唯一的管理者</b>。另一个工具动了系统状态，这个假设就不成立了。</li>
+    </ul>
+  </div>
+
+  <h3>2.3　症状对照表</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>你看到的现象</th><th>大概率是哪一层出问题</th><th>怎么确认</th></tr></thead>
+      <tbody>
+        <tr><td>公司 VPN 显示已连接，但访问不了内网</td><td>路由表——默认路由被抢</td><td><code>route print</code> 看 <code>0.0.0.0</code> 那行指向谁</td></tr>
+        <tr><td>内网域名解析失败，IP 直连却可以</td><td>DNS——被 fake-ip 劫持</td><td><code>nslookup 内网域名</code>，看返回的 IP 是不是 <code>198.18.x.x</code></td></tr>
+        <tr><td>公司 VPN 反复掉线重连</td><td>虚拟网卡 / 过滤器冲突</td><td>设备管理器里看有几个 TUN 网卡</td></tr>
+        <tr><td>关掉 Clash 后公司 VPN 依然不正常</td><td>残留没清理干净</td><td>清 DNS 缓存 + 重启网络适配器</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>2.4　想让两者共存，按这个来</h3>
+
+  <ol>
+    <li><strong>最省事的办法：别同时开两个全局接管型工具。</strong>需要公司内网时用公司 VPN，需要出网时切 Clash，不并行。</li>
+    <li>必须共存时，<strong>把优先级定清楚</strong>：
+      <ul>
+        <li>Clash TUN 配置里排除公司 VPN 的虚拟网卡（<code>interface-name</code> 或 <code>exclude-interface</code>）</li>
+        <li>Clash 规则里给公司网段、公司 VPN 服务器地址加 <code>DIRECT</code> 规则，明确不走 Clash</li>
+      </ul>
+    </li>
+    <li><strong>启动顺序：</strong>先连公司 VPN，确认内网能通 → 再开 Clash → 开完用 <code>route print</code> 复查默认路由和公司网段的走向对不对。</li>
+    <li><strong>出问题时的快速修复：</strong>全部退出（含托盘和后台服务）→ <code>ipconfig /flushdns</code> → 禁用再启用网络适配器，或者干脆重启系统。</li>
+    <li><strong>最根本的解法：</strong>让公司 VPN 用拆分隧道模式，不去抢默认路由，冲突面立刻缩小一大半。</li>
+  </ol>
+</section>
+
+<!-- ══════════════════ 第 4 章 ══════════════════ -->
+<section class="ch" id="c4">
+  <div class="ch-hd"><span class="ch-n">04</span><h2>隧道的死循环：为什么必须给自己留一条 /32</h2></div>
+  <p class="ch-sub">外层包也要出口 · 先有鸡还是先有蛋</p>
+
+  <div class="tl">
+    <p><b>一句话结论：</b>隧道的外层包同样需要一条出口路由。如果这条路由也没人管、被默认路由吞掉指回了隧道，那就形成一个「要发它就得先建隧道，要建隧道就得先发它」的循环依赖，隧道永远建不起来。</p>
+  </div>
+
+  <h3>3.1　场景设定</h3>
+
+  <ul>
+    <li>你的电脑：<code>192.168.1.10</code>，网关 <code>192.168.1.1</code></li>
+    <li>公司 VPN 网关的公网地址：<code>203.0.113.1</code></li>
+    <li>隧道虚拟网卡分配到的地址：<code>10.10.0.200</code></li>
+  </ul>
+
+  <p>全隧道模式下，客户端会往路由表里塞这些行：</p>
+
+  <pre><code>10.10.0.0/16    →  10.10.0.200    （隧道网卡，公司内网走这里）
+203.0.113.1/32  →  192.168.1.1    （★ 例外：去 VPN 服务器走真实网关）
+0.0.0.0/0       →  10.10.0.200    （默认路由，全部改走隧道）</code></pre>
+
+  <p>关键是带 ★ 的那一行。它的前缀长度是 <code>32</code>，比 <code>0</code> 长得多，所以在「最长前缀优先」的规则下，<strong>任何去往 <code>203.0.113.1</code> 的包都必定走真实网卡</strong>，绝不会落进默认路由。</p>
+
+  <h3>3.2　如果没有那一行：完整死循环</h3>
+
+  <figure class="fig">
+    <div class="fgt">图 3-1　缺少 /32 例外路由时的循环依赖</div>
+    <svg viewBox="0 0 680 232" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>隧道建立的死循环</title>
+      <desc>外层握手包需要发往 VPN 服务器，但默认路由指向隧道网卡，而使用隧道网卡又需要先建立隧道，形成循环依赖。</desc>
+      <defs>
+        <marker id="a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <text x="40" y="30" dominant-baseline="central" font-size="13" style="fill:var(--tx3)">场景：全隧道模式，VPN 服务器公网地址 = 203.0.113.1</text>
+      <rect x="70" y="84" width="240" height="56" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="190" y="105" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--tx)">想把握手包发给</text>
+      <text x="190" y="125" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--tx)">203.0.113.1</text>
+      <rect x="370" y="84" width="240" height="56" rx="10" style="fill:var(--ambg)" stroke="var(--am)" stroke-width="0.5"/>
+      <text x="490" y="105" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--am)">查表命中 0.0.0.0/0</text>
+      <text x="490" y="125" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--am)">→ 隧道网卡</text>
+      <path d="M310 104 L364 104" fill="none" stroke="var(--bd2)" stroke-width="1.5" marker-end="url(#a3)"/>
+      <text x="337" y="88" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">第一步</text>
+      <path d="M490 140 L490 180 L190 180 L190 144" fill="none" stroke="var(--am)" stroke-width="1.5" marker-end="url(#a3)"/>
+      <text x="340" y="204" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--am)">但要用隧道网卡，得先建好隧道；要建隧道，又得先把这个包发出去 → 回到第一步</text>
+    </svg>
+    <figcaption>表现形式：客户端一直卡在「正在连接」、日志里反复刷「无法建立隧道」、连接条走到一半就回退。</figcaption>
+  </figure>
+
+  <h3>3.3　为什么商业客户端很少踩这个坑</h3>
+
+  <p>因为正规的 VPN 客户端在内部有一套严格的时序，它们是<strong>先留后路，再修大路</strong>：</p>
+
+  <ol class="steps">
+    <li><p>读取配置，拿到服务器地址（这时候还不改任何东西）。</p></li>
+    <li><p><strong>先在路由表里插一条 <code>服务器IP/32 → 当前默认网关</code></strong>，并且把当前整张路由表和 DNS 设置<strong>存成快照</strong>。</p></li>
+    <li><p>开始握手、建隧道。因为有了第 2 步那条例外路由，握手包必定走真实网卡出去。</p></li>
+    <li><p>隧道建立成功，再把 <code>0.0.0.0/0</code> 改指向隧道网卡。</p></li>
+    <li><p>断开连接时，按第 2 步的快照把路由表和 DNS <strong>原样恢复</strong>。</p></li>
+  </ol>
+
+  <p><strong>容易出问题的场景</strong>是手工配置：手写 WireGuard 的 <code>AllowedIPs = 0.0.0.0/0</code>、手写 OpenVPN 的 <code>route</code> 指令时，很容易漏掉「给服务器地址留一条例外」这一步。</p>
+
+  <div class="note warn">
+    <span class="nt">WireGuard 的一个隐藏坑</span>
+    <p>如果 <code>Endpoint</code> 写的是<b>域名</b>而不是 IP，那么解析这个域名也需要走网络。如果那一刻 DNS 已经被指到了隧道内部的服务器，就会出现「为了连隧道，得先解析域名；为了解析域名，得先连上隧道」的二次死循环。所以 WireGuard 配置里 <code>Endpoint</code> 最好直接写 IP。</p>
+  </div>
+
+  <h3>3.4　为什么 <code>route print</code> 里那么多 /32</h3>
+
+  <p>你在 Windows 上敲 <code>route print</code>，经常看到一大串 <code>xxx.xxx.xxx.xxx/32</code> 的行。它们就是各路人马给自己留的「后门」——VPN 客户端、虚拟化软件、Docker、Clash 的 TUN 等等，都在用「加一条最具体的路由」这个手段，保证自己的关键流量不会被默认路由吞掉。</p>
+
+  <div class="qk">
+    <div class="qt">一句话记忆</div>
+    <p>默认路由是「其他都归我」。谁不想被吞掉，就给自己加一条更具体的 <code>/32</code>。<strong>前缀越长，说话越算数。</strong></p>
+  </div>
+</section>
+
+<!-- ══════════════════ 第 5 章 ══════════════════ -->
+<section class="ch" id="c5">
+  <div class="ch-hd"><span class="ch-n">05</span><h2>本机服务与防火墙方向</h2></div>
+  <p class="ch-sub">别人来连你，走的是入站 · 三个条件缺一不可</p>
+
+  <div class="tl">
+    <p><b>一句话结论：</b>在 A 上起一个服务，同网段的 B 能不能访问，看的是 A 的<b>入站（Inbound）</b>规则，不是出站。<b>方向搞反了，怎么调都没用。</b></p>
+  </div>
+
+  <h3>5.1　入站和出站是两个方向</h3>
+
+  <figure class="fig">
+    <div class="fgt">图 5-1　请求走哪扇门，响应走哪扇门</div>
+    <svg viewBox="0 0 680 254" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>入站与出站方向</title>
+      <desc>电脑 B 主动访问电脑 A 的服务属于入站方向，需要监听地址、入站规则、VPN 客户端三项条件同时满足。</desc>
+      <defs>
+        <marker id="b5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <text x="40" y="30" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--tx)">别人访问你电脑上的服务：卡的是入站规则</text>
+      <rect x="40" y="60" width="150" height="60" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="115" y="82" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" style="fill:var(--tx)">电脑 B</text>
+      <text x="115" y="100" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">192.168.1.20</text>
+      <rect x="250" y="60" width="150" height="60" rx="10" style="fill:var(--ambg)" stroke="var(--am)" stroke-width="0.5"/>
+      <text x="325" y="82" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" style="fill:var(--am)">入站规则</text>
+      <text x="325" y="100" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--am)">默认：拦截</text>
+      <rect x="460" y="60" width="180" height="60" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="550" y="82" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" style="fill:var(--ac)">A 上的本地服务</text>
+      <text x="550" y="100" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--ac)">0.0.0.0:8080</text>
+      <path d="M190 90 L244 90" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#b5)"/>
+      <path d="M400 90 L454 90" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#b5)"/>
+      <text x="40" y="148" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">回给 B 的响应包走「出站规则」，Windows 默认放行，通常不用管</text>
+      <rect x="40" y="170" width="192" height="64" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="136" y="192" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--tx)">① 监听 0.0.0.0</text>
+      <text x="136" y="212" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">不是 127.0.0.1</text>
+      <rect x="244" y="170" width="192" height="64" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="340" y="192" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--tx)">② 入站规则放行</text>
+      <text x="340" y="212" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">该端口和程序</text>
+      <rect x="448" y="170" width="192" height="64" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="544" y="192" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--tx)">③ VPN 客户端</text>
+      <text x="544" y="212" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">没禁本地网络访问</text>
+    </svg>
+    <figcaption>Windows 防火墙的默认策略是「<b>入站阻止、出站允许</b>」，所以问题几乎总是出在入站这一侧。</figcaption>
+  </figure>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>方向</th><th>谁主动</th><th>管什么</th><th>Windows 默认策略</th></tr></thead>
+      <tbody>
+        <tr><td>入站 Inbound</td><td>外面的人连你</td><td>别人的请求能不能进到你的服务</td><td><b style="color:var(--rd)">阻止</b>（除非有放行规则）</td></tr>
+        <tr><td>出站 Outbound</td><td>你连别人</td><td>你这台机器能不能出去访问</td><td>允许</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note info">
+    <span class="nt">为什么响应包不用单独放行</span>
+    <p>Windows 防火墙是有状态的（stateful）：只要一条连接是<b>你这边先发起的或者是被放行进来的</b>，它回程的包会自动放行，不需要额外规则。所以「出站」基本不用动。</p>
+  </div>
+
+  <h3>5.2　三个条件，缺一不可</h3>
+
+  <p>图 5-1 底下那三块，就是全部条件。实操中最常踩的是<strong>第一个</strong>——程序根本没监听对地址：</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>框架 / 工具</th><th>默认监听地址</th><th>要改成什么</th></tr></thead>
+      <tbody>
+        <tr><td>Flask</td><td><code>127.0.0.1</code></td><td><code>app.run(host="0.0.0.0")</code></td></tr>
+        <tr><td>Vite / Vue 开发服务器</td><td>localhost</td><td>启动加 <code>--host</code></td></tr>
+        <tr><td>Python <code>-m http.server</code></td><td><code>0.0.0.0</code>（本身就是）</td><td>不用改，直接就能被访问</td></tr>
+        <tr><td>Node 原生 <code>http</code></td><td>不指定时是全部地址</td><td>注意别显式写 <code>localhost</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><code>127.0.0.1</code> 是「本机回环地址」，只对本机开放。程序监听它，意味着「只有我自己能连」，别人发到 <code>192.168.1.10:8080</code> 的包根本没人接。</p>
+
+  <h3>5.3　同网段通信压根不经过路由器</h3>
+
+  <p>B 和 A 都在 <code>192.168.1.x</code> 里，B 做的事是发一个 ARP 广播问「A 的 MAC 是多少」，拿到之后直接把帧交给交换机，交换机再送到 A。整个过程中<strong>路由器完全没有参与</strong>。</p>
+
+  <p>所以在这个场景下，路由器怎么配都无所谓。只有 B 和 A <strong>不在同一网段</strong>时，才需要路由器转发——那就还得额外确认路由器的路由和防火墙策略。</p>
+
+  <h3>5.4　全隧道模式会从反面影响它</h3>
+
+  <p>如果 A 开的是全隧道模式，而且客户端带了「禁止访问本地网络 / Kill Switch」这类策略，B 就算三条件都满足也连不上——包能到 A 的网卡（二层没问题），但 A 的系统<strong>不回应</strong>，因为流量被客户端自己的过滤器拦掉了。</p>
+
+  <p>快速验证：把公司 VPN 切成拆分隧道。如果 B 立刻能访问，就是这个原因。详细机制见第 2 章 2.1 与第 3 章 3.2。</p>
+</section>
+
+<!-- ══════════════════ 第 6 章 ══════════════════ -->
+<section class="ch" id="c6">
+  <div class="ch-hd"><span class="ch-n">06</span><h2>VPN 与 Clash 的分野</h2></div>
+  <p class="ch-sub">路由表长什么样 · 网络层接管 vs 应用层代理 · 局域网共享</p>
+
+  <div class="tl">
+    <p><b>一句话结论：</b>VPN 和 Clash 长得像，但根本不是一个层次的东西。VPN 在<b>网络层</b>用虚拟网卡 + 路由表接管<b>所有程序</b>；Clash 在<b>应用层</b>开一个本地端口，只有<b>主动把请求交过来的程序</b>才走代理。</p>
+  </div>
+
+  <h3>6.1　先看清路由表长什么样</h3>
+
+  <p>Windows 上敲 <code>route print</code>，或者 Mac/Linux 上敲 <code>netstat -rn</code>，会看到类似这样的输出（下面是为讲清楚而整理的，只保留关键列）：</p>
+
+  <pre><code>目标网段          掩码              网关            接口              跃点数
+0.0.0.0         0.0.0.0         192.168.1.1     192.168.1.10       25   ← 默认路由，兜底
+10.10.0.0       255.255.0.0     10.10.0.1       10.10.0.200         5   ← VPN 加的公司网段
+203.0.113.1     255.255.255.255 192.168.1.1     192.168.1.10        5   ← VPN 加的服务器例外
+192.168.1.0     255.255.255.0   On-link         192.168.1.10      281   ← 本地网段，直连</code></pre>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>列</th><th>含义</th></tr></thead>
+      <tbody>
+        <tr><td>目标网段 / 掩码</td><td>这条规则管哪个范围。「掩码全 0」= 管全世界（默认路由）</td></tr>
+        <tr><td>网关</td><td>下一个交给谁。<code>On-link</code> 表示「就在本地网段，直接发」</td></tr>
+        <tr><td>接口</td><td>从这个地址对应的网卡出去。隧道网卡还是物理网卡，差别就在这</td></tr>
+        <tr><td>跃点数（metric）</td><td>优先级参考值，越小越优先。<b>仅在同前缀长度时才用来决胜</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note ok">
+    <span class="nt">匹配靠的是「最长前缀优先」，不是「从上往下第一条」</span>
+    <p>一个包找路时，系统会把所有能对上的规则挑出来，<b>选前缀最长的那条</b>。所以 <code>10.10.0.0/16</code> 永远压过 <code>0.0.0.0/0</code>，<code>203.0.113.1/32</code> 也永远压过默认路由。跃点数只在「前缀长度打平」时才登场。</p>
+  </div>
+
+  <p>于是「拆分隧道」和「全隧道」就很好理解了，它们无非是改这张表的不同改法：</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>模式</th><th>对路由表做什么</th><th>结果</th></tr></thead>
+      <tbody>
+        <tr><td>拆分隧道</td><td>只加一条 <code>公司网段 → 隧道网卡</code></td><td>只有去公司内网的流量进隧道，其余照常直连</td></tr>
+        <tr><td>全隧道</td><td>加公司网段 + <b>把默认路由改成隧道</b> + 单独放行 VPN 服务器 <code>/32</code></td><td>所有流量进隧道（第三条是为了防死循环，见第 4 章）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>6.2　两套接管方式的本质区别</h3>
+
+  <figure class="fig">
+    <div class="fgt">图 6-1　谁被接管了：全部程序 vs 只有配了代理的程序</div>
+    <svg viewBox="0 0 680 234" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>VPN 改路由表与 Clash 本地代理端口的区别</title>
+      <desc>VPN 在网络层通过虚拟网卡和路由表接管所有程序，Clash 在应用层通过本地端口只接管主动配置代理的程序。</desc>
+      <defs>
+        <marker id="b6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <text x="40" y="28" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--ac)">VPN：改路由表，程序无感</text>
+      <text x="350" y="28" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--tx)">Clash：本地端口，程序要主动交</text>
+      <rect x="40" y="48" width="88" height="44" rx="8" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="84" y="70" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--ac)">浏览器</text>
+      <rect x="141" y="48" width="88" height="44" rx="8" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="185" y="70" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--ac)">游戏</text>
+      <rect x="242" y="48" width="88" height="44" rx="8" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="286" y="70" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--ac)">命令行</text>
+      <path d="M84 92 L84 142" fill="none" stroke="var(--ac)" stroke-width="1.5" marker-end="url(#b6)"/>
+      <path d="M185 92 L185 142" fill="none" stroke="var(--ac)" stroke-width="1.5" marker-end="url(#b6)"/>
+      <path d="M286 92 L286 142" fill="none" stroke="var(--ac)" stroke-width="1.5" marker-end="url(#b6)"/>
+      <rect x="40" y="146" width="290" height="48" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="185" y="170" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--ac)">虚拟网卡 + 路由表</text>
+      <rect x="350" y="48" width="88" height="44" rx="8" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="394" y="70" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--ac)">浏览器</text>
+      <rect x="451" y="48" width="88" height="44" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="495" y="70" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--tx3)">游戏</text>
+      <rect x="552" y="48" width="88" height="44" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="596" y="70" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--tx3)">命令行</text>
+      <path d="M394 92 L394 142" fill="none" stroke="var(--ac)" stroke-width="1.5" marker-end="url(#b6)"/>
+      <path d="M495 92 L495 112" fill="none" stroke="var(--bd2)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <path d="M490 117 L500 127 M500 117 L490 127" fill="none" stroke="var(--bd2)" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M596 92 L596 112" fill="none" stroke="var(--bd2)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <path d="M591 117 L601 127 M601 117 L591 127" fill="none" stroke="var(--bd2)" stroke-width="1.5" stroke-linecap="round"/>
+      <rect x="350" y="146" width="290" height="48" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="495" y="170" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--ac)">本地端口 127.0.0.1:7890</text>
+      <text x="185" y="214" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">三个程序全都自动走</text>
+      <text x="495" y="214" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">没配代理的程序照样直连</text>
+    </svg>
+    <figcaption>右边那两个「✗」是重点：Clash 想接管一个程序，那个程序<b>必须把请求交给 7890 端口</b>，否则 Clash 完全无从下手。</figcaption>
+  </figure>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>对比项</th><th>VPN 隧道</th><th>Clash 代理模式</th></tr></thead>
+      <tbody>
+        <tr><td>工作层次</td><td><b>网络层（L3）</b></td><td><b>应用层（L7）</b></td></tr>
+        <tr><td>载体</td><td>虚拟网卡（TUN 设备）</td><td>本地监听端口 <code>7890</code></td></tr>
+        <tr><td>谁来接管</td><td>系统路由表，程序完全不知情</td><td>程序自己得把请求交过来（系统代理 / 环境变量 / 规则劫持）</td></tr>
+        <tr><td>分流依据</td><td><b>目标 IP 段</b></td><td><b>域名 / IP / 规则</b>，粒度更细</td></tr>
+        <tr><td>是否改路由表</td><td>是</td><td>普通模式否；<b>TUN 模式是</b></td></tr>
+        <tr><td>加密范围</td><td>整条链路（到公司网关）</td><td>到你连的代理服务器那一段</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>6.3　Clash 的模式怎么对应</h3>
+
+  <ul>
+    <li><strong>规则模式 / 分流规则</strong> ≈ 拆分隧道：<code>DOMAIN-SUFFIX,google.com,PROXY</code> 走代理，其余 <code>DIRECT</code> 直连。</li>
+    <li><strong>全局模式（Global）</strong> ≈ 全隧道：所有流量走代理。</li>
+  </ul>
+
+  <p>但<strong>匹配依据不同</strong>：VPN 的拆分是按<strong>目标 IP 段</strong>分的，Clash 还能按<strong>域名</strong>分——这是应用层才能做到的事，因为只有应用层才看得到 HTTP 里的域名。这也是为什么用 Clash 分流「某网站直连、某网站走代理」比用 VPN 精确得多。</p>
+
+  <div class="note warn">
+    <span class="nt">例外：Clash 的 TUN 模式才是「真·改路由表」</span>
+    <p>开启 TUN 模式后，Clash 会创建一个虚拟网卡并接管路由表，行为上就和 VPN 非常接近了——包括<b>接管那些不认代理的程序</b>，也包括<b>和公司 VPN 抢默认路由</b>（这就是第 3 章那个冲突的来源）。</p>
+  </div>
+
+  <h3>6.4　Clash 的「局域网共享」和「借道」是一回事吗</h3>
+
+  <p><strong>是同一个思想，只是层次不同。</strong></p>
+
+  <p>Clash 的 <strong>Allow LAN（允许局域网连接）</strong>，做的事情就是把监听地址从 <code>127.0.0.1:7890</code> 改成 <code>0.0.0.0:7890</code>——从「只服务我自己」变成「欢迎邻居来用」。然后隔壁电脑把代理设成 <code>192.168.1.10:7890</code>，就等于借了 A 的 Clash 出去。</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th></th><th>Clash Allow LAN</th><th>VPN 借道</th></tr></thead>
+      <tbody>
+        <tr><td>层次</td><td>应用层（显式提供服务）</td><td>网络层（默默转发）</td></tr>
+        <tr><td>怎么开</td><td>UI 上一个开关，一点就开</td><td>要开 IP 转发 + 改对方路由 + 做 NAT</td></tr>
+        <tr><td>默认状态</td><td>关闭（只监听本机）</td><td>全部关闭</td></tr>
+        <tr><td>对方怎么用</td><td>手动把代理指向 A 的端口</td><td>手动把网关或路由指向 A</td></tr>
+        <tr><td>本质</td><td colspan="2" style="fill:var(--ac)">本机当中间人：别人把流量交给它，它替你转出去</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="qk">
+    <div class="qt">一句话</div>
+    <p><strong>Allow LAN 就是「轻量版的跳板」</strong>：原理同源，但因为它在应用层显式提供服务，开起来容易得多——代价是对方必须主动配置代理，而 VPN 借道（如果配上）对对方程序是透明的。</p>
+  </div>
+</section>
+
+<!-- ══════════════════ 第 7 章 ══════════════════ -->
+<section class="ch" id="c7">
+  <div class="ch-hd"><span class="ch-n">07</span><h2>IP 从哪来：交换机的边界在哪里</h2></div>
+  <p class="ch-sub">DHCP 的四个包 · APIPA 的自我救赎 · 为什么必须要有路由器</p>
+
+  <div class="tl">
+    <p><b>一句话结论：</b>交换机不分配 IP，它连「IP 是什么」都不关心——它只认 MAC 地址。IP 是 DHCP 服务器发的；如果没人应答，设备会<b>自己编一个</b>（APIPA）。所以「没有路由器也能组内网，但一定上不了外网」。</p>
+  </div>
+
+  <h3>4.1　交换机不做的事</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>功能</th><th>二层交换机</th><th>路由器</th></tr></thead>
+      <tbody>
+        <tr><td>同网段内转发</td><td>✅ 靠 MAC 地址表</td><td>也能做，但没必要</td></tr>
+        <tr><td>跨网段转发</td><td>❌ 看不懂 IP</td><td>✅ 靠 IP 和路由表</td></tr>
+        <tr><td>分配 IP（DHCP）</td><td>❌</td><td>✅ 通常内置</td></tr>
+        <tr><td>NAT（私有转公网）</td><td>❌</td><td>✅</td></tr>
+        <tr><td>解析域名（DNS 代理）</td><td>❌</td><td>✅ 通常内置</td></tr>
+        <tr><td>隔离广播域</td><td>❌ 反而扩散广播</td><td>✅ 默认隔离</td></tr>
+        <tr><td>防火墙 / 流量控制</td><td>❌</td><td>✅</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.2　设备拿到 IP 的三条路</h3>
+
+  <ol>
+    <li><strong>手工静态配置</strong>：自己填 IP、掩码、网关、DNS。好处是稳定可预测，坏处是要人工维护。</li>
+    <li><strong>DHCP 自动获取</strong>：向网络喊一嗓子，服务器分配给你。</li>
+    <li><strong>APIPA 自动配置</strong>：喊了没人应，自己挑一个用。</li>
+  </ol>
+
+  <h4>DHCP 的完整过程（DORA 四步）</h4>
+
+  <ol class="steps">
+    <li><p><strong>Discover（发现）</strong>：设备刚开机，还没有 IP，所以只能用源地址 <code>0.0.0.0</code>、目的地址 <code>255.255.255.255</code> 发<strong>广播</strong>：「这屋里有没有 DHCP 服务器？」</p></li>
+    <li><p><strong>Offer（提供）</strong>：DHCP 服务器收到后回应：「我可以把 <code>192.168.1.20</code> 给你用，租期 24 小时。」</p></li>
+    <li><p><strong>Request（请求）</strong>：设备再<strong>广播</strong>一次：「各位服务器注意，我要 <code>192.168.1.20</code> 了。」（这一步用广播而不是单播，是为了让所有 DHCP 服务器都知道它选了谁，从而收回其他家的 Offer。）</p></li>
+    <li><p><strong>Ack（确认）</strong>：服务器回一句「确认，拿去用」，同时把掩码、网关、DNS 一起给你。设备配置完成。</p></li>
+  </ol>
+
+  <div class="note info">
+    <span class="nt">为什么全程靠广播</span>
+    <p>因为设备此刻还没有 IP 地址，无法进行任何单播通信。广播是「还不知道跟谁说」时唯一的通信方式。这也是为什么 DHCP 只能在同一个广播域里工作——广播穿不过路由器。</p>
+  </div>
+
+  <h3>4.3　没有路由器、只有交换机、三台设备都设为「自动获取」会怎样</h3>
+
+  <figure class="fig">
+    <div class="fgt">图 4-1　有 DHCP 服务器 vs 只有交换机</div>
+    <svg viewBox="0 0 680 262" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>有无 DHCP 服务器的对比</title>
+      <desc>左边有路由器充当 DHCP 服务器，三台设备拿到完整配置；右边只有二层交换机，设备拿不到地址只能自行配置 169.254 开头的地址。</desc>
+      <defs>
+        <marker id="a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <text x="40" y="30" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--ac)">有路由器（内置 DHCP 服务器）</text>
+      <text x="350" y="30" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--tx3)">只有二层交换机</text>
+      <rect x="40" y="48" width="290" height="44" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="185" y="70" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--ac)">路由器 · 内置 DHCP</text>
+      <path d="M185 92 L84 128" fill="none" stroke="var(--ac)" stroke-width="1" marker-end="url(#a4)"/>
+      <path d="M185 92 L185 128" fill="none" stroke="var(--ac)" stroke-width="1" marker-end="url(#a4)"/>
+      <path d="M185 92 L286 128" fill="none" stroke="var(--ac)" stroke-width="1" marker-end="url(#a4)"/>
+      <rect x="350" y="48" width="290" height="44" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="495" y="70" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--tx3)">二层交换机 · 只转发</text>
+      <path d="M495 92 L394 128" fill="none" stroke="var(--bd2)" stroke-width="1" stroke-dasharray="4 4"/>
+      <path d="M495 92 L495 128" fill="none" stroke="var(--bd2)" stroke-width="1" stroke-dasharray="4 4"/>
+      <path d="M495 92 L596 128" fill="none" stroke="var(--bd2)" stroke-width="1" stroke-dasharray="4 4"/>
+      <text x="495" y="112" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">无人应答</text>
+      <rect x="40" y="132" width="88" height="44" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="84" y="154" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--tx)">电脑 A</text>
+      <rect x="141" y="132" width="88" height="44" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="185" y="154" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--tx)">电脑 B</text>
+      <rect x="242" y="132" width="88" height="44" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="286" y="154" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--tx)">电脑 C</text>
+      <rect x="350" y="132" width="88" height="44" rx="8" style="fill:var(--ambg)" stroke="var(--am)" stroke-width="0.5"/>
+      <text x="394" y="154" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--am)">电脑 A</text>
+      <rect x="451" y="132" width="88" height="44" rx="8" style="fill:var(--ambg)" stroke="var(--am)" stroke-width="0.5"/>
+      <text x="495" y="154" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--am)">电脑 B</text>
+      <rect x="552" y="132" width="88" height="44" rx="8" style="fill:var(--ambg)" stroke="var(--am)" stroke-width="0.5"/>
+      <text x="596" y="154" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--am)">电脑 C</text>
+      <text x="185" y="200" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--ac)">拿到 192.168.1.10~12 + 网关 + DNS</text>
+      <text x="185" y="224" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--tx2)">能互通，也能上外网</text>
+      <text x="495" y="200" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--am)">自己编 169.254.x.x（APIPA）</text>
+      <text x="495" y="224" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--tx2)">能互通，上不了外网</text>
+      <text x="340" y="250" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">IP 的分配者是 DHCP 服务器，不是交换机</text>
+    </svg>
+    <figcaption>三台设备都在同一个网段，所以互相 ping 得通；差别在于<b>有没有网关和 DNS</b>，而这决定了能不能出门。</figcaption>
+  </figure>
+
+  <h4>APIPA：喊不到人，就自己编一个</h4>
+
+  <p>Windows 上看到 <code>169.254.x.x</code> 这种地址，就是「我没要到 IP」的信号。这个机制叫 <strong>APIPA（自动专用 IP 寻址）</strong>，过程是：</p>
+
+  <ol>
+    <li>从 <code>169.254.0.0/16</code> 这个专用网段里，随机挑一个地址</li>
+    <li>发 <strong>ARP 探测</strong>（ARP Probe）问：「这个地址有人用吗？」</li>
+    <li>有人回应 → 说明撞车了，换一个，回到第 1 步</li>
+    <li>没人回应 → 用这个地址，再发一次 ARP <strong>通告</strong>声明占用</li>
+  </ol>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>APIPA 的特点</th><th>具体表现</th></tr></thead>
+      <tbody>
+        <tr><td>地址范围</td><td><code>169.254.0.0/16</code>（168.254 段专用）</td></tr>
+        <tr><td>子网掩码</td><td>固定 <code>255.255.0.0</code>，所以同网段范围极大</td></tr>
+        <tr><td>网关</td><td><b>没有</b>——所以出不了门</td></tr>
+        <tr><td>DNS</td><td><b>没有</b>——所以解析不了域名</td></tr>
+        <tr><td>能否互访</td><td>能。三台设备都在 <code>169.254.x.x</code>，同网段，交换机直达</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.4　会不会 IP 冲突</h3>
+
+  <ul>
+    <li><strong>APIPA 不会冲突</strong>：因为有 ARP 探测 + 通告这套机制，同一个广播域内每个人都能确认自己的地址没被占用。</li>
+    <li><strong>DHCP 也不会冲突</strong>：服务器维护「已分配列表」和租约时间，不会重复发放。</li>
+    <li><strong>手工配置会冲突</strong>：如果两个人手动填了同一个 IP，操作系统在启动时会通过 ARP 检测到冲突，弹出「检测到 IP 地址冲突」的警告，然后那台设备可能干脆不启用网络。</li>
+    <li><strong>跨广播域的 APIPA 可能重复</strong>：两个互不相通的局域网各自用 <code>169.254.1.1</code> 是可能的——但它们本来也通信不了，所以无所谓。</li>
+  </ul>
+
+  <h3>4.5　那为什么还需要路由器</h3>
+
+  <p>因为「组内网」和「连外网」是两件事。路由器解决的正是交换机做不到的那部分：</p>
+
+  <ol>
+    <li><strong>跨网段转发</strong>：交换机只能在同一个网段内转发（靠 MAC）。一旦目标在别的网段，交换机不知道该怎么办。路由器负责「从这个网络送到另一个网络」。</li>
+    <li><strong>NAT</strong>：内网用的 <code>192.168.x.x</code> / <code>10.x.x.x</code> / <code>172.16~31.x.x</code> 是<strong>私有地址</strong>，在公网上根本不存在、也不允许出现。必须由路由器把它们翻译成一个真实的公网地址。</li>
+    <li><strong>DHCP + DNS 代理</strong>：自动分配地址、告诉设备去哪解析域名。</li>
+    <li><strong>隔离广播</strong>：广播不会穿过路由器。这样每个网段内的广播量才可控。</li>
+    <li><strong>防火墙与流量控制</strong>：能拦、能限速、能记录。</li>
+  </ol>
+
+  <h3>4.6　路由器与交换机的关系</h3>
+
+  <div class="qk">
+    <div class="qt">一个比喻</div>
+    <p><strong>交换机 = 一栋楼里的内部邮差</strong>：他认识楼里每个人的房间号（MAC 地址），只负责楼内投递，不知道楼外还有世界。<br>
+    <strong>路由器 = 连接不同楼栋的跨城快递</strong>：他认识城市和街道（IP 网段），负责把包裹从一个网络送到另一个网络。</p>
+  </div>
+
+  <p>层级关系上：<strong>路由器在上，交换机在下</strong>。路由器的一个 LAN 口接一台交换机，就构成一个「子网」；多个子网用路由器连起来，才成了互联网的雏形。</p>
+
+  <div class="note ok">
+    <span class="nt">一个重要的事实：你家的「路由器」其实是五个东西合体</span>
+    <p>路由器 + 交换机 + 无线 AP + DHCP 服务器 + 防火墙/NAT。所以它才能一根网线进来、几台设备出去、还自动分地址。拆开看，每一部分都不是必须绑在一起的。</p>
+  </div>
+</section>
+
+<!-- ══════════════════ 第 8 章 ══════════════════ -->
+<section class="ch" id="c8">
+  <div class="ch-hd"><span class="ch-n">08</span><h2>设备的能力边界</h2></div>
+  <p class="ch-sub">什么结构能借道 · 谁能开 VPN · 没有路由器能不能上网</p>
+
+  <div class="tl">
+    <p><b>一句话结论：</b>判断「能不能」的时候，别盯着拓扑长什么样，只看两条：<b>二层能不能互通、IP 是不是同一网段</b>。中间挂的是路由器、交换机还是光猫，不影响同网段设备之间互相看见。</p>
+  </div>
+
+  <h3>8.1　借道的判据只有两条</h3>
+
+  <figure class="fig">
+    <div class="fgt">图 8-1　三种网络结构，结论是同一个</div>
+    <svg viewBox="0 0 680 254" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>三种网络结构下的借道可行性</title>
+      <desc>只有路由器、路由器加交换机、只有交换机三种结构，只要二层互通且在同一网段，都能借道。</desc>
+      <text x="40" y="26" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--tx)">只有路由器</text>
+      <text x="245" y="26" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--tx)">路由器 + 交换机</text>
+      <text x="450" y="26" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--tx)">只有交换机（网关在上一级）</text>
+      <rect x="55" y="46" width="160" height="40" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="135" y="66" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx)">路由器（网关）</text>
+      <rect x="260" y="46" width="160" height="40" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="340" y="66" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx)">路由器（网关）</text>
+      <rect x="465" y="46" width="160" height="40" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="545" y="66" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx)">光猫 / 上级网关</text>
+      <path d="M135 86 L135 108" fill="none" stroke="var(--bd2)" stroke-width="1"/>
+      <path d="M340 86 L340 108" fill="none" stroke="var(--bd2)" stroke-width="1"/>
+      <path d="M545 86 L545 108" fill="none" stroke="var(--bd2)" stroke-width="1"/>
+      <rect x="55" y="112" width="160" height="32" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5" stroke-dasharray="3 3"/>
+      <text x="135" y="128" text-anchor="middle" dominant-baseline="central" font-size="11.5" style="fill:var(--tx3)">无交换机，直接接</text>
+      <rect x="260" y="112" width="160" height="32" rx="8" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="340" y="128" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--ac)">二层交换机</text>
+      <rect x="465" y="112" width="160" height="32" rx="8" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="545" y="128" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--ac)">二层交换机</text>
+      <path d="M135 144 L135 166" fill="none" stroke="var(--bd2)" stroke-width="1"/>
+      <path d="M340 144 L340 166" fill="none" stroke="var(--bd2)" stroke-width="1"/>
+      <path d="M545 144 L545 166" fill="none" stroke="var(--bd2)" stroke-width="1"/>
+      <rect x="55" y="170" width="75" height="40" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="92" y="190" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx)">电脑 A</text>
+      <rect x="140" y="170" width="75" height="40" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="177" y="190" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx)">电脑 B</text>
+      <rect x="260" y="170" width="75" height="40" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="297" y="190" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx)">电脑 A</text>
+      <rect x="345" y="170" width="75" height="40" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="382" y="190" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx)">电脑 B</text>
+      <rect x="465" y="170" width="75" height="40" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="502" y="190" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx)">电脑 A</text>
+      <rect x="550" y="170" width="75" height="40" rx="8" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="587" y="190" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx)">电脑 B</text>
+      <text x="135" y="232" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="500" style="fill:var(--ac)">能借道</text>
+      <text x="340" y="232" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="500" style="fill:var(--ac)">能借道</text>
+      <text x="545" y="232" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="500" style="fill:var(--ac)">能借道</text>
+    </svg>
+    <figcaption>三种结构下，A 和 B 的通信都只经过交换机（或直接相接），<b>路由器不参与</b>——因为同网段通信不需要经过网关。</figcaption>
+  </figure>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>网络结构</th><th>二层能互通</th><th>同网段</th><th>能否借道</th></tr></thead>
+      <tbody>
+        <tr><td>光猫 / 路由器下，设备都在 LAN 侧</td><td style="color:var(--ac)">能</td><td style="color:var(--ac)">是</td><td style="color:var(--ac)">能</td></tr>
+        <tr><td>路由器 + 交换机，都在 LAN 侧同一网段</td><td style="color:var(--ac)">能</td><td style="color:var(--ac)">是</td><td style="color:var(--ac)">能</td></tr>
+        <tr><td>只有交换机，网关在上一级，同一网段</td><td style="color:var(--ac)">能</td><td style="color:var(--ac)">是</td><td style="color:var(--ac)">能</td></tr>
+        <tr><td>设备接在路由器 WAN 侧，或分属不同网段</td><td style="color:var(--rd)">不能</td><td style="color:var(--rd)">否</td><td style="color:var(--rd)">不能</td></tr>
+        <tr><td>路由器开了 AP 隔离或访客网络</td><td style="color:var(--rd)">不能</td><td style="color:var(--ac)">是</td><td style="color:var(--rd)">不能</td></tr>
+        <tr><td>VPN 主机开了全隧道，且客户端禁止本地网络</td><td style="color:var(--ac)">能</td><td style="color:var(--ac)">是</td><td style="color:var(--rd)">不能</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>注意最后三行：它变「不能」的原因都不是拓扑，而是<strong>被隔离了</strong>或者<strong>目标主机自己拒绝了</strong>。所以排查问题时要按这个顺序问：</p>
+
+  <ol>
+    <li>两台设备在不在同一个广播域？（没有 AP 隔离、没有 VLAN 划分、没跨 WAN 口）</li>
+    <li>是不是同一个网段？（掩码算一下）</li>
+    <li>目标主机那边有没有策略拦截？（防火墙、VPN 客户端、安全软件）</li>
+  </ol>
+
+  <h3>8.2　没有路由器，宽带网线直连交换机能上网吗</h3>
+
+  <div class="note bad">
+    <span class="nt">不能。交换机永远不会上网——它就是一根「多口排插」</span>
+    <p>你家能上网，是因为有一台设备在干三件事：<b>① 拨号</b>（拿公网 IP）、<b>② NAT</b>（把内网地址翻译成公网地址）、<b>③ DHCP</b>（给设备分地址）。<b>这三件交换机一件都做不了。</b></p>
+  </div>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>你家的「宽带」是哪种</th><th>直连交换机的结果</th><th>原因</th></tr></thead>
+      <tbody>
+        <tr><td>PPPoE 拨号（绝大多数家用）</td><td><b style="color:var(--rd)">不能上网</b></td><td>必须有设备提交账号密码去拨号，交换机不会拨。谁都没拿到 IP</td></tr>
+        <tr><td>ISP 直接给固定 IP / DHCP（专线）</td><td><b style="color:var(--am)">只有一台能用</b></td><td>ISP 通常只给 1 个 IP、还常绑 MAC。且没有 NAT 没有防火墙，电脑直接暴露在公网</td></tr>
+        <tr><td>看着像交换机、其实是路由一体机</td><td>能</td><td>它有 WAN 口、能填宽带账号——<b>本质是路由器</b>，不叫交换机</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><strong>如果某台电脑自己用系统自带功能拨号呢？</strong>那台电脑能上网（它拿到了公网 IP），但<strong>其他电脑还是不能</strong>——它们没有网关、没有 DNS。想让它们也上，那台电脑得再开「网络共享（ICS）」把自己当网关，也就是回到第 1 章讲的「借道」了。</p>
+
+  <div class="note info">
+    <span class="nt">怎么快速分辨</span>
+    <p>看它有没有 <b>WAN 口</b>、有没有能填宽带账号的管理界面。<b>有，就是路由器。</b>市面上很多小盒子既有多个 LAN 口又能填账号，它叫「无线路由器」，只是长得像交换机。</p>
+  </div>
+
+  <h3>8.3　交换机能不能开 VPN</h3>
+
+  <p>判断标准只有一条：<strong>这个设备有没有 IP 协议栈、能不能改自己的路由表、有没有转发能力。</strong>三条都满足，它才跑得动 VPN。</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>设备</th><th>有 IP 协议栈和路由表</th><th>能当 VPN 客户端</th><th>没路由器时能带人上网</th></tr></thead>
+      <tbody>
+        <tr><td>二层交换机</td><td style="color:var(--rd)">没有</td><td style="color:var(--rd)">不能</td><td style="color:var(--rd)">不能</td></tr>
+        <tr><td>三层交换机</td><td style="color:var(--ac)">有</td><td style="color:var(--ac)">能</td><td style="color:var(--ac)">能（需配 NAT）</td></tr>
+        <tr><td>家用无线路由器</td><td style="color:var(--ac)">有</td><td style="color:var(--ac)">能（看型号）</td><td style="color:var(--ac)">能</td></tr>
+        <tr><td>软路由 / OpenWrt</td><td style="color:var(--ac)">有</td><td style="color:var(--ac)">能</td><td style="color:var(--ac)">能</td></tr>
+        <tr><td>NAS（群晖、威联通）</td><td style="color:var(--ac)">有</td><td style="color:var(--ac)">能</td><td style="color:var(--tx3)">需额外配置</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><strong>二层交换机为什么不行：</strong>它没有 IP 协议栈、没有路由表、也没有 CPU 去跑 VPN 客户端。它连 IP 包都看不懂，只认网卡地址（MAC），做的事就是「这个帧该从哪个口送出去」。</p>
+
+  <p><strong>三层交换机为什么行：</strong>它有完整的 TCP/IP 栈和路由能力，企业级的（Cisco、H3C、华为）都支持 IPsec VPN，当客户端当服务端都行。</p>
+
+  <div class="qk">
+    <div class="qt">家用想「全屋走 VPN」的正确做法</div>
+    <p>① 用本身支持 VPN 客户端的路由器（不少家用型号有 OpenVPN / WireGuard 客户端功能）<br>
+    ② 刷 OpenWrt 固件<br>
+    ③ 加一台软路由做旁路由<br>
+    ④ 在 NAS 上跑 VPN 客户端，再把局域网网关指向它</p>
+  </div>
+</section>
+
+<!-- ══════════════════ 第 9 章 ══════════════════ -->
+<section class="ch" id="c9">
+  <div class="ch-hd"><span class="ch-n">09</span><h2>WAN 口接 LAN 口是什么意思</h2></div>
+  <p class="ch-sub">级联 ≠ 桥接 · 双重 NAT 的代价 · 三种「桥接」说法的澄清</p>
+
+  <div class="tl">
+    <p><b>一句话结论：</b>把路由器的 WAN 口接到另一台路由器的 LAN 口，这叫<b>级联</b>，结果是「双重 NAT」——两台路由器各管一个子网，NAT 做了两遍。<b>它不是桥接。</b>真正想让第二台路由器「只当交换机用」，要接的是它的 <b>LAN 口</b>，并且关掉它的 DHCP。</p>
+  </div>
+
+  <h3>5.1　两种接法的对比</h3>
+
+  <figure class="fig">
+    <div class="fgt">图 5-1　接 WAN 口 vs 接 LAN 口</div>
+    <svg viewBox="0 0 680 292" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>两种路由器级联方式</title>
+      <desc>接 WAN 口会形成双重 NAT 和两个子网，接 LAN 口并关闭 DHCP 则让第二台路由器退化成交换机。</desc>
+      <text x="40" y="26" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--tx)">接法 A：R1 的 LAN → R2 的 WAN</text>
+      <text x="350" y="26" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--ac)">接法 B：R1 的 LAN → R2 的 LAN</text>
+      <rect x="40" y="44" width="290" height="44" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="185" y="66" text-anchor="middle" dominant-baseline="central" font-size="13" style="fill:var(--tx)">路由器 R1　192.168.1.1</text>
+      <path d="M185 88 L185 118" fill="none" stroke="var(--am)" stroke-width="1.5"/>
+      <text x="196" y="103" dominant-baseline="central" font-size="12" style="fill:var(--am)">接 WAN 口</text>
+      <rect x="100" y="122" width="170" height="44" rx="10" style="fill:var(--ambg)" stroke="var(--am)" stroke-width="0.5"/>
+      <text x="185" y="144" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--am)">R2　WAN: 192.168.1.2</text>
+      <path d="M185 166 L185 196" fill="none" stroke="var(--bd2)" stroke-width="1"/>
+      <rect x="40" y="200" width="290" height="44" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="185" y="222" text-anchor="middle" dominant-baseline="central" font-size="13" style="fill:var(--tx)">下游设备　192.168.2.x</text>
+      <text x="185" y="268" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--am)">双重 NAT · 上游访问不到下游</text>
+      <rect x="350" y="44" width="290" height="44" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="495" y="66" text-anchor="middle" dominant-baseline="central" font-size="13" style="fill:var(--tx)">路由器 R1　192.168.1.1</text>
+      <path d="M495 88 L495 118" fill="none" stroke="var(--ac)" stroke-width="1.5"/>
+      <text x="506" y="103" dominant-baseline="central" font-size="12" style="fill:var(--ac)">接 LAN 口</text>
+      <rect x="410" y="122" width="170" height="44" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="495" y="144" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--ac)">R2　关掉 DHCP</text>
+      <path d="M495 166 L495 196" fill="none" stroke="var(--bd2)" stroke-width="1"/>
+      <rect x="350" y="200" width="290" height="44" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="495" y="222" text-anchor="middle" dominant-baseline="central" font-size="13" style="fill:var(--tx)">下游设备　仍是 192.168.1.x</text>
+      <text x="495" y="268" text-anchor="middle" dominant-baseline="central" font-size="12.5" style="fill:var(--ac)">同一网段 · 互相都看得见</text>
+    </svg>
+    <figcaption>上面那种多了一层 NAT，下面那种是把第二台路由器的路由功能「关掉」，只留下它的交换和无线模块。</figcaption>
+  </figure>
+
+  <h3>5.2　接 WAN 口的完整过程（双重 NAT）</h3>
+
+  <p>假设电脑接在 R2 下面，地址是 <code>192.168.2.10</code>，要访问百度：</p>
+
+  <ol class="steps">
+    <li><p>电脑发现目标不在本网段 → 交给自己的网关，也就是 R2 的 LAN 口 <code>192.168.2.1</code>。</p></li>
+    <li><p><strong>第一次 NAT</strong>：R2 把源地址从 <code>192.168.2.10</code> 改成自己 WAN 口的地址 <code>192.168.1.2</code>，发给 R1。</p></li>
+    <li><p>R1 收到一个源地址是 <code>192.168.1.2</code> 的包，它只知道这是自己内网的某台设备，照常处理。</p></li>
+    <li><p><strong>第二次 NAT</strong>：R1 把源地址改成自己的公网地址，发往互联网。</p></li>
+    <li><p>回包反向走两遍：公网 → R1（还原一次）→ R2（再还原一次）→ 电脑。</p></li>
+  </ol>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>影响</th><th>具体表现</th></tr></thead>
+      <tbody>
+        <tr><td>上网能不能通</td><td><b>能</b>，只是多了一层，延迟略微增加</td></tr>
+        <tr><td>上游能访问下游吗</td><td><b style="color:var(--rd)">不能</b>。R1 下面的设备访问不到 R2 下面的设备，因为 R2 的 NAT 把下游藏起来了</td></tr>
+        <tr><td>下游能访问上游吗</td><td>能。单向可达</td></tr>
+        <tr><td>P2P / 游戏联机 / BT</td><td>容易出问题。NAT 穿透要穿两层，成功率大幅下降</td></tr>
+        <tr><td>UPnP 自动端口映射</td><td>通常失效，穿不过两层</td></tr>
+        <tr><td>端口映射（做服务器）</td><td>必须在<b>两层都做</b>，非常麻烦</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>5.3　接 LAN 口的正确姿势</h3>
+
+  <ol class="steps">
+    <li><p>网线插 R1 的 <strong>LAN</strong> 口 → R2 的 <strong>LAN</strong> 口（注意不是 WAN 口，WAN 口空着不用）。</p></li>
+    <li><p>登录 R2 的管理页面，<strong>关闭 DHCP 服务器</strong>。这一步必须做，否则两个 DHCP 服务器会打架。</p></li>
+    <li><p>把 R2 自己的管理 IP 改成和 R1 同网段、但不会冲突的地址（比如 R1 是 <code>192.168.1.1</code>，R2 改成 <code>192.168.1.2</code>）。</p></li>
+    <li><p>结果：R2 退化成「交换机 + 无线 AP」，所有设备都在 <code>192.168.1.0/24</code> 里，互相都能看见，也没有双重 NAT。</p></li>
+  </ol>
+
+  <h3>5.4　三种「桥接」说法的澄清</h3>
+
+  <p>中文语境里「桥接」这个词被用了三个不同的意思，混起来非常容易吵架。逐一说清楚：</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>说法</th><th>真实含义</th><th>属于哪一层</th><th>典型场景</th></tr></thead>
+      <tbody>
+        <tr><td>光猫桥接（Bridge Mode）</td><td>关掉光猫的拨号和 NAT，只做光电转换，拨号交给路由器</td><td>三层功能关闭，设备退化为「媒体转换器」</td><td>想用自己的路由器拨号、拿公网 IP 时</td></tr>
+        <tr><td>无线桥接 / WDS</td><td>两台无线路由器用无线连起来，扩展覆盖范围</td><td>二层（WDS 可以做到同一广播域）</td><td>家里信号覆盖不到另一个房间</td></tr>
+        <tr><td>路由器当交换机用</td><td>LAN→LAN + 关 DHCP，关掉路由功能只留交换和无线</td><td>三层功能关闭</td><td>手头多一台路由器，想当交换机使</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note bad">
+    <span class="nt">「WAN 口接 LAN 口」不是桥接的原因</span>
+    <p><b>桥接是二层概念</b>：把两个网段合并成一个广播域，设备之间靠 MAC 直接通信，看起来像接在同一台交换机上。<br>
+    <b>WAN→LAN 是三层概念</b>：两台路由器各维护一个子网，中间靠 IP 路由 + NAT 转发，广播不会穿过，两边的设备互不相识。<br>
+    所以它叫「级联」，不叫桥接。</p>
+  </div>
+</section>
+
+<!-- ══════════════════ 第 10 章 ══════════════════ -->
+<section class="ch" id="c10">
+  <div class="ch-hd"><span class="ch-n">10</span><h2>掩码、网关与广播</h2></div>
+  <p class="ch-sub">设备只做一个判断 · ARP 把 IP 翻译成 MAC · 广播是「对着一屋子人喊」</p>
+
+  <div class="tl">
+    <p><b>一句话结论：</b>子网掩码决定「直接喊还是交给网关」，网关决定「交给谁」，广播是「还不知道跟谁说」时的通信方式。而设备自己<b>从来不做复杂的路由决策</b>——它只会做一个判断：目标和我是不是同一个网段。</p>
+  </div>
+
+  <h3>6.1　子网掩码：把 IP 切成两半</h3>
+
+  <p>IP 地址一共 32 位（IPv4），掩码的作用就是告诉你：<strong>这 32 位里，前多少位是「网络号」，剩下的是「主机号」</strong>。</p>
+
+  <pre><code>IP 地址：  192.168.1.10
+子网掩码： 255.255.255.0
+          └─────┬────┘└─┬─┘
+          网络号 192.168.1   主机号 10
+
+等价写法： 192.168.1.10/24      ← /24 表示前 24 位是网络号</code></pre>
+
+  <h4>怎么判断两台设备是不是同一个网段</h4>
+
+  <p>把两个 IP 分别和掩码做<strong>按位与</strong>运算，结果相同就是同网段：</p>
+
+  <pre><code>192.168.1.10 AND 255.255.255.0 = 192.168.1.0
+192.168.1.20 AND 255.255.255.0 = 192.168.1.0   ← 相同，同网段
+
+192.168.2.10 AND 255.255.255.0 = 192.168.2.0   ← 不同，跨网段</code></pre>
+
+  <h3>6.2　设备的全部决策逻辑（就这么简单）</h3>
+
+  <figure class="fig">
+    <div class="fgt">图 6-1　一个包出门前，设备只问自己一个问题</div>
+    <svg viewBox="0 0 680 276" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>同网段判断分支</title>
+      <desc>设备判断目标是否同网段，同网段则用 ARP 询问 MAC 后直接发送，不同网段则交给默认网关。</desc>
+      <defs>
+        <marker id="a6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <rect x="200" y="44" width="280" height="42" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="340" y="65" text-anchor="middle" dominant-baseline="central" font-size="13.5" style="fill:var(--tx)">我要发一个包给 192.168.1.20</text>
+      <path d="M340 86 L340 116" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#a6)"/>
+      <rect x="180" y="120" width="320" height="44" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="340" y="142" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--tx)">和掩码做与运算：它在我的网段里吗？</text>
+      <path d="M340 164 L185 196" fill="none" stroke="var(--ac)" stroke-width="1.5" marker-end="url(#a6)"/>
+      <path d="M340 164 L495 196" fill="none" stroke="var(--am)" stroke-width="1.5" marker-end="url(#a6)"/>
+      <text x="222" y="176" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--ac)">是</text>
+      <text x="458" y="176" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--am)">否</text>
+      <rect x="40" y="200" width="290" height="56" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="185" y="220" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--ac)">ARP 问它的 MAC，直接发出去</text>
+      <text x="185" y="240" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--ac)">走交换机，路由器完全不参与</text>
+      <rect x="350" y="200" width="290" height="56" rx="10" style="fill:var(--ambg)" stroke="var(--am)" stroke-width="0.5"/>
+      <text x="495" y="220" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--am)">无脑丢给网关（默认路由）</text>
+      <text x="495" y="240" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--am)">剩下的路由决策交给路由器</text>
+    </svg>
+    <figcaption>这就是为什么设备上只需要配一个网关，而路由器上却有整张路由表——<b>设备把复杂的决策外包给了路由器</b>。</figcaption>
+  </figure>
+
+  <h3>6.3　网关：所有「不在本网段」的包的出口</h3>
+
+  <ul>
+    <li><strong>定义</strong>：默认路由的下一跳，通常就是路由器 LAN 口的地址（<code>192.168.1.1</code>）。</li>
+    <li><strong>作用</strong>：设备判断「这个目标不在我的网段」之后，唯一的动作就是把它交给网关。</li>
+    <li><strong>关键点</strong>：设备只配一个网关就够了，因为设备根本不做路由决策。真正复杂的选路，全部由路由器完成。</li>
+    <li><strong>没有网关会怎样</strong>：设备只能和自己同网段的设备通信，出不了门。这就是 APIPA 的状态。</li>
+  </ul>
+
+  <h3>6.4　内网如何区分不同设备：两套地址系统</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th></th><th>MAC 地址</th><th>IP 地址</th></tr></thead>
+      <tbody>
+        <tr><td>工作层次</td><td>二层（链路层）</td><td>三层（网络层）</td></tr>
+        <tr><td>来源</td><td>网卡出厂烧录</td><td>DHCP 分配或手工配置</td></tr>
+        <tr><td>长度</td><td>48 位，如 <code>A4:83:E7:11:22:33</code></td><td>32 位（IPv4）</td></tr>
+        <tr><td>范围</td><td>同一局域网内唯一</td><td>全网唯一（配合路由）</td></tr>
+        <tr><td>可变性</td><td>基本不变（可以软件伪装）</td><td>随时可改</td></tr>
+        <tr><td>作用</td><td>实际投递（最后一跳）</td><td>寻址与选路</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="qk">
+    <div class="qt">一句话区分</div>
+    <p>IP 决定「<strong>送到哪个网络、哪台机器</strong>」，MAC 决定「<strong>这一跳具体交给哪块网卡</strong>」。IP 是收件地址，MAC 是投递到门牌号。</p>
+  </div>
+
+  <h4>ARP：把 IP 翻译成 MAC 的过程</h4>
+
+  <ol class="steps">
+    <li><p>A 要发数据给 <code>192.168.1.20</code>，先查自己的 <strong>ARP 缓存</strong>：这个 IP 的 MAC 是多少？</p></li>
+    <li><p>缓存里没有 → <strong>广播</strong>一个 ARP 请求：「谁是 <code>192.168.1.20</code>？请告诉 <code>192.168.1.10</code>，我的 MAC 是 <code>AA:AA:AA</code>。」</p></li>
+    <li><p>交换机看到这是一个广播帧（目标 MAC 是 <code>FF:FF:FF:FF:FF:FF</code>），会从<strong>除来源端口之外的所有端口</strong>发出去。</p></li>
+    <li><p><code>192.168.1.20</code> 收到后，<strong>单播</strong>回应：「我是，我的 MAC 是 <code>BB:BB:BB</code>。」</p></li>
+    <li><p>A 把这个对应关系记进 ARP 缓存（Windows 通常缓存几分钟），然后开始正式发数据。</p></li>
+  </ol>
+
+  <div class="note info">
+    <span class="nt">跨网段时 ARP 问的是谁</span>
+    <p>跨网段时，ARP 问的<b>不是</b>最终目标的 MAC，而是<b>网关的 MAC</b>。包先发给网关，由网关再去决定下一跳是谁。所以 <b>ARP 广播永远出不了本网段</b>——这是广播的天然边界。</p>
+  </div>
+
+  <h3>6.5　广播是什么</h3>
+
+  <ul>
+    <li><strong>定义</strong>：目标 MAC 是 <code>FF:FF:FF:FF:FF:FF</code> 的帧，或者目标 IP 是网段内主机号全为 1 的地址（如 <code>192.168.1.255</code>）。</li>
+    <li><strong>交换机怎么处理</strong>：从<strong>除来源端口之外的所有端口</strong>转发出去。同一个广播域里的每一台设备都会收到。</li>
+    <li><strong>常见用途</strong>：
+      <ul>
+        <li>ARP 请求（找 MAC）</li>
+        <li>DHCP Discover（找服务器，因为此时设备还没有 IP，无法单播）</li>
+        <li>NetBIOS 名称解析（老式 Windows「网上邻居」）</li>
+      </ul>
+    </li>
+    <li><strong>问题</strong>：广播多了会吃掉可观的带宽，严重时形成「广播风暴」，把交换机 CPU 打满、网络瘫痪。</li>
+    <li><strong>路由器默认隔离广播</strong>：广播不会穿过路由器。所以一个网段里的广播，另一个网段的设备是收不到的。</li>
+  </ul>
+
+  <div class="note ok">
+    <span class="nt">这就是「子网」存在的真正意义</span>
+    <p>把一个大网络切成多个小广播域，让每段里面的广播量可控。一个子网里设备越多，广播的绝对数量越大，效率越低。所以大型网络会划 VLAN、划子网，把每个域控制在合理规模。</p>
+  </div>
+</section>
+
+<!-- ══════════════════ 第 11 章 ══════════════════ -->
+<section class="ch" id="c11">
+  <div class="ch-hd"><span class="ch-n">11</span><h2>互联网是怎么连起来的</h2></div>
+  <p class="ch-sub">逐跳转发 · BGP 交换路由 · 三件被忽略的事</p>
+
+  <div class="tl">
+    <p><b>一句话结论：</b>是，互联网的连通性核心就是<b>路由器逐跳转发 + BGP 交换路由</b>。但要说得准确，还有三件事：送信号靠<b>光传输设备</b>，送内容常被 <b>CDN</b> 提前截住，同一个 IP 在多地同时存在靠 <b>Anycast</b>。</p>
+  </div>
+
+  <h3>7.1　分层结构：从你家到目标服务器</h3>
+
+  <figure class="fig">
+    <div class="fgt">图 7-1　一个包出国的六层阶梯</div>
+    <svg viewBox="0 0 680 392" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>互联网分层结构</title>
+      <desc>从接入层、接入网、城域汇聚、省网核心、国家骨干到目标网络，每一层由不同的设备承担不同的职责。</desc>
+      <defs>
+        <marker id="a7" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <rect x="40" y="52" width="600" height="40" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="62" y="72" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--tx)">接入层</text>
+      <text x="210" y="72" dominant-baseline="central" font-size="12.5" style="fill:var(--tx2)">光猫、家用路由器 —— 拨号、NAT、分地址</text>
+      <path d="M340 92 L340 104" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#a7)"/>
+      <rect x="40" y="108" width="600" height="40" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="62" y="128" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--tx)">接入网</text>
+      <text x="210" y="128" dominant-baseline="central" font-size="12.5" style="fill:var(--tx2)">运营商 OLT、BRAS —— 汇聚用户、认证计费</text>
+      <path d="M340 148 L340 160" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#a7)"/>
+      <rect x="40" y="164" width="600" height="40" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="62" y="184" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--tx)">城域汇聚</text>
+      <text x="210" y="184" dominant-baseline="central" font-size="12.5" style="fill:var(--tx2)">市级汇聚路由器 —— 汇聚多个片区的流量</text>
+      <path d="M340 204 L340 216" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#a7)"/>
+      <rect x="40" y="220" width="600" height="40" rx="10" style="fill:var(--bg3)" stroke="var(--bd2)" stroke-width="0.5"/>
+      <text x="62" y="240" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--tx)">省网核心</text>
+      <text x="210" y="240" dominant-baseline="central" font-size="12.5" style="fill:var(--tx2)">省级核心路由器 —— 省内骨干，Tbps 级吞吐</text>
+      <path d="M340 260 L340 272" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#a7)"/>
+      <rect x="40" y="276" width="600" height="40" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="62" y="296" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--ac)">国家骨干</text>
+      <text x="210" y="296" dominant-baseline="central" font-size="12.5" style="fill:var(--ac)">核心路由器 + DWDM 光传输 —— 跨省、直达 IXP</text>
+      <path d="M340 316 L340 328" fill="none" stroke="var(--bd2)" stroke-width="1" marker-end="url(#a7)"/>
+      <rect x="40" y="332" width="600" height="40" rx="10" style="fill:var(--acbg)" stroke="var(--ac)" stroke-width="0.5"/>
+      <text x="62" y="352" dominant-baseline="central" font-size="13" font-weight="500" style="fill:var(--ac)">目标网络</text>
+      <text x="210" y="352" dominant-baseline="central" font-size="12.5" style="fill:var(--ac)">对方 AS 的边界路由器 → 汇聚 → 服务器</text>
+    </svg>
+    <figcaption>每一层都只做一件事：查自己的路由表，决定下一跳交给谁。整条链路上没有「总指挥」。</figcaption>
+  </figure>
+
+  <h3>7.2　核心机制：BGP 与逐跳转发</h3>
+
+  <p>互联网由几万个<strong>自治系统（AS）</strong>组成。比如中国电信是 AS4134、中国联通是 AS4837、阿里云是 AS45102。每个 AS 通过 <strong>BGP（边界网关协议）</strong>向邻居宣告：「我这里有这些 IP 网段，要来的话交给我。」</p>
+
+  <ul>
+    <li>全球 IPv4 路由表约 <strong>95 万 ~ 100 万条</strong>，并且持续增长。</li>
+    <li>每台路由器只关心一件事：「去往 X 网段，下一跳交给谁。」</li>
+    <li>路由器之间不交换「完整地图」，只交换「这个方向能不能到」——这是互联网能扛住规模的秘诀。</li>
+  </ul>
+
+  <h4>一个包的完整旅程（访问 example.com）</h4>
+
+  <ol class="steps">
+    <li><p><strong>DNS 解析</strong>：先查浏览器缓存 → 系统缓存 → 运营商 DNS。都没有就去递归查询：根服务器 → <code>.com</code> 顶级域 → 权威服务器，最终拿到目标 IP（比如 <code>93.184.216.34</code>）。这一步本身也是走网络完成的。</p></li>
+    <li><p><strong>你的电脑</strong>：判断目标不在本网段 → 交给网关。</p></li>
+    <li><p><strong>家用路由器</strong>：做 NAT，把源地址换成公网 IP → 交给运营商的 BRAS。</p></li>
+    <li><p><strong>BRAS / 城域网</strong>：查路由表 → 送到省级核心。</p></li>
+    <li><p><strong>省网核心 → 国家骨干</strong>：逐跳转发，可能经过 10~20 跳，中途可能跨 IXP（互联网交换中心）进入对方 AS。</p></li>
+    <li><p><strong>对方网络的边界路由器</strong>：进入目标 AS，逐层下发：汇聚 → 接入 → 服务器。</p></li>
+    <li><p><strong>回包</strong>：沿路返回，但<strong>路径可能和去程完全不同</strong>——因为 BGP 是单向选路的，去和回是两条独立的决策。</p></li>
+  </ol>
+
+  <h4>那「是否都靠路由器转发」的精确答案</h4>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>方面</th><th>靠什么</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>决定往哪走（选路）</td><td><b>路由器</b></td><td>逐跳查表，BGP 提供跨 AS 的路由信息</td></tr>
+        <tr><td>把信号送到几百公里外</td><td><b>DWDM 光传输设备</b></td><td>路由器负责「决策」，光设备负责「搬运」。路由器 → 光设备 → 光纤 → 光设备 → 路由器</td></tr>
+        <tr><td>内容实际从哪来</td><td><b>CDN 边缘节点</b></td><td>视频、图片、静态资源大多缓存在离你几十公里的节点，根本没走远</td></tr>
+        <tr><td>同一个 IP 全球可用</td><td><b>Anycast</b></td><td><code>8.8.8.8</code>、<code>1.1.1.1</code>、根域名服务器：多地宣告同一 IP，BGP 把你导向最近的那个</td></tr>
+        <tr><td>跨国流量</td><td><b>海底光缆</b></td><td>全球 95% 以上的国际数据流量走海底光缆</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note ok">
+    <span class="nt">所以更准确的说法是</span>
+    <p>互联网的<b>连通性</b>来自「路由器逐跳转发 + BGP 交换路由」；<br>
+    互联网的<b>物理传输</b>来自「DWDM 光传输 + 海底光缆」；<br>
+    互联网的<b>实际体验</b>被 CDN 和 Anycast 大量优化——很多流量根本没有走出你所在的城市。</p>
+  </div>
+</section>
+
+<!-- ══════════════════ 第 12 章 ══════════════════ -->
+<section class="ch" id="c12">
+  <div class="ch-hd"><span class="ch-n">12</span><h2>从河南到河北：百万家庭的流量怎么过一根光纤</h2></div>
+  <p class="ch-sub">波分复用 · 统计复用 · 光纤到底算不算弱网</p>
+
+  <div class="tl">
+    <p><b>一句话结论：</b>前提要修正两处。第一，光纤的带宽<b>不是固定的</b>——一根纤可以同时跑几十上百个波长，容量做到几十 Tbps。第二，百万家庭<b>不会同时满速跑</b>——运营商靠「统计复用」按概率卖带宽。所以这不是「把几十万 T 挤进一根纤」，而是「两层复用把需求削掉几个数量级」。</p>
+  </div>
+
+  <h3>8.1　纠正前提一：光纤的容量不是固定的</h3>
+
+  <figure class="fig">
+    <div class="fgt">图 8-1　波分复用：一根纤里塞进几十个不同颜色的光</div>
+    <svg viewBox="0 0 680 244" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>波分复用示意</title>
+      <desc>一根光纤中可以同时传输多个不同波长的光信号，每个波长各自承载独立的百 G 级流量。</desc>
+      <text x="40" y="30" dominant-baseline="central" font-size="13.5" font-weight="500" style="fill:var(--tx)">一根光纤里同时跑 80~96 个不同波长的光，互不干扰</text>
+      <path d="M40 130 L640 130" fill="none" stroke="var(--bd2)" stroke-width="6" stroke-linecap="round"/>
+      <rect x="70" y="112" width="60" height="36" rx="6" fill="#1D9E75"/>
+      <rect x="150" y="112" width="60" height="36" rx="6" fill="#5DCAA5"/>
+      <rect x="230" y="112" width="60" height="36" rx="6" fill="#9FE1CB"/>
+      <rect x="310" y="112" width="60" height="36" rx="6" fill="#1D9E75"/>
+      <rect x="390" y="112" width="60" height="36" rx="6" fill="#5DCAA5"/>
+      <rect x="470" y="112" width="60" height="36" rx="6" fill="#9FE1CB"/>
+      <rect x="550" y="112" width="60" height="36" rx="6" fill="#1D9E75"/>
+      <text x="100" y="168" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">λ1</text>
+      <text x="180" y="168" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">λ2</text>
+      <text x="260" y="168" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">λ3</text>
+      <text x="340" y="168" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">λ4</text>
+      <text x="420" y="168" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">λ5</text>
+      <text x="500" y="168" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">λ6</text>
+      <text x="580" y="168" text-anchor="middle" dominant-baseline="central" font-size="12" style="fill:var(--tx3)">λ7</text>
+      <text x="40" y="200" dominant-baseline="central" font-size="12.5" style="fill:var(--tx2)">每个波长 100G ~ 400G　→　单纤合计 10 ~ 38 Tbps</text>
+      <text x="40" y="224" dominant-baseline="central" font-size="12.5" style="fill:var(--tx2)">一根光缆通常 96 ~ 288 芯　→　整束光缆达到 Pbps 级</text>
+    </svg>
+    <figcaption>所以「带宽总量固定」这个前提并不成立。真正要问的不是「够不够」，而是「扩起来要多久、成本多少」。</figcaption>
+  </figure>
+
+  <h4>扩容的三条路（从易到难）</h4>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>手段</th><th>做法</th><th>周期</th><th>是否需要挖沟</th></tr></thead>
+      <tbody>
+        <tr><td>加波长</td><td>两端各加一块板卡，启用空闲波长</td><td>几天到几周</td><td><b style="color:var(--ac)">不需要</b></td></tr>
+        <tr><td>加纤芯</td><td>启用光缆里还没用的纤芯</td><td>几天</td><td>不需要</td></tr>
+        <tr><td>再铺光缆</td><td>在原有路由上敷设新光缆</td><td>几个月</td><td>需要</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>这是光纤最重要的一点：<strong>扩容最常用的手段是「加波长」，完全不用动土。</strong>两端加设备，中间的玻璃和管沟一个字都不用改。</p>
+
+  <h3>8.2　纠正前提二：百万家庭不会同时满速跑</h3>
+
+  <p>这是运营商商业模式的基础，叫 <strong>统计复用（oversubscription，也叫收敛比）</strong>。</p>
+
+  <ul>
+    <li>假设每户签约 100 Mbps，但<strong>同一时刻真正跑满的概率极低</strong>，一般在 1%~10% 之间。</li>
+    <li>所以一个 10 Gbps 的上联口可以挂几百户，收敛比常见 <strong>1:10 ~ 1:50</strong>，某些场景更高。</li>
+    <li>这不是偷工减料，是<strong>全球通行的行业标准做法</strong>。</li>
+    <li>依据是流量模型：绝大多数人大部分时间在刷网页、看视频（有缓冲，是突发性的），而不是持续满速下载。</li>
+  </ul>
+
+  <div class="note warn">
+    <span class="nt">那晚高峰为什么会卡</span>
+    <p>因为晚 8 到 10 点，并发率上升，实际需求接近或超过了上联口的容量。运营商的应对是 <b>QoS 分级（优先保语音和视频）+ 持续扩容</b>。所以你感觉「晚上卡」，本质上是收敛比在高峰时段不够用了，而不是光纤本身跑不动。</p>
+  </div>
+
+  <h3>8.3　从河南家庭到河北家庭的完整链路</h3>
+
+  <pre><code>河南某家庭光猫
+  ↓  PON（一根纤，32~128 户共享 2.5G / 10G 下行）
+河南小区 OLT（光线路终端）
+  ↓  城域汇聚
+河南城域核心路由器
+  ↓  省级骨干（DWDM，单纤数十 Tbps）
+河南国家骨干节点
+  ═══ 省际光缆（几百公里，多根 × 多芯 × 多波长）═══
+河北国家骨干节点
+  ↓
+河北城域核心 → 汇聚 → OLT
+  ↓  PON
+河北某家庭光猫
+</code></pre>
+
+  <h3>8.4　「稳定传输」靠哪几个机制</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>机制</th><th>干什么</th></tr></thead>
+      <tbody>
+        <tr><td>统计复用</td><td>按概率共享带宽，把成本降低几个数量级</td></tr>
+        <tr><td>QoS 分级</td><td>语音、视频、普通数据分优先级，拥塞时优先保关键业务</td></tr>
+        <tr><td>流量工程（MPLS-TE / SR）</td><td>预先规划路径，避免流量全挤到同一条链路</td></tr>
+        <tr><td>ECMP 多路径负载均衡</td><td>同一目的地有多条等价路径时，把流量分散开</td></tr>
+        <tr><td>TCP 拥塞控制</td><td>端到端自动降速（CUBIC / BBR），避免全网一起崩</td></tr>
+        <tr><td>CDN 缓存</td><td>视频等大流量提前落到省内节点，<b>根本不走省际骨干</b></td></tr>
+        <tr><td>FEC 前向纠错</td><td>光传输自带纠错，误码率低到 10⁻¹² 以下</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note ok">
+    <span class="nt">其中 CDN 是最省事的一招</span>
+    <p>视频流量占互联网总流量的绝大部分。如果这些流量都要从源站跨省拉，骨干网早就崩了。CDN 把它们提前缓存到离用户几十公里的节点，<b>跨省骨干上跑的其实只是「回源」的少量流量</b>。这才是互联网能撑住的真正原因。</p>
+  </div>
+
+  <h3>8.5　带宽不够怎么办（按时间尺度）</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>时间尺度</th><th>手段</th></tr></thead>
+      <tbody>
+        <tr><td>秒级</td><td>QoS 限速、流量调度、丢弃低优先级包</td></tr>
+        <tr><td>小时级</td><td>调整 BGP 选路、临时启用备用路径分担</td></tr>
+        <tr><td>天到周级</td><td>加波长（两端加板卡，不用挖沟）</td></tr>
+        <tr><td>月到季级</td><td>敷设新光缆、新增纤芯</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>8.6　光纤算弱网吗</h3>
+
+  <div class="tl">
+    <p><b>不算。恰恰相反——光纤是目前最好的传输介质。</b>所谓「弱网」是<b>终端侧</b>的概念。</p>
+  </div>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>指标</th><th>光纤</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>时延</td><td>约 5 微秒 / 公里</td><td>河南到河北约 500 公里，单向约 2.5 毫秒</td></tr>
+        <tr><td>带宽</td><td>单纤数十 Tbps</td><td>远超任何其他介质</td></tr>
+        <tr><td>误码率</td><td>低于 10⁻¹²</td><td>有 FEC 前向纠错兜底</td></tr>
+        <tr><td>抖动</td><td>极小</td><td>适合实时语音、视频</td></tr>
+        <tr><td>抗电磁干扰</td><td>完全免疫</td><td>光信号不受电磁场影响</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><strong>「弱网」真正指的是这些场景：</strong></p>
+
+  <ul>
+    <li>移动网络的弱信号区（4G / 5G 边缘、地下车库、电梯里）</li>
+    <li>Wi-Fi 信号差、同频干扰严重</li>
+    <li>高丢包、高抖动、高时延的链路</li>
+    <li>卫星网络（时延高，还受天气影响）</li>
+  </ul>
+
+  <p><strong>真正的瓶颈从来不在骨干光纤上，而在这几处：</strong></p>
+
+  <ol>
+    <li><strong>最后一公里</strong>：PON 端口拥塞（32 户共享 2.5 Gbps 下行）</li>
+    <li><strong>运营商之间的互联带宽</strong>：跨网访问（电信 ↔ 联通）的历史遗留问题</li>
+    <li><strong>服务器自身</strong>：CPU 处理能力、磁盘 IO、出口带宽</li>
+    <li><strong>家里的 Wi-Fi</strong>：这才是绝大多数人真正感受到「慢」的地方</li>
+  </ol>
+
+  <div class="qk">
+    <div class="qt">一句话记住</div>
+    <p>从河南到河北那根光纤，是全程<b>最富余</b>的一段。你感觉慢，大概率是最后 10 米那个无线路由器，或者你连的那台服务器本身就慢。</p>
+  </div>
+</section>
+
+<!-- ══════════════════ 速查表 ══════════════════ -->
+<section class="ch" id="c13">
+  <div class="ch-hd"><span class="ch-n">附</span><h2>速查表</h2></div>
+  <p class="ch-sub">三句口诀 · 现象对照 · 常用命令</p>
+
+  <h3>三句口诀</h3>
+
+  <div class="qk">
+    <div class="qt">口诀一：能不能到，看两张表</div>
+    <p><strong>路由表</strong>决定「往哪走」——同网段就直连走交换机，不用问路由器；<br>
+    <strong>防火墙表</strong>决定「让不让过」——先搞清楚这次通信是入站还是出站。</p>
+  </div>
+
+  <div class="qk">
+    <div class="qt">口诀二：前缀越长，说话越算数</div>
+    <p>默认路由是「其他都归我」。谁不想被吞掉，就给自己加一条更具体的路由（常见的是 <code>/32</code>）。VPN 客户端、容器、虚拟化软件都在用这一招。</p>
+  </div>
+
+  <div class="qk">
+    <div class="qt">口诀三：隧道的入口在哪台设备上，就只有哪台设备进得去</div>
+    <p>电脑上开 VPN，只有这台电脑进隧道；路由器上配 VPN 客户端，全屋设备一起进。中间的二层交换机全程只是搬运工，它连 IP 都不看。</p>
+  </div>
+
+  <h3>现象 → 原因 对照表</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>你看到的现象</th><th>最可能的原因</th><th>怎么验证</th></tr></thead>
+      <tbody>
+        <tr><td>局域网上其他电脑访问不了开 VPN 的那台</td><td>VPN 客户端开了「禁止本地网络」或全隧道 kill switch</td><td>切成拆分隧道试试，或临时断开 VPN</td></tr>
+        <tr><td>公司 VPN 显示已连接但访问不了内网</td><td>默认路由被另一个 TUN 工具抢走</td><td><code>route print</code> 看 <code>0.0.0.0</code> 指向谁</td></tr>
+        <tr><td>内网域名解析失败但 IP 直连正常</td><td>DNS 被 Clash 的 fake-ip 劫持</td><td><code>nslookup</code> 看返回的是不是 <code>198.18.x.x</code></td></tr>
+        <tr><td>VPN 一直卡在「正在连接」</td><td>缺少 VPN 服务器 <code>/32</code> 例外路由，形成死循环</td><td>看客户端日志有没有反复重试</td></tr>
+        <tr><td>设备拿到 <code>169.254.x.x</code></td><td>没收到 DHCP 应答，走了 APIPA</td><td>检查 DHCP 服务器是否开启、网线是否通</td></tr>
+        <tr><td>能互相 ping 通但上不了网</td><td>没有网关 / 没有 DNS</td><td><code>ipconfig /all</code> 看默认网关是否为空</td></tr>
+        <tr><td>路由器后面再挂一个路由器，游戏联机失败</td><td>双重 NAT</td><td>把第二台的网线改插 LAN 口并关 DHCP</td></tr>
+        <tr><td>本地服务别人连不上</td><td>程序只监听了 <code>127.0.0.1</code>，或入站规则没放行</td><td><code>netstat -ano | findstr 端口</code> 看监听地址</td></tr>
+        <tr><td>网线直接插交换机，所有电脑都上不了网</td><td>交换机不拨号、不 NAT、不发地址</td><td>必须有一台设备当网关（路由器或开共享的电脑）</td></tr>
+        <tr><td>换到另一台路由器下面后，原来的设备互相 ping 不通了</td><td>双重 NAT，两个子网互不相识</td><td>第二台改接 LAN 口并关掉 DHCP</td></tr>
+        <tr><td>Clash 能借道给别人，公司 VPN 不能</td><td>Allow LAN 是应用层显式开端口；VPN 借道要网络层转发，且默认全关</td><td>看它是主动提供服务，还是要改对方路由</td></tr>
+        <tr><td>晚上上网特别卡</td><td>接入网收敛比在高峰时段不够用</td><td>换个时段对比</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>常用命令</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>目的</th><th>Windows</th><th>macOS / Linux</th></tr></thead>
+      <tbody>
+        <tr><td>看路由表</td><td><code>route print</code></td><td><code>netstat -rn</code> / <code>ip route</code></td></tr>
+        <tr><td>看 IP、掩码、网关、DNS</td><td><code>ipconfig /all</code></td><td><code>ip addr</code> / <code>cat /etc/resolv.conf</code></td></tr>
+        <tr><td>看 ARP 缓存（IP → MAC）</td><td><code>arp -a</code></td><td><code>arp -a</code> / <code>ip neigh</code></td></tr>
+        <tr><td>看谁在监听哪个端口</td><td><code>netstat -ano | findstr 8080</code></td><td><code>ss -tlnp</code> / <code>lsof -i:8080</code></td></tr>
+        <tr><td>清 DNS 缓存</td><td><code>ipconfig /flushdns</code></td><td><code>sudo dscacheutil -flushcache</code></td></tr>
+        <tr><td>测试连通性</td><td><code>ping</code> / <code>tracert</code></td><td><code>ping</code> / <code>traceroute</code></td></tr>
+        <tr><td>看域名解析到哪</td><td><code>nslookup 域名</code></td><td><code>dig 域名</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>概念速查</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>概念</th><th>一句话定义</th></tr></thead>
+      <tbody>
+        <tr><td>子网掩码</td><td>把 IP 切成「网络号 + 主机号」，决定「直接喊还是交给网关」</td></tr>
+        <tr><td>网关</td><td>所有「不在本网段」的包的出口，通常是路由器 LAN 口地址</td></tr>
+        <tr><td>默认路由</td><td><code>0.0.0.0/0</code>，兜底规则，前缀最短所以最没话语权</td></tr>
+        <tr><td>最长前缀优先</td><td>路由匹配的唯一准则：越具体的规则越优先</td></tr>
+        <tr><td>ARP</td><td>把 IP 翻译成 MAC，靠广播请求 + 单播应答</td></tr>
+        <tr><td>广播域</td><td>广播能到达的范围，由路由器划边界</td></tr>
+        <tr><td>DHCP</td><td>自动分配 IP、掩码、网关、DNS，靠四个广播包完成</td></tr>
+        <tr><td>APIPA</td><td>要不到 IP 时自己编一个 <code>169.254.x.x</code>，没网关没 DNS</td></tr>
+        <tr><td>NAT</td><td>把私有地址翻译成公网地址，让内网设备能上网</td></tr>
+        <tr><td>双重 NAT</td><td>NAT 做了两遍，上游访问不到下游</td></tr>
+        <tr><td>桥接</td><td>二层概念，把两个网段合并成一个广播域</td></tr>
+        <tr><td>级联</td><td>三层概念，一台路由器的 LAN 接另一台的 WAN，形成两个子网</td></tr>
+        <tr><td>隧道封装</td><td>把整个 IP 包当载荷，外面再套一层新 IP 头</td></tr>
+        <tr><td>拆分隧道</td><td>只有指定网段走隧道，其余直连</td></tr>
+        <tr><td>全隧道</td><td>默认路由也改到隧道，所有流量都走</td></tr>
+        <tr><td>BGP</td><td>自治系统之间交换路由信息的协议，互联网的骨架</td></tr>
+        <tr><td>DWDM</td><td>密集波分复用，一根纤里同时跑几十个波长</td></tr>
+        <tr><td>统计复用</td><td>按概率卖带宽，即「收敛比」，宽带商业模式的基础</td></tr>
+        <tr><td>CDN</td><td>把内容缓存到离用户最近的节点，减少骨干网压力</td></tr>
+        <tr><td>Anycast</td><td>多地宣告同一个 IP，路由把你导向最近的一个</td></tr>
+        <tr><td>入站 / 出站</td><td>入站管「别人来连你」，出站管「你出去连别人」；Windows 默认入站阻止、出站允许</td></tr>
+        <tr><td>Allow LAN</td><td>Clash 把监听地址从 <code>127.0.0.1</code> 改成 <code>0.0.0.0</code>，让邻居也能借道</td></tr>
+        <tr><td>TUN 模式</td><td>Clash 创建虚拟网卡并改路由表，行为接近 VPN，会与其他 VPN 抢默认路由</td></tr>
+        <tr><td>三层交换机</td><td>有 IP 协议栈和路由表的交换机，能跑 VPN、能做 NAT</td></tr>
+        <tr><td>横向移动</td><td>攻击者拿下内网一台机器后，以它为跳板去攻击其他机器</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</article>
+
+</div>
+
+<footer id="ft">
+  <div id="ft-txt">网络与隧道原理手册</div>
+</footer>
+
+<script>
+(function(){
+  var btn=document.getElementById('tt');
+  btn.addEventListener('click',function(){
+    var cur=document.documentElement.getAttribute('data-theme');
+    var next=cur==='dark'?'light':'dark';
+    document.documentElement.setAttribute('data-theme',next);
+    try{localStorage.setItem('netguide-theme',next);}catch(e){}
+  });
+
+  var links=[].slice.call(document.querySelectorAll('.toc a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));});
+  function sync(){
+    var y=window.scrollY+140,idx=0;
+    for(var i=0;i<secs.length;i++){if(secs[i]&&secs[i].offsetTop<=y)idx=i;}
+    links.forEach(function(a,i){a.classList.toggle('on',i===idx);});
+  }
+  var t=false;
+  window.addEventListener('scroll',function(){
+    if(t)return;t=true;requestAnimationFrame(function(){sync();t=false;});
+  },{passive:true});
+  sync();
+
+  var d=new Date();
+  var ft=document.getElementById('ft-txt');
+  if(ft){ft.innerHTML='网络与隧道原理手册　·　生成于 '+d.getFullYear()+' 年 '+(d.getMonth()+1)+' 月 '+d.getDate()+' 日';}
+})();
+</script>
+</body>
+</html>
