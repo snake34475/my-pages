@@ -114,6 +114,11 @@ del{color:var(--tx3)}
 <p class="sub">以你本机正在运行的 Clash Verge Rev 为样本,逐字段讲解 · 对照 mihomo 官方文档</p>
 <p class="meta">生成于 2026-09-28 · 样本目录 <code>%APPDATA%\io.github.clash-verge-rev.clash-verge-rev\</code> · 内核 verge-mihomo</p>
 
+<div class="box info">
+  <span class="t">配套阅读</span>
+  <p>本篇讲「字段怎么填」。如果想先弄懂「背后的原理」，可以看 <a class="lnk" href="network-and-tunnel.html">网络与隧道原理手册</a>——隧道如何分层封装、路由表为什么是「最长前缀优先」、TUN 模式为什么会和公司 VPN 抢默认路由，都在那篇里。</p>
+</div>
+
 <h2 id="s0"><span class="n">00</span>你的实况:先搞清楚哪个文件说了算</h2>
 
 <p>你这个目录里躺着一堆 yaml,职责完全不同。多数人看配置看到头晕,就是因为把这些文件混为一谈。先把地图摊开:</p>
