@@ -36,6 +36,10 @@ const pad2 = n => String(n).padStart(2, "0");
 const ymd  = d => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
 const todayLink = (y, m, d) => `${CONFIG.pageUrl}#${y}-${pad2(m)}/d${d}`;
 
+/* 时效性：checkedAt 距今超过 staleDays 天 → 「待核实」。旧数据缺字段视为不超期 */
+const isStale = (e, staleDays) => !!e.checkedAt
+  && Date.now() - new Date(e.checkedAt + "T00:00:00").getTime() > staleDays * 864e5;
+
 function theme() {
   const dark = Device.isUsingDarkAppearance();
   return {
@@ -93,7 +97,7 @@ function eventsFor(data, y, m, d) {
 
 /* 注：Scriptable 只支持整个小组件统一的点击跳转（ListWidget.url），
    行级 url 不生效，所以点击任意位置都跳同一个链接。 */
-function addRow(w, e, th, showWarn) {
+function addRow(w, e, th, showWarn, staleDays) {
   const meta = CAT_META[e.cat] || CAT_META.other;
   const twoLine = !!(showWarn && e.warn);
 
@@ -112,9 +116,10 @@ function addRow(w, e, th, showWarn) {
   col.layoutVertically();
   col.spacing = 1;
 
-  const name = col.addText(`${meta.emoji} ${e.name}${e.member ? "  ★会员日" : ""}`);
+  const stale = isStale(e, staleDays);
+  const name = col.addText(`${meta.emoji} ${e.name}${e.member ? "  ★会员日" : ""}${stale ? "  ⏳待核实" : ""}`);
   name.font = Font.semiboldSystemFont(12.5);
-  name.textColor = th.text;
+  name.textColor = stale ? th.faint : th.text;
   name.lineLimit = 1;
   name.minimumScaleFactor = 0.8;
 
@@ -132,7 +137,7 @@ function addRow(w, e, th, showWarn) {
   }
 }
 
-function addPerkRow(w, p, th, bmap) {
+function addPerkRow(w, p, th, bmap, staleDays) {
   const b = bmap[p.brand] || {};
   const row = w.addStack();
   row.layoutHorizontally();
@@ -143,7 +148,7 @@ function addPerkRow(w, p, th, bmap) {
   const col = row.addStack();
   col.layoutVertically();
   col.spacing = 0;
-  const t = col.addText(`· ${b.name || p.brand}｜${p.tag}`);
+  const t = col.addText(`· ${b.name || p.brand}｜${p.tag}${isStale(p, staleDays) ? " ⏳待核实" : ""}`);
   t.font = Font.mediumSystemFont(11);
   t.textColor = th.dim;
   t.lineLimit = 1;
@@ -169,6 +174,7 @@ function buildWidget(data) {
 
   const link = todayLink(y, m, d);
   const bmap = Object.fromEntries(data.BRANDS.map(b => [b.id, b]));
+  const staleDays = (data.META && data.META.staleDays) || 60;
   const perks = (CONFIG.showDailyPerks && !param) ? data.FLEXIBLE.slice(0, 2) : [];
 
   const w = new ListWidget();
@@ -203,7 +209,7 @@ function buildWidget(data) {
     const maxRows = family === "large" ? CONFIG.maxRowsLarge
                   : family === "small" ? 2 : 3;
     const shown = evs.slice(0, maxRows);
-    shown.forEach(e => addRow(w, e, th, family !== "small"));
+    shown.forEach(e => addRow(w, e, th, family !== "small", staleDays));
 
     if (evs.length > shown.length) {
       const more = w.addText(`还有 ${evs.length - shown.length} 项 → 点开查看`);
@@ -212,7 +218,7 @@ function buildWidget(data) {
     }
     if (family === "large" && perks.length) {
       w.addSpacer(2);
-      perks.forEach(p => addPerkRow(w, p, th, bmap));
+      perks.forEach(p => addPerkRow(w, p, th, bmap, staleDays));
     }
   }
 

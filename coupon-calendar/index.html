@@ -147,6 +147,13 @@
   .ditem .desc { color:var(--muted); margin-top:3px; }
   .ditem .desc b { color:var(--text); font-weight:600; }
   .ditem .warn { color:var(--accent); font-size:11px; margin-top:3px; display:block; }
+  .ditem .source { color:var(--accent); font-size:11px; display:inline-block; margin-top:3px; text-decoration:none; }
+  .ditem .source:hover { text-decoration:underline; }
+  /* 久未核实条目：置灰 + 「待核实」角标 */
+  .ditem.stale { opacity:.55; }
+  .ditem.stale:hover { opacity:1; }
+  .badge-stale { font-size:10px; border:1px solid rgba(245,185,66,.5); color:var(--accent); padding:1px 7px; border-radius:8px; margin-left:7px; vertical-align:1px; white-space:nowrap; }
+  .brule.stale .rbody { opacity:.6; }
   .day-jump { display:flex; flex-wrap:wrap; gap:7px; margin-top:12px; }
   .day-jump a {
     font-size:12px; color:var(--text); text-decoration:none;
@@ -276,7 +283,8 @@
   <div class="cal" id="cal"></div>
 
   <div class="notice">
-    <b>时效说明：</b>信息查证于 2026-10-08，来源为品牌官方微博/小程序、界面新闻、什么值得买等公开渠道。
+    <b>时效说明：</b><span id="checkedNote">信息查证于 2026-10-08</span>，来源为品牌官方微博/小程序、界面新闻、什么值得买等公开渠道。
+    距核查日超过 <span id="staleDaysNote">60</span> 天的条目会标「⏳ 待核实」并置灰，悬停可看核查日期与来源。
     限时补贴（茶百道 1.9 元咖啡、沪上阿姨次卡等）随时可能调整或结束；赵一鸣会员日成都部分门店为 18 号而非 8 号；
     达美乐 7 折限指定城市与饼底；书亦周二抽免单限四川等地区。Tims 周一券及 CoCo 周三赠礼需以当期小程序和参与门店为准；不定日券只在品牌卡展示。<b>置灰的日子也能点</b>——可查看当日收录情况。</b>
   </div>
@@ -342,11 +350,11 @@ const ICONS = {
 
 
 (async () => {
-let CATS, BRANDS, WEEKLY, MONTHLY, FLEXIBLE;
+let CATS, BRANDS, WEEKLY, MONTHLY, FLEXIBLE, META;
 try {
-  const res = await fetch('data.json');
+  const res = await fetch('data.json?cb=' + Date.now(), { cache: 'no-store' });
   if (!res.ok) throw new Error('HTTP ' + res.status);
-  ({ CATS, BRANDS, WEEKLY, MONTHLY, FLEXIBLE } = await res.json());
+  ({ CATS, BRANDS, WEEKLY, MONTHLY, FLEXIBLE, META } = await res.json());
 } catch (e) {
   const banner = document.createElement('div');
   banner.style.cssText = 'padding:32px 16px;text-align:center;color:#B4231C;font:14px/1.6 system-ui';
@@ -357,6 +365,21 @@ try {
 const BRAND_MAP = Object.fromEntries(BRANDS.map(b => [b.id, b]));
 const CAT_NAME  = Object.fromEntries(CATS.map(c => [c.id, c.name]));
 const DOW_CN = ['日','一','二','三','四','五','六'];
+
+/* 时效性：checkedAt 距今超过 META.staleDays 天 → 「待核实」。缺字段的旧数据视为不超期 */
+const STALE_DAYS = (META && META.staleDays) || 60;
+const isStale = e => !!e.checkedAt
+  && Date.now() - new Date(e.checkedAt + 'T00:00:00').getTime() > STALE_DAYS * 864e5;
+const staleBadge = e => isStale(e) ? '<span class="badge-stale" title="上次核查：' + e.checkedAt + '">⏳ 待核实</span>' : '';
+const sourceLink = e => e.source
+  ? `<a class="source" href="${e.source}" target="_blank" rel="noopener noreferrer">查看来源 ↗</a>` : '';
+(() => {   // 动态填充时效说明：取全部条目最大的 checkedAt
+  const dates = [...WEEKLY, ...MONTHLY, ...FLEXIBLE].map(e => e.checkedAt).filter(Boolean).sort();
+  const note = document.getElementById('checkedNote');
+  if (note && dates.length) note.textContent = `信息最近一次核查于 ${dates[dates.length - 1]}`;
+  const sd = document.getElementById('staleDaysNote');
+  if (sd) sd.textContent = STALE_DAYS;
+})();
 const icoImg = (bid, cls='bico') =>
   ICONS[bid] ? `<img class="${cls}" src="${ICONS[bid]}" alt="" loading="lazy">`
     : BRAND_MAP[bid]?.short ? `<span class="${cls} bico-fallback" style="--cc:var(--${BRAND_MAP[bid].cat})" aria-hidden="true">${BRAND_MAP[bid].short}</span>` : '';
@@ -533,10 +556,11 @@ function renderDetail(y, m) {
       <div class="desc">MANNER 自带杯减 5 元等不定日福利，可在品牌筛选中查看；领取和适用情况以品牌渠道为准。</div></div>`;
   } else {
     inner = filtered.map(e => `
-      <div class="ditem" style="--cc:var(--${e.cat})">
-        <span class="brand">${icoImg(e.id)}${e.name}</span>${e.member ? '<span class="badge-m">★ 会员日</span>' : ''}
+      <div class="ditem${isStale(e) ? ' stale' : ''}" style="--cc:var(--${e.cat})" ${e.checkedAt ? `title="上次核查：${e.checkedAt}"` : ''}>
+        <span class="brand">${icoImg(e.id)}${e.name}</span>${e.member ? '<span class="badge-m">★ 会员日</span>' : ''}${staleBadge(e)}
         <div class="desc"><b>${e.desc}</b></div>
         ${e.warn ? `<span class="warn">${e.warn}</span>` : ''}
+        ${sourceLink(e)}
       </div>`).join('');
   }
   box.innerHTML = `<h3>${title}</h3><div class="dlist">${inner}</div>`;
@@ -564,18 +588,19 @@ function renderBrandCard(y, m) {
 
   let rules = '';
   wr.forEach(w => {
-    rules += `<div class="brule"><span class="rtag">${dowName(w.dow)}</span>
-      <span class="rbody"><b>${w.desc}</b>${w.warn ? `<span class="warn">${w.warn}</span>` : ''}
-      ${w.source ? `<a class="source" href="${w.source}" target="_blank" rel="noopener noreferrer">查看来源 ↗</a>` : ''}</span></div>`;
+    rules += `<div class="brule${isStale(w) ? ' stale' : ''}" ${w.checkedAt ? `title="上次核查：${w.checkedAt}"` : ''}><span class="rtag">${dowName(w.dow)}</span>
+      <span class="rbody"><b>${w.desc}</b>${staleBadge(w)}${w.warn ? `<span class="warn">${w.warn}</span>` : ''}
+      ${sourceLink(w)}</span></div>`;
   });
   mr.forEach(x => {
-    rules += `<div class="brule"><span class="rtag">每月 ${x.date} 号</span>
-      <span class="rbody"><b>${x.desc}</b>${x.warn ? `<span class="warn">${x.warn}</span>` : ''}</span></div>`;
+    rules += `<div class="brule${isStale(x) ? ' stale' : ''}" ${x.checkedAt ? `title="上次核查：${x.checkedAt}"` : ''}><span class="rtag">每月 ${x.date} 号</span>
+      <span class="rbody"><b>${x.desc}</b>${staleBadge(x)}${x.warn ? `<span class="warn">${x.warn}</span>` : ''}
+      ${sourceLink(x)}</span></div>`;
   });
   fr.forEach(x => {
-    rules += `<div class="brule"><span class="rtag">${x.tag}</span>
-      <span class="rbody"><b>${x.desc}</b>${x.warn ? `<span class="warn">${x.warn}</span>` : ''}
-      <a class="source" href="${x.source}" target="_blank" rel="noopener noreferrer">查看来源 ↗</a></span></div>`;
+    rules += `<div class="brule${isStale(x) ? ' stale' : ''}" ${x.checkedAt ? `title="上次核查：${x.checkedAt}"` : ''}><span class="rtag">${x.tag}</span>
+      <span class="rbody"><b>${x.desc}</b>${staleBadge(x)}${x.warn ? `<span class="warn">${x.warn}</span>` : ''}
+      ${sourceLink(x)}</span></div>`;
   });
   if (!rules) rules = '<div class="brule"><span class="rbody">暂无收录的固定规则</span></div>';
 

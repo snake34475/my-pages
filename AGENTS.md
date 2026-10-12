@@ -65,3 +65,15 @@
   并同步更新首页、归档、`nav.json` 三处入口
 - `index.html` / `archive.html` / `about.html` 是站点结构页，功能页不要反向依赖它们
 - 中文内容为主，提交信息用中文 conventional commits（`feat:` / `fix:` / `blog:` 等）
+
+## coupon-calendar 数据维护约定
+
+- `data.json` 每条活动（WEEKLY / MONTHLY / FLEXIBLE）**必须带 `source` 和 `checkedAt`**
+  （`YYYY-MM-DD`，人工核实当天）；顶层 `META.staleDays` 是页面/小组件的「⏳ 待核实」阈值
+- 页面与小组件对 `checkedAt` 距今超过 `staleDays` 的条目置灰并标「待核实」；
+  确认活动仍有效后，把该条 `checkedAt` 改成当天即可恢复显示
+- 半自动巡检：`node tools/coupon-check/check.mjs`（零依赖，Node ≥ 18，建议每月一次），
+  产出 `tools/coupon-check/report.md`（本地生成物，不提交）；脚本不改数据，
+  人工按报告逐条确认后再更新 `data.json` 并提交
+- 微博通道默认匿名不可用（需 JS 指纹），要自动化：浏览器登录后复制 m.weibo.cn 的
+  `SUB` cookie，`WEIBO_SUB='...' node tools/coupon-check/check.mjs`；不设则自动降级为人工回访

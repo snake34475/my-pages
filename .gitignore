@@ -1,0 +1,2 @@
+# 巡检报告是本地生成物，每次运行 check.mjs 覆盖，不入库
+tools/coupon-check/report.md
